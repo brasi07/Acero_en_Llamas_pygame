@@ -5,7 +5,7 @@ from src.player import Player
 class Game:
     def __init__(self):
         pygame.init()
-        self.pantalla = pygame.display.set_mode((1280, 720))
+        self.pantalla = pygame.display.set_mode((0, 0), pygame.FULLSCREEN | pygame.NOFRAME)
         self.clock = pygame.time.Clock()
         self.ejecutando = True
         self.jugador = Player()
@@ -24,6 +24,9 @@ class Game:
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
                 self.ejecutando = False
+            if evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_ESCAPE:  # Detecta cuando se presiona ESC
+                    self.ejecutando = False  # Termina el juego
 
     def update(self):
         self.jugador.update(self.pantalla, self.mundo.muro)
