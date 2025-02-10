@@ -1,4 +1,5 @@
 import pygame
+from src.bullet import Bala
 
 class Player:
     def __init__(self):
@@ -16,12 +17,15 @@ class Player:
         self.image = self.sprites["abajo"]
         self.rect = self.image.get_rect(center=(400, 300))
         self.velocidad = 1
+        self.direccion = "abajo"  # Dirección inicial del tanque
+        self.balas = []  # Lista para almacenar las balas disparadas
+        self.tiempo_ultimo_disparo = pygame.time.get_ticks()  # Tiempo del último disparo
 
     def cargar_y_escalar_imagen(self, ruta, escala):
         imagen = pygame.image.load(ruta)
         return pygame.transform.scale(imagen, (imagen.get_width() * escala, imagen.get_height() * escala))
 
-    def update(self, muro):
+    def update(self, pantalla ,muro):
         teclas = pygame.key.get_pressed()
         direccion = None
         nuevo_rect = self.rect.copy()
@@ -61,6 +65,29 @@ class Player:
 
         if direccion:
             self.image = self.sprites[direccion]
+            self.direccion = direccion  # Actualizar la dirección del tanque
+
+        # Verificar el clic izquierdo del ratón para disparar
+        if pygame.mouse.get_pressed()[0]:  # 0 es el botón izquierdo
+            tiempo_actual = pygame.time.get_ticks()
+            if tiempo_actual - self.tiempo_ultimo_disparo >= 2000:  # Verifica si han pasado 2 segundos
+                self.disparar()
+                self.tiempo_ultimo_disparo = tiempo_actual  # Actualiza el tiempo del último disparo
+
+        # Actualizar las balas
+        for bala in self.balas[:]:
+            bala.update()
+            if bala.fuera_de_pantalla(pantalla):  # Eliminar balas fuera de la pantalla
+                self.balas.remove(bala)
+
+    def disparar(self):
+        # Crear una nueva bala en la posición del tanque según la dirección
+        nueva_bala = Bala(self.rect.centerx, self.rect.centery, self.direccion)
+        self.balas.append(nueva_bala)
 
     def draw(self, pantalla):
         pantalla.blit(self.image, self.rect)
+        # Dibujar las balas
+        for bala in self.balas:
+            bala.draw(pantalla)
+
