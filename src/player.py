@@ -16,7 +16,7 @@ class Player:
             "abajo_derecha": self.cargar_y_escalar_imagen("../res/tanque_player/tanque_abajo_derecha.png", settings.RESIZE_PLAYER),
         }
         self.image = self.sprites["abajo"]
-        self.rect = self.image.get_rect(center=(400, 300))
+        self.rect = self.image.get_rect(center=(settings.ANCHO//2, settings.ALTO//2))
         self.velocidad = 2
         self.direccion = "abajo"  # Dirección inicial del tanque
         self.balas = []  # Lista para almacenar las balas disparadas

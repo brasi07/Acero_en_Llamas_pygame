@@ -1,4 +1,5 @@
 import pygame
+import settings
 from src.world import World
 from src.player import Player
 
@@ -6,7 +7,7 @@ class Game:
     def __init__(self):
         pygame.init()
         #self.pantalla = pygame.display.set_mode((0, 0), pygame.FULLSCREEN | pygame.NOFRAME)
-        self.pantalla = pygame.display.set_mode((1280, 720))  # Ventana de 800x600
+        self.pantalla = pygame.display.set_mode((settings.ANCHO, settings.ALTO))  # Ventana de 800x600
 
         self.clock = pygame.time.Clock()
         self.ejecutando = True
@@ -18,7 +19,7 @@ class Game:
             self.handle_events()
             self.update()
             self.draw()
-            self.clock.tick(60)
+            self.clock.tick(120)
 
         pygame.quit()
 
