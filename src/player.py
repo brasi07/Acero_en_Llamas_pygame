@@ -23,9 +23,9 @@ class Player:
 
     def cargar_y_escalar_imagen(self, ruta, escala):
         imagen = pygame.image.load(ruta)
-        return pygame.transform.scale(imagen, (imagen.get_width() * escala, imagen.get_height() * escala))
+        return pygame.transform.scale(imagen, (int(imagen.get_width() * escala), int(imagen.get_height() * escala)))
 
-    def update(self, pantalla ,muro):
+    def update(self, pantalla, elementos):
         teclas = pygame.key.get_pressed()
         direccion = None
         nuevo_rect = self.rect.copy()
@@ -59,9 +59,9 @@ class Player:
             nuevo_rect.y += self.velocidad
             direccion = "abajo"
 
-        # Verificar colisión con el muro
-        if not nuevo_rect.colliderect(muro):
-            self.rect = nuevo_rect
+        # Verificar colisión con todos los elementos
+        if not any(nuevo_rect.colliderect(elemento.rect) for elemento in elementos):
+            self.rect = nuevo_rect  # Mover el jugador solo si no hay colisión
 
         if direccion:
             self.image = self.sprites[direccion]
