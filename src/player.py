@@ -1,22 +1,23 @@
 import pygame
+import settings
 from src.bullet import Bala
 
 class Player:
     def __init__(self):
         # Cargar imágenes del tanque y escalarlas
         self.sprites = {
-            "izquierda": self.cargar_y_escalar_imagen("../res/tanque_izquierda.png", 1.5),
-            "derecha": self.cargar_y_escalar_imagen("../res/tanque_derecha.png", 1.5),
-            "arriba": self.cargar_y_escalar_imagen("../res/tanque_arriba.png", 1.5),
-            "abajo": self.cargar_y_escalar_imagen("../res/tanque_abajo.png", 1.5),
-            "arriba_izquierda": self.cargar_y_escalar_imagen("../res/tanque_arriba_izquierda.png", 1.5),
-            "arriba_derecha": self.cargar_y_escalar_imagen("../res/tanque_arriba_derecha.png", 1.5),
-            "abajo_izquierda": self.cargar_y_escalar_imagen("../res/tanque_abajo_izquierda.png", 1.5),
-            "abajo_derecha": self.cargar_y_escalar_imagen("../res/tanque_abajo_derecha.png", 1.5),
+            "izquierda": self.cargar_y_escalar_imagen("../res/tanque_player/tanque_izquierda.png", settings.RESIZE_PLAYER),
+            "derecha": self.cargar_y_escalar_imagen("../res/tanque_player/tanque_derecha.png", settings.RESIZE_PLAYER),
+            "arriba": self.cargar_y_escalar_imagen("../res/tanque_player/tanque_arriba.png", settings.RESIZE_PLAYER),
+            "abajo": self.cargar_y_escalar_imagen("../res/tanque_player/tanque_abajo.png", settings.RESIZE_PLAYER),
+            "arriba_izquierda": self.cargar_y_escalar_imagen("../res/tanque_player/tanque_arriba_izquierda.png", settings.RESIZE_PLAYER),
+            "arriba_derecha": self.cargar_y_escalar_imagen("../res/tanque_player/tanque_arriba_derecha.png", settings.RESIZE_PLAYER),
+            "abajo_izquierda": self.cargar_y_escalar_imagen("../res/tanque_player/tanque_abajo_izquierda.png", settings.RESIZE_PLAYER),
+            "abajo_derecha": self.cargar_y_escalar_imagen("../res/tanque_player/tanque_abajo_derecha.png", settings.RESIZE_PLAYER),
         }
         self.image = self.sprites["abajo"]
         self.rect = self.image.get_rect(center=(400, 300))
-        self.velocidad = 1
+        self.velocidad = 2
         self.direccion = "abajo"  # Dirección inicial del tanque
         self.balas = []  # Lista para almacenar las balas disparadas
         self.tiempo_ultimo_disparo = pygame.time.get_ticks()  # Tiempo del último disparo
