@@ -77,9 +77,8 @@ class Player:
 
         # Actualizar las balas
         for bala in self.balas[:]:
-            bala.update()
-            if bala.fuera_de_pantalla(pantalla):  # Eliminar balas fuera de la pantalla
-                self.balas.remove(bala)
+            if bala.update(elementos) or bala.fuera_de_pantalla(pantalla):
+                self.balas.remove(bala)  # Eliminar la bala si choca o sale de la pantalla
 
     def disparar(self):
         # Crear una nueva bala en la posición del tanque según la dirección

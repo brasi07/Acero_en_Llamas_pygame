@@ -36,11 +36,18 @@ class Bala:
 
         self.rect = pygame.Rect(self.x, self.y, self.radio * 2, self.radio * 2)
 
-    def update(self):
+    def update(self, elementos):
         # Mueve la bala en función de su dirección
         self.x += self.vel_x
         self.y += self.vel_y
         self.rect.topleft = (self.x, self.y)  # Actualiza la posición del rectángulo de la bala
+
+        # Verificar colisión con elementos
+        for elemento in elementos:
+            if self.rect.colliderect(elemento.rect):
+                return True  # Indica que la bala debe ser eliminada
+
+        return False
 
     def draw(self, pantalla):
         pygame.draw.circle(pantalla, (255, 0, 0), (self.rect.centerx, self.rect.centery), self.radio)
