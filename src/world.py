@@ -2,6 +2,7 @@ import pygame
 import maps
 from settings import Color
 from elements import Muro, Palmera
+import settings
 import math
 
 import pygame
@@ -25,13 +26,21 @@ class World:
 
         # Cargar imágenes de los sprites
         self.muro_imagen = pygame.image.load("../res/muros/wall1.png")
-
-        # Ajustar tamaño de los sprites a los tamaños de los tiles
         self.muro_imagen = pygame.transform.scale(self.muro_imagen, (self.tamaño_tile, self.tamaño_tile))
+
+        # Crear la cámara
+        self.camara_x, self.camara_y = 0, 0
+        self.offset_x, self.offset_y = 0, 0
 
         # Lista de elementos
         self.elementos = []
         self.generar_elementos()
+
+        # Variables de transición
+        self.en_transicion = False
+        self.tiempo_inicio = 0
+        self.destino_camara_x = 0
+        self.destino_camara_y = 0
 
     def generar_elementos(self):
         """Crea los elementos del mapa ajustándolos al tamaño de la pantalla."""
@@ -42,11 +51,56 @@ class World:
                 elif valor == "2":  # Palmera
                     self.elementos.append(Palmera(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, self.tamaño_tile, (0, 255, 0)))
 
-    def update(self):
-        pass
+    def cambiar_pantalla(self, direccion):
+
+        if not self.en_transicion:
+        # Si no hay transición en curso, iniciar una
+            self.tiempo_inicio = pygame.time.get_ticks()  # Guarda el tiempo actual
+            if direccion == "derecha" and self.camara_x + self.ancho_pantalla < self.num_columnas * self.ancho_pantalla:
+                self.destino_camara_x = self.camara_x + self.ancho_pantalla
+                self.destino_camara_y = self.camara_y
+                self.en_transicion = True
+            elif direccion == "izquierda" and self.camara_x > 0:
+                self.destino_camara_x = self.camara_x - self.ancho_pantalla
+                self.destino_camara_y = self.camara_y
+                self.en_transicion = True
+            elif direccion == "abajo" and self.camara_y + self.alto_pantalla < self.num_filas * self.alto_pantalla:
+                self.destino_camara_x = self.camara_x
+                self.destino_camara_y = self.camara_y + self.alto_pantalla
+                self.en_transicion = True
+            elif direccion == "arriba" and self.camara_y > 0:
+                self.destino_camara_x = self.camara_x
+                self.destino_camara_y = self.camara_y - self.alto_pantalla
+                self.en_transicion = True
+
+    def actualizar_transicion(self):
+        """Actualiza la transición de la cámara."""
+        if self.en_transicion:
+            tiempo_transcurrido = pygame.time.get_ticks() - self.tiempo_inicio
+            duracion_transicion = 1000
+
+            if tiempo_transcurrido < duracion_transicion:
+                # Interpolación lineal
+                t = tiempo_transcurrido / duracion_transicion
+                self.camara_x = self.camara_x + (self.destino_camara_x - self.camara_x) * t
+                self.camara_y = self.camara_y + (self.destino_camara_y - self.camara_y) * t
+            else:
+                # Una vez que se ha completado la transición
+                self.camara_x = self.destino_camara_x
+                self.camara_y = self.destino_camara_y
+                self.en_transicion = False
 
     def draw(self, pantalla):
+        """Dibuja solo los elementos de la pantalla actual."""
         pantalla.blit(self.mapa, (0, 0))
 
+
         for elemento in self.elementos:
-            elemento.dibujar(pantalla)  # Dibuja cada elemento en su nueva escala
+            if (
+                self.camara_x - 80 <= elemento.rect.x < self.camara_x + self.ancho_pantalla + 80
+                and self.camara_y - 80 <= elemento.rect.y < self.camara_y + self.alto_pantalla + 80
+            ):
+                # Dibujar con ajuste de la cámara
+                elemento.dibujar(pantalla, self.camara_x, self.camara_y)
+
+        self.actualizar_transicion()

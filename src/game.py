@@ -32,12 +32,12 @@ class Game:
                     self.ejecutando = False  # Termina el juego
 
     def update(self):
-        self.jugador.update(self.pantalla, self.mundo.elementos)
-        self.mundo.update()
+        self.jugador.update(self.pantalla, self.mundo)
+        #self.mundo.update()
 
     def draw(self):
         self.pantalla.fill((0, 0, 0))
         self.mundo.draw(self.pantalla)
-        self.jugador.draw(self.pantalla)
+        self.jugador.draw(self.pantalla, self.mundo)
         pygame.display.flip()
 

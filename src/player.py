@@ -28,7 +28,7 @@ class Player:
         imagen = pygame.image.load(ruta)
         return pygame.transform.scale(imagen, (int(imagen.get_width() * escala), int(imagen.get_height() * escala)))
 
-    def update(self, pantalla, elementos):
+    def update(self, pantalla, mundo):
         teclas = pygame.key.get_pressed()
         direccion = None
         nuevo_rect = self.rect.copy()
@@ -62,24 +62,34 @@ class Player:
             nuevo_rect.y += self.velocidad
             direccion = "abajo"
 
-        # Verificar colisión con todos los elementos
-        if not any(nuevo_rect.colliderect(elemento.rect) for elemento in elementos):
-            self.rect = nuevo_rect  # Mover el jugador solo si no hay colisión
+        # Verificar si el jugador sale de la pantalla y cambiar la cámara
+        if nuevo_rect.right > mundo.camara_x + mundo.ancho_pantalla + 50:
+            mundo.cambiar_pantalla("derecha")
+        elif nuevo_rect.left < mundo.camara_x - 50:
+            mundo.cambiar_pantalla("izquierda")
+        elif nuevo_rect.bottom > mundo.camara_y + mundo.alto_pantalla + 50:
+            mundo.cambiar_pantalla("abajo")
+        elif nuevo_rect.top < mundo.camara_y - 50:
+            mundo.cambiar_pantalla("arriba")
+
+        # Si no hubo cambio de pantalla, verificar colisiones y mover jugador
+        if not any(nuevo_rect.colliderect(elemento.rect) for elemento in mundo.elementos):
+            self.rect = nuevo_rect
 
         if direccion:
             self.image = self.sprites[direccion]
             self.direccion = direccion  # Actualizar la dirección del tanque
 
-        # Verificar el clic izquierdo del ratón para disparar
+        # Disparo del tanque
         if pygame.mouse.get_pressed()[0]:  # 0 es el botón izquierdo
             tiempo_actual = pygame.time.get_ticks()
-            if tiempo_actual - self.tiempo_ultimo_disparo >= 1000:  # Verifica si han pasado 2 segundos
+            if tiempo_actual - self.tiempo_ultimo_disparo >= 1000:  # 1 segundo entre disparos
                 self.disparar()
                 self.tiempo_ultimo_disparo = tiempo_actual  # Actualiza el tiempo del último disparo
 
         # Actualizar las balas
         for bala in self.balas[:]:
-            if bala.update(elementos) or bala.fuera_de_pantalla(pantalla):
+            if bala.update(mundo.elementos) or bala.fuera_de_pantalla(pantalla):
                 self.balas.remove(bala)  # Eliminar la bala si choca o sale de la pantalla
 
     def disparar(self):
@@ -87,11 +97,11 @@ class Player:
         nueva_bala = Bala(self.rect.centerx-5, self.rect.centery-5, self.direccion)
         self.balas.append(nueva_bala)
 
-    def draw(self, pantalla):
+    def draw(self, pantalla, mundo):
         # Dibujar las balas
         for bala in self.balas:
             bala.draw(pantalla)
 
         # Dibujar tanque
-        pantalla.blit(self.image, self.rect)
+        pantalla.blit(self.image, (self.rect.x - mundo.camara_x, self.rect.y - mundo.camara_y))  # ✅ Corrección
 
