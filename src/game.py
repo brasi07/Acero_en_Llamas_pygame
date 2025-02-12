@@ -11,7 +11,7 @@ class Game:
 
         self.clock = pygame.time.Clock()
         self.ejecutando = True
-        self.jugador = Player()
+        self.jugador = Player(self.pantalla)
         self.mundo = World("mundo_1", self.pantalla)
 
     def run(self):
@@ -19,7 +19,7 @@ class Game:
             self.handle_events()
             self.update()
             self.draw()
-            self.clock.tick(120)
+            self.clock.tick(60)
 
         pygame.quit()
 

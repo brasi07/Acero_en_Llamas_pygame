@@ -3,7 +3,7 @@ import settings
 from src.bullet import Bala
 
 class Player:
-    def __init__(self):
+    def __init__(self, pantalla):
         # Cargar imágenes del tanque y escalarlas
         self.sprites = {
             "izquierda": self.cargar_y_escalar_imagen("../res/tanque_player/tanque_izquierda.png", settings.RESIZE_PLAYER),
@@ -15,8 +15,10 @@ class Player:
             "abajo_izquierda": self.cargar_y_escalar_imagen("../res/tanque_player/tanque_abajo_izquierda.png", settings.RESIZE_PLAYER),
             "abajo_derecha": self.cargar_y_escalar_imagen("../res/tanque_player/tanque_abajo_derecha.png", settings.RESIZE_PLAYER),
         }
+        self.pantalla = pantalla
+        self.ancho_pantalla, self.alto_pantalla = pantalla.get_size()
         self.image = self.sprites["abajo"]
-        self.rect = self.image.get_rect(center=(settings.ANCHO//2, settings.ALTO//2))
+        self.rect = self.image.get_rect(center=(self.ancho_pantalla//2, self.alto_pantalla//2))
         self.velocidad = 2
         self.direccion = "abajo"  # Dirección inicial del tanque
         self.balas = []  # Lista para almacenar las balas disparadas
