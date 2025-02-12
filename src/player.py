@@ -18,8 +18,8 @@ class Player:
         self.pantalla = pantalla
         self.ancho_pantalla, self.alto_pantalla = pantalla.get_size()
         self.image = self.sprites["abajo"]
-        self.rect = self.image.get_rect(center=(self.ancho_pantalla//2, self.alto_pantalla//2))
-        self.velocidad = 2
+        self.rect = self.image.get_rect(center=(self.ancho_pantalla//2 + self.ancho_pantalla, self.alto_pantalla//2 + self.alto_pantalla))
+        self.velocidad = 5
         self.direccion = "abajo"  # Dirección inicial del tanque
         self.balas = []  # Lista para almacenar las balas disparadas
         self.tiempo_ultimo_disparo = pygame.time.get_ticks()  # Tiempo del último disparo
@@ -89,7 +89,7 @@ class Player:
 
         # Actualizar las balas
         for bala in self.balas[:]:
-            if bala.update(mundo.elementos) or bala.fuera_de_pantalla(pantalla):
+            if bala.update(mundo.elementos):
                 self.balas.remove(bala)  # Eliminar la bala si choca o sale de la pantalla
 
     def disparar(self):

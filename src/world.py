@@ -29,8 +29,7 @@ class World:
         self.muro_imagen = pygame.transform.scale(self.muro_imagen, (self.tamaño_tile, self.tamaño_tile))
 
         # Crear la cámara
-        self.camara_x, self.camara_y = 0, 0
-        self.offset_x, self.offset_y = 0, 0
+        self.camara_x, self.camara_y = self.ancho_pantalla, self.alto_pantalla
 
         # Lista de elementos
         self.elementos = []
@@ -39,8 +38,7 @@ class World:
         # Variables de transición
         self.en_transicion = False
         self.tiempo_inicio = 0
-        self.destino_camara_x = 0
-        self.destino_camara_y = 0
+        self.destino_camara_x, self.destino_camara_y = self.ancho_pantalla, self.alto_pantalla
 
     def generar_elementos(self):
         """Crea los elementos del mapa ajustándolos al tamaño de la pantalla."""

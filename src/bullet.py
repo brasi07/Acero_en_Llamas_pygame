@@ -52,6 +52,4 @@ class Bala:
     def draw(self, pantalla):
         pygame.draw.circle(pantalla, (255, 0, 0), (self.rect.centerx, self.rect.centery), self.radio)
 
-    def fuera_de_pantalla(self, pantalla):
-        # Si la bala se ha salido de la pantalla, la eliminamos
-        return not pantalla.get_rect().colliderect(self.rect)
+
