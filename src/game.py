@@ -1,7 +1,7 @@
 import pygame
 import settings
-from src.world import World
-from src.player import Player
+from world import World
+from player import Player
 
 class Game:
     def __init__(self):

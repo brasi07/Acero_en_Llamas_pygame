@@ -1,6 +1,6 @@
 import pygame
 import settings
-from src.bullet import Bala
+from bullet import Bala
 
 class Player:
     def __init__(self, pantalla):

@@ -1,7 +1,7 @@
 import pygame
 import maps
-from src.settings import Color
-from src.elements import Muro, Palmera
+from settings import Color
+from elements import Muro, Palmera
 import math
 
 import pygame
