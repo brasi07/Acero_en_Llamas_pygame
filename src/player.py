@@ -90,7 +90,7 @@ class Player:
         # Actualizar las balas
         for bala in self.balas[:]:
             if bala.update(mundo.elementos):
-                self.balas.remove(bala)  # Eliminar la bala si choca o sale de la pantalla
+                self.balas.remove(bala)
 
     def disparar(self):
         # Crear una nueva bala en la posición del tanque según la dirección
