@@ -15,6 +15,7 @@ class Game:
         self.mundo = World("mundo_1", self.pantalla)
 
     def run(self):
+        self.set_cursor()
         while self.ejecutando:
             self.handle_events()
             self.update()
@@ -22,6 +23,11 @@ class Game:
             self.clock.tick(60)
 
         pygame.quit()
+
+    def set_cursor(self):
+        cursor_image = pygame.image.load("../res/tanque_player/mirilla.png")
+        cursor = pygame.cursors.Cursor((cursor_image.get_width() // 2, cursor_image.get_height() // 2), cursor_image)
+        pygame.mouse.set_cursor(cursor)
 
     def handle_events(self):
         for evento in pygame.event.get():

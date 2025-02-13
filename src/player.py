@@ -1,9 +1,11 @@
 import pygame
 import settings
+import numpy
 from bullet import Bala
 
 class Player:
     def __init__(self, pantalla):
+        self.sprite_cannon = self.cargar_y_escalar_imagen("../res/tanque_player/tanque_canhon.png", settings.RESIZE_PLAYER)
         # Cargar imágenes del tanque y escalarlas
         self.sprites = {
             "izquierda": self.cargar_y_escalar_imagen("../res/tanque_player/tanque_izquierda.png", settings.RESIZE_PLAYER),
@@ -72,6 +74,8 @@ class Player:
         elif nuevo_rect.top < mundo.camara_y - 50:
             mundo.cambiar_pantalla("arriba")
 
+        self.update_cannon_position()
+
         # Si no hubo cambio de pantalla, verificar colisiones y mover jugador
         if not any(nuevo_rect.colliderect(elemento.rect) for elemento in mundo.elementos):
             self.rect = nuevo_rect
@@ -92,10 +96,29 @@ class Player:
             if bala.update(mundo.elementos):
                 self.balas.remove(bala)
 
+    def update_cannon_position(self):
+        # Obtener la posición del ratón
+        cursorx, cursory = pygame.mouse.get_pos()
+
+        # Calcular el ángulo hacia el cursor
+        diff_x = cursorx - self.rect.centerx
+        diff_y = cursory - self.rect.centery
+        angle = numpy.degrees(numpy.arctan2(diff_y, diff_x))  + 270# Calcular ángulo en grados
+
+        # Rotar la imagen del cañón
+        self.top_image = pygame.transform.rotate(self.sprite_cannon, -angle)  # Se invierte el ángulo para que apunte correctamente
+
+        # Mantener el cañón centrado en el tanque
+        self.rec = self.top_image.get_rect(center=self.rect.center)
+
+
+
+
     def disparar(self):
         # Crear una nueva bala en la posición del tanque según la dirección
         nueva_bala = Bala(self.rect.centerx-5, self.rect.centery-5, self.direccion)
         self.balas.append(nueva_bala)
+        #self.image = pygame.transform.rotate(self.image, 90)
 
     def draw(self, pantalla, mundo):
         # Dibujar las balas
@@ -104,4 +127,5 @@ class Player:
 
         # Dibujar tanque
         pantalla.blit(self.image, (self.rect.x - mundo.camara_x, self.rect.y - mundo.camara_y))  # ✅ Corrección
+        pantalla.blit(self.top_image, self.rec)
 
