@@ -20,7 +20,7 @@ class Player:
         self.pantalla = pantalla
         self.ancho_pantalla, self.alto_pantalla = pantalla.get_size()
         self.image = self.sprites["abajo"]
-        self.rect = self.image.get_rect(center=(self.ancho_pantalla//2 + self.ancho_pantalla, self.alto_pantalla//2 + self.alto_pantalla))
+        self.rect = self.image.get_rect(center=(self.ancho_pantalla // 2 + self.ancho_pantalla, self.alto_pantalla // 2 + self.alto_pantalla))
         self.velocidad = 3
         self.direccion = "abajo"  # Dirección inicial del tanque
         self.balas = []  # Lista para almacenar las balas disparadas
@@ -103,7 +103,7 @@ class Player:
         # Calcular el ángulo hacia el cursor
         diff_x = cursorx - self.rect.centerx
         diff_y = cursory - self.rect.centery
-        angle = numpy.degrees(numpy.arctan2(diff_y, diff_x))  + 270# Calcular ángulo en grados
+        angle = numpy.degrees(numpy.arctan2(diff_y, diff_x)) + 270  # Calcular ángulo en grados
 
         # Rotar la imagen del cañón
         self.top_image = pygame.transform.rotate(self.sprite_cannon, -angle)  # Se invierte el ángulo para que apunte correctamente
@@ -111,14 +111,10 @@ class Player:
         # Mantener el cañón centrado en el tanque
         self.rec = self.top_image.get_rect(center=self.rect.center)
 
-
-
-
     def disparar(self):
         # Crear una nueva bala en la posición del tanque según la dirección
-        nueva_bala = Bala(self.rect.centerx-5, self.rect.centery-5, self.direccion)
+        nueva_bala = Bala(self.rect.centerx - 5, self.rect.centery - 5, self.direccion)
         self.balas.append(nueva_bala)
-        #self.image = pygame.transform.rotate(self.image, 90)
 
     def draw(self, pantalla, mundo):
         # Dibujar las balas
@@ -126,6 +122,5 @@ class Player:
             bala.draw(pantalla)
 
         # Dibujar tanque
-        pantalla.blit(self.image, (self.rect.x - mundo.camara_x, self.rect.y - mundo.camara_y))  # ✅ Corrección
-        pantalla.blit(self.top_image, self.rec)
-
+        pantalla.blit(self.image, (self.rect.x - mundo.camara_x, self.rect.y - mundo.camara_y))
+        pantalla.blit(self.top_image, (self.rect.centerx - self.rec.width // 2 - mundo.camara_x, self.rect.centery - self.rec.height // 2 - mundo.camara_y))
