@@ -74,8 +74,6 @@ class Player:
         elif nuevo_rect.top < mundo.camara_y - 50:
             mundo.cambiar_pantalla("arriba")
 
-        self.update_cannon_position()
-
         # Si no hubo cambio de pantalla, verificar colisiones y mover jugador
         if not any(nuevo_rect.colliderect(elemento.rect) for elemento in mundo.elementos):
             self.rect = nuevo_rect
@@ -96,13 +94,13 @@ class Player:
             if bala.update(mundo.elementos):
                 self.balas.remove(bala)
 
-    def update_cannon_position(self):
+    def update_cannon_position(self, mundo):
         # Obtener la posición del ratón
         cursorx, cursory = pygame.mouse.get_pos()
 
         # Calcular el ángulo hacia el cursor
-        diff_x = cursorx - self.rect.centerx
-        diff_y = cursory - self.rect.centery
+        diff_x = cursorx - (self.rect.x - mundo.camara_x)
+        diff_y = cursory - (self.rect.y - mundo.camara_y)
         angle = numpy.degrees(numpy.arctan2(diff_y, diff_x)) + 270  # Calcular ángulo en grados
 
         # Rotar la imagen del cañón
@@ -123,4 +121,7 @@ class Player:
 
         # Dibujar tanque
         pantalla.blit(self.image, (self.rect.x - mundo.camara_x, self.rect.y - mundo.camara_y))
+
+        self.update_cannon_position(mundo)
+
         pantalla.blit(self.top_image, (self.rect.centerx - self.rec.width // 2 - mundo.camara_x, self.rect.centery - self.rec.height // 2 - mundo.camara_y))
