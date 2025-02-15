@@ -39,11 +39,25 @@ class Elemento:
         return False
 
 
+class Boton(Elemento):
+    def __init__(self, x, y, tamaño_tile, imagen):
+        imagen = pygame.transform.scale(imagen, (tamaño_tile, tamaño_tile))  # Escalamos la imagen
+        super().__init__(x, y, False, imagen)
+
 class Muro(Elemento):
     def __init__(self, x, y, tamaño_tile, imagen):
         imagen = pygame.transform.scale(imagen, (tamaño_tile, tamaño_tile))  # Escalamos la imagen
         super().__init__(x, y, True, imagen)
 
+class Vacio(Elemento):
+    def __init__(self, x, y, tamaño_tile, imagen):
+        imagen = pygame.transform.scale(imagen, (tamaño_tile, tamaño_tile))  # Escalamos la imagen
+        super().__init__(x, y, False, imagen)
+
+class Trampa(Elemento):
+    def __init__(self, x, y, tamaño_tile, imagen):
+        imagen = pygame.transform.scale(imagen, (tamaño_tile, tamaño_tile))  # Escalamos la imagen
+        super().__init__(x, y, False, imagen)
 
 class Arbol(Elemento):
     def __init__(self, x, y, tamaño_tile, imagen):

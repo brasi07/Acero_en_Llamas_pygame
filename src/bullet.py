@@ -10,7 +10,6 @@ class Bala(Elemento):
         super().__init__(x, y, True, imagen)
         self.angulo = math.radians(angulo)  # Convertir grados a radianes
         self.velocidad = 7  # Velocidad de la bala
-        self.radio = 5  # Tamaño de la bala
 
         # Estado de la bala
         self.colisionando = False

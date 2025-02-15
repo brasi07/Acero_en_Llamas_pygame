@@ -6,9 +6,8 @@ from player import Player
 class Game:
     def __init__(self):
         pygame.init()
-        #self.pantalla = pygame.display.set_mode((0, 0), pygame.FULLSCREEN | pygame.NOFRAME)
-        self.pantalla = pygame.display.set_mode((1280, 720))  # Ventana de 800x600
-
+        self.tamaño_pantalla = 1
+        self.pantalla = pygame.display.set_mode((1280, 720), pygame.FULLSCREEN | pygame.SCALED | pygame.DOUBLEBUF)
         self.clock = pygame.time.Clock()
         self.ejecutando = True
         self.jugador = Player(self.pantalla)
@@ -36,6 +35,9 @@ class Game:
             if evento.type == pygame.KEYDOWN:
                 if evento.key == pygame.K_ESCAPE:  # Detecta cuando se presiona ESC
                     self.ejecutando = False  # Termina el juego
+                elif evento.key == pygame.K_F11:
+                    self.pantalla = pygame.display.set_mode((1280, 720))
+
 
     def update(self):
         self.jugador.update(self.pantalla, self.mundo)

@@ -1,7 +1,8 @@
 import pygame
 import maps
 from settings import Color
-from elements import Muro, Arbol, Arbusto
+from elements import Muro, Arbol, Arbusto, Vacio, Boton, Trampa
+from enemy import Enemy
 import settings
 import math
 
@@ -18,8 +19,8 @@ class World:
         self.mapa = pygame.transform.scale(self.mapa_original, (self.ancho_pantalla, self.alto_pantalla))
 
         # Obtener dimensiones del mapa en tiles
-        self.num_filas = len(maps.mapa_tiles)
-        self.num_columnas = len(maps.mapa_tiles[0])
+        self.num_filas = len(maps.mapa1_tiles)
+        self.num_columnas = len(maps.mapa1_tiles[0])
 
         self.ancho_pantalla, self.alto_pantalla = pantalla.get_size()
         self.tamaño_tile = math.gcd(self.ancho_pantalla, self.alto_pantalla)
@@ -27,6 +28,11 @@ class World:
         # Cargar imágenes de los sprites
         self.sprites = {
             "wall1": pygame.image.load("../res/elementos/wall1.png"),
+            "wall7": pygame.image.load("../res/elementos/wall7.png"),
+            "wall16": pygame.image.load("../res/elementos/wall16.png"),
+            "wall21": pygame.image.load("../res/elementos/wall21.png"),
+            "boton": pygame.image.load("../res/elementos/boton.png"),
+            "cracks11": pygame.image.load("../res/elementos/cracks11.png"),
             "arbol1": pygame.image.load("../res/elementos/arbol1.png"),
             "arbusto1": pygame.image.load("../res/elementos/arbusto1.png"),
         }
@@ -45,10 +51,22 @@ class World:
 
     def generar_elementos(self):
         """Crea los elementos del mapa ajustándolos al tamaño de la pantalla."""
-        for y, fila in enumerate(maps.mapa_tiles):
+        for y, fila in enumerate(maps.mapa1_tiles):
             for x, valor in enumerate(fila):
-                if valor == "1":  # Muro
+                if valor == 29:  # Muro
                     self.elementos.append(Muro(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile,  self.sprites["wall1"]))
+                elif valor == 35:  # Muro
+                    self.elementos.append(Muro(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile,  self.sprites["wall7"]))
+                elif valor == 44:  # Muro
+                    self.elementos.append(Muro(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile,  self.sprites["wall16"]))
+                elif valor == 49:  # Vacio
+                    self.elementos.append(Vacio(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile,  self.sprites["wall21"]))
+                elif valor == 14:  # Enemigo
+                    self.elementos.append(Enemy(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile))
+                elif valor == 80:  # Enemigo
+                    self.elementos.append(Boton(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile,  self.sprites["boton"]))
+                elif valor == 60:  # Enemigo
+                    self.elementos.append(Trampa(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile,  self.sprites["cracks11"]))
                 elif valor == "2":  # Arbol
                     self.elementos.append(Arbol(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile,  self.sprites["arbol1"]))
                 elif valor == "3":  # Arbusto

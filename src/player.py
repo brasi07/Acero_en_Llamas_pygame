@@ -101,7 +101,7 @@ class Player(Elemento):
             direccion = "arriba_derecha"
         elif movimiento_x < 0 < movimiento_y and not colision_x and not colision_y:
             direccion = "abajo_izquierda"
-        elif movimiento_x > 0 > movimiento_y and not colision_x and not colision_y:
+        elif movimiento_x > 0 < movimiento_y and not colision_x and not colision_y:
             direccion = "abajo_derecha"
         elif movimiento_x < 0 and not colision_x:
             direccion = "izquierda"
