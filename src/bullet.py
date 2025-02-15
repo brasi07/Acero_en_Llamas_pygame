@@ -1,11 +1,13 @@
 import pygame
 import math
 import time
+import settings
+from elements import Elemento
 
-class Bala:
-    def __init__(self, x, y, angulo):
-        self.x = x
-        self.y = y
+
+class Bala(Elemento):
+    def __init__(self, x, y, angulo, imagen):
+        super().__init__(x, y, True, imagen)
         self.angulo = math.radians(angulo)  # Convertir grados a radianes
         self.velocidad = 7  # Velocidad de la bala
         self.radio = 5  # Tamaño de la bala
@@ -32,8 +34,6 @@ class Bala:
         self.sprites_colision = [pygame.image.load(img) for img in sprites_colision]
         self.sprites_colision = [pygame.transform.scale(img, (20, 20)) for img in self.sprites_colision]
 
-        # Rectángulo de la bala
-        self.rect = pygame.Rect(self.x, self.y, self.radio * 2, self.radio * 2)
 
         # Velocidad en X e Y usando trigonometría
         self.vel_x = math.cos(self.angulo) * self.velocidad
@@ -51,14 +51,14 @@ class Bala:
         # Mover la bala si no ha colisionado
         self.x += self.vel_x
         self.y += self.vel_y
-        self.rect.topleft = (self.x, self.y)
+        self.rect_element.topleft = (self.x, self.y)
 
         # Verificar colisión con elementos
         for elemento in mundo.elementos:
-            if self.rect.colliderect(elemento.rect_element) and elemento.colisiona:
+            if self.check_collision(elemento):
                 self.colisionando = True
                 self.tiempo_colision = time.time()  # Guardar tiempo de colisión
-                self.rect = self.sprites_colision[0].get_rect(center=self.rect.center)  # Ajustar el sprite
+                self.rect_element = self.sprites_colision[0].get_rect(center=self.rect_element.center)  # Ajustar el sprite
                 return False  # No eliminar aún
 
         # Verificar si la bala sale de la pantalla
@@ -71,7 +71,6 @@ class Bala:
     def draw(self, pantalla, mundo):
         if self.colisionando:
             pantalla.blit(self.sprites_colision[self.frame_actual],
-                          (self.rect.x - mundo.camara_x, self.rect.y - mundo.camara_y))  # Dibujar animación
+                          (self.rect_element.x - mundo.camara_x, self.rect_element.y - mundo.camara_y))  # Dibujar animación
         else:
-            pygame.draw.circle(pantalla, (30, 30, 30),
-                               (self.rect.centerx - mundo.camara_x, self.rect.centery - mundo.camara_y), self.radio)  # Dibujar bala normal
+            self.dibujar(pantalla, mundo)

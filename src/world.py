@@ -21,16 +21,15 @@ class World:
         self.num_filas = len(maps.mapa_tiles)
         self.num_columnas = len(maps.mapa_tiles[0])
 
-        # Calcular tamaño de cada tile dinámicamente
+        self.ancho_pantalla, self.alto_pantalla = pantalla.get_size()
         self.tamaño_tile = math.gcd(self.ancho_pantalla, self.alto_pantalla)
 
         # Cargar imágenes de los sprites
-        self.muro_imagen = pygame.image.load("../res/elementos/wall1.png")
-        self.muro_imagen = pygame.transform.scale(self.muro_imagen, (self.tamaño_tile, self.tamaño_tile))
-        self.arbol_imagen = pygame.image.load("../res/elementos/arbol1.png")
-        self.arbol_imagen = pygame.transform.scale(self.arbol_imagen, (self.tamaño_tile, self.tamaño_tile))
-        self.arbusto_imagen = pygame.image.load("../res/elementos/arbusto1.png")
-        self.arbusto_imagen = pygame.transform.scale(self.arbusto_imagen, (self.tamaño_tile, self.tamaño_tile))
+        self.sprites = {
+            "wall1": pygame.image.load("../res/elementos/wall1.png"),
+            "arbol1": pygame.image.load("../res/elementos/arbol1.png"),
+            "arbusto1": pygame.image.load("../res/elementos/arbusto1.png"),
+        }
 
         # Crear la cámara
         self.camara_x, self.camara_y = self.ancho_pantalla, self.alto_pantalla
@@ -49,11 +48,11 @@ class World:
         for y, fila in enumerate(maps.mapa_tiles):
             for x, valor in enumerate(fila):
                 if valor == "1":  # Muro
-                    self.elementos.append(Muro(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, self.tamaño_tile,  self.muro_imagen))
+                    self.elementos.append(Muro(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile,  self.sprites["wall1"]))
                 elif valor == "2":  # Arbol
-                    self.elementos.append(Arbol(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, self.tamaño_tile, self.arbol_imagen))
+                    self.elementos.append(Arbol(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile,  self.sprites["arbol1"]))
                 elif valor == "3":  # Arbusto
-                    self.elementos.append(Arbusto(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, self.tamaño_tile, self.arbusto_imagen))
+                    self.elementos.append(Arbusto(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile,  self.sprites["arbusto1"]))
 
     def cambiar_pantalla(self, direccion):
 
@@ -105,6 +104,6 @@ class World:
                 and self.camara_y - 80 <= elemento.rect_element.y < self.camara_y + self.alto_pantalla + 80
             ):
                 # Dibujar con ajuste de la cámara
-                elemento.dibujar(pantalla, self.camara_x, self.camara_y)
+                elemento.dibujar(pantalla, self)
 
         self.actualizar_transicion()

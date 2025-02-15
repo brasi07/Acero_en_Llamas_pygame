@@ -2,9 +2,10 @@
 FPS = 60
 
 TILE_SIZE = 80
-RESIZE_PLAYER = 3
+RESIZE_PLAYER = 0.7
 
 
 class Color:
     NEGRO = (0, 0, 0)
     BLANCO = (255, 255, 255)
+    GRIS_OSCURO = (30, 30, 30)
