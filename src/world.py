@@ -95,8 +95,8 @@ class World:
 
         for elemento in self.elementos:
             if (
-                self.camara_x - 80 <= elemento.rect.x < self.camara_x + self.ancho_pantalla + 80
-                and self.camara_y - 80 <= elemento.rect.y < self.camara_y + self.alto_pantalla + 80
+                self.camara_x - 80 <= elemento.rect_element.x < self.camara_x + self.ancho_pantalla + 80
+                and self.camara_y - 80 <= elemento.rect_element.y < self.camara_y + self.alto_pantalla + 80
             ):
                 # Dibujar con ajuste de la cámara
                 elemento.dibujar(pantalla, self.camara_x, self.camara_y)

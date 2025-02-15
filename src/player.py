@@ -17,16 +17,21 @@ class Player:
             "abajo_izquierda": self.cargar_y_escalar_imagen("../res/tanque_player/tanque_abajo_izquierda.png", settings.RESIZE_PLAYER),
             "abajo_derecha": self.cargar_y_escalar_imagen("../res/tanque_player/tanque_abajo_derecha.png", settings.RESIZE_PLAYER),
         }
-        self.pantalla = pantalla
-        self.ancho_pantalla, self.alto_pantalla = pantalla.get_size()
-        self.image = self.sprites["abajo"]
-        self.rect = self.image.get_rect(center=(self.ancho_pantalla // 2 + self.ancho_pantalla, self.alto_pantalla // 2 + self.alto_pantalla))
-        self.hitbox = pygame.Rect(self.ancho_pantalla // 2 + self.ancho_pantalla, self.alto_pantalla // 2 + self.alto_pantalla, self.rect.width * 0.8, self.rect.height * 0.8)
-
         self.velocidad = 3
         self.direccion = "abajo"  # Dirección inicial del tanque
         self.balas = []  # Lista para almacenar las balas disparadas
         self.tiempo_ultimo_disparo = pygame.time.get_ticks()  # Tiempo del último disparo
+        self.angulo_cannon = 0
+
+        self.pantalla = pantalla
+        self.ancho_pantalla, self.alto_pantalla = pantalla.get_size()
+        self.imagen_base_tanque = self.sprites["abajo"]
+        self.imagen_canon = pygame.transform.rotate(self.sprite_cannon, -self.angulo_cannon)
+
+        self.rect_base = self.imagen_base_tanque.get_rect(center=(self.ancho_pantalla // 2 + self.ancho_pantalla, self.alto_pantalla // 2 + self.alto_pantalla))
+        self.rect_canon = self.imagen_canon.get_rect(center=self.rect_base.center)
+        self.hitbox = pygame.Rect(self.ancho_pantalla // 2 + self.ancho_pantalla, self.alto_pantalla // 2 + self.alto_pantalla, self.rect_base.width * 0.8, self.rect_base.height * 0.8)
+
 
     def cargar_y_escalar_imagen(self, ruta, escala):
         imagen = pygame.image.load(ruta)
@@ -61,13 +66,13 @@ class Player:
 
         # 1. Mover en X y verificar colisión
         nuevo_hitbox.x += movimiento_x
-        if any(nuevo_hitbox.colliderect(elemento.rect) for elemento in mundo.elementos):
+        if any(nuevo_hitbox.colliderect(elemento.rect_element) for elemento in mundo.elementos):
             nuevo_hitbox.x -= movimiento_x  # Si hay colisión, deshacer movimiento en X
             colision_x = True
 
         # 2. Mover en Y y verificar colisión
         nuevo_hitbox.y += movimiento_y
-        if any(nuevo_hitbox.colliderect(elemento.rect) for elemento in mundo.elementos):
+        if any(nuevo_hitbox.colliderect(elemento.rect_element) for elemento in mundo.elementos):
             nuevo_hitbox.y -= movimiento_y  # Si hay colisión, deshacer movimiento en Y
             colision_y = True
 
@@ -101,10 +106,10 @@ class Player:
 
         # Aplicar el movimiento final
         self.hitbox = nuevo_hitbox
-        self.rect.center = self.hitbox.center  # Asegurar que el sprite coincida con la hitbox
+        self.rect_base.center = self.hitbox.center  # Asegurar que el sprite coincida con la hitbox
 
         if direccion:
-            self.image = self.sprites[direccion]
+            self.imagen_base_tanque = self.sprites[direccion]
             self.direccion = direccion  # Actualizar la dirección del tanque
 
         # Disparo del tanque
@@ -116,40 +121,40 @@ class Player:
 
         # Actualizar las balas
         for bala in self.balas[:]:
-            if bala.update(mundo.elementos):
+            if bala.update(mundo, self.ancho_pantalla, self.alto_pantalla):
                 self.balas.remove(bala)
 
     def update_cannon_position(self, mundo):
-        # Obtener la posición del ratón
+        # Obtener la posición del ratón en relación con la cámara
         cursorx, cursory = pygame.mouse.get_pos()
+        diff_x = cursorx - (self.rect_base.centerx - mundo.camara_x)
+        diff_y = cursory - (self.rect_base.centery - mundo.camara_y)
 
-        # Calcular el ángulo hacia el cursor
-        diff_x = cursorx - (self.rect.centerx - mundo.camara_x)
-        diff_y = cursory - (self.rect.centery - mundo.camara_y)
-        angle = numpy.degrees(numpy.arctan2(diff_y, diff_x)) + 270  # Calcular ángulo en grados
+        # Calcular el ángulo del cañón
+        self.angulo_cannon = numpy.degrees(numpy.arctan2(diff_y, diff_x))  # Guardar el ángulo para disparos
 
         # Rotar la imagen del cañón
-        self.top_image = pygame.transform.rotate(self.sprite_cannon, -angle)  # Se invierte el ángulo para que apunte correctamente
+        self.imagen_canon = pygame.transform.rotate(self.sprite_cannon, -self.angulo_cannon + 90)
 
         # Mantener el cañón centrado en el tanque
-        self.rec = self.top_image.get_rect(center=self.rect.center)
+        self.rect_canon = self.imagen_canon.get_rect(center=self.rect_base.center)
 
     def disparar(self):
-        # Crear una nueva bala en la posición del tanque según la dirección
-        nueva_bala = Bala(self.rect.centerx - 5, self.rect.centery - 5, self.direccion)
+        # Crear una nueva bala en la posición del cañón con el ángulo del cañón
+        nueva_bala = Bala(self.rect_canon.centerx, self.rect_canon.centery, self.angulo_cannon)
         self.balas.append(nueva_bala)
 
     def draw(self, pantalla, mundo):
         # Dibujar las balas
         for bala in self.balas:
-            bala.draw(pantalla)
+            bala.draw(pantalla, mundo)
 
         # Dibujar tanque
-        pantalla.blit(self.image, (self.rect.x - mundo.camara_x, self.rect.y - mundo.camara_y))
+        pantalla.blit(self.imagen_base_tanque, (self.rect_base.x - mundo.camara_x, self.rect_base.y - mundo.camara_y))
 
         self.update_cannon_position(mundo)
 
-        pantalla.blit(self.top_image, (self.rect.centerx - self.rec.width // 2 - mundo.camara_x, self.rect.centery - self.rec.height // 2 - mundo.camara_y))
+        pantalla.blit(self.imagen_canon, (self.rect_base.centerx - self.rect_canon.width // 2 - mundo.camara_x, self.rect_base.centery - self.rect_canon.height // 2 - mundo.camara_y))
 
         #Mostrar la Hitbox
         #pygame.draw.rect(pantalla, (255, 0, 0), (self.hitbox.x - mundo.camara_x, self.hitbox.y - mundo.camara_y, self.hitbox.width, self.hitbox.height), 2)
