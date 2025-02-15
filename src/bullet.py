@@ -55,7 +55,7 @@ class Bala:
 
         # Verificar colisión con elementos
         for elemento in mundo.elementos:
-            if self.rect.colliderect(elemento.rect_element):
+            if self.rect.colliderect(elemento.rect_element) and elemento.colisiona:
                 self.colisionando = True
                 self.tiempo_colision = time.time()  # Guardar tiempo de colisión
                 self.rect = self.sprites_colision[0].get_rect(center=self.rect.center)  # Ajustar el sprite

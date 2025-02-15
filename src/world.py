@@ -1,7 +1,7 @@
 import pygame
 import maps
 from settings import Color
-from elements import Muro, Palmera
+from elements import Muro, Arbol, Arbusto
 import settings
 import math
 
@@ -25,8 +25,12 @@ class World:
         self.tamaño_tile = math.gcd(self.ancho_pantalla, self.alto_pantalla)
 
         # Cargar imágenes de los sprites
-        self.muro_imagen = pygame.image.load("../res/muros/wall1.png")
+        self.muro_imagen = pygame.image.load("../res/elementos/wall1.png")
         self.muro_imagen = pygame.transform.scale(self.muro_imagen, (self.tamaño_tile, self.tamaño_tile))
+        self.arbol_imagen = pygame.image.load("../res/elementos/arbol1.png")
+        self.arbol_imagen = pygame.transform.scale(self.arbol_imagen, (self.tamaño_tile, self.tamaño_tile))
+        self.arbusto_imagen = pygame.image.load("../res/elementos/arbusto1.png")
+        self.arbusto_imagen = pygame.transform.scale(self.arbusto_imagen, (self.tamaño_tile, self.tamaño_tile))
 
         # Crear la cámara
         self.camara_x, self.camara_y = self.ancho_pantalla, self.alto_pantalla
@@ -45,9 +49,11 @@ class World:
         for y, fila in enumerate(maps.mapa_tiles):
             for x, valor in enumerate(fila):
                 if valor == "1":  # Muro
-                    self.elementos.append(Muro(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, self.tamaño_tile, (255, 255, 255), self.muro_imagen))
-                elif valor == "2":  # Palmera
-                    self.elementos.append(Palmera(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, self.tamaño_tile, (0, 255, 0)))
+                    self.elementos.append(Muro(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, self.tamaño_tile,  self.muro_imagen))
+                elif valor == "2":  # Arbol
+                    self.elementos.append(Arbol(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, self.tamaño_tile, self.arbol_imagen))
+                elif valor == "3":  # Arbusto
+                    self.elementos.append(Arbusto(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, self.tamaño_tile, self.arbusto_imagen))
 
     def cambiar_pantalla(self, direccion):
 

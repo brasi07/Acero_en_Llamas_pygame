@@ -66,13 +66,13 @@ class Player:
 
         # 1. Mover en X y verificar colisión
         nuevo_hitbox.x += movimiento_x
-        if any(nuevo_hitbox.colliderect(elemento.rect_element) for elemento in mundo.elementos):
+        if any(nuevo_hitbox.colliderect(elemento.rect_element) and elemento.colisiona for elemento in mundo.elementos):
             nuevo_hitbox.x -= movimiento_x  # Si hay colisión, deshacer movimiento en X
             colision_x = True
 
         # 2. Mover en Y y verificar colisión
         nuevo_hitbox.y += movimiento_y
-        if any(nuevo_hitbox.colliderect(elemento.rect_element) for elemento in mundo.elementos):
+        if any(nuevo_hitbox.colliderect(elemento.rect_element) and elemento.colisiona for elemento in mundo.elementos):
             nuevo_hitbox.y -= movimiento_y  # Si hay colisión, deshacer movimiento en Y
             colision_y = True
 

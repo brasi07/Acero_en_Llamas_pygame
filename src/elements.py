@@ -1,10 +1,12 @@
 import pygame
+import settings
 
 class Elemento:
-    def __init__(self, x, y, ancho, alto, color=None, imagen=None):
+    def __init__(self, x, y, ancho, alto, colisiona, color=None, imagen=None):
         self.rect_element = pygame.Rect(x, y, ancho, alto)  # Crear un rectángulo
         self.color = color  # Color del elemento
         self.imagen = imagen  # Imagen (puede ser None si no se usa imagen)
+        self.colisiona = colisiona
 
     def dibujar(self, pantalla, camera_x, camera_y):
         if self.imagen:  # Si tiene imagen, dibujamos la imagen
@@ -14,12 +16,16 @@ class Elemento:
 
 
 class Muro(Elemento):
-    def __init__(self, x, y, ancho, alto, color, imagen):
-        super().__init__(x, y, ancho, alto, color, imagen)  # Llama al constructor de la clase padre
+    def __init__(self, x, y, ancho, alto, imagen):
+        super().__init__(x, y, ancho, alto, True, settings.Color.BLANCO,imagen)
 
 
-class Palmera(Elemento):
-    def __init__(self, x, y, ancho, alto, color, imagen=None):
-        super().__init__(x, y, ancho, alto, color, imagen)  # Llama al constructor de la clase padre
+class Arbol(Elemento):
+    def __init__(self, x, y, ancho, alto, imagen):
+        super().__init__(x, y, ancho, alto, True, settings.Color.BLANCO, imagen)
+
+class Arbusto(Elemento):
+    def __init__(self, x, y, ancho, alto, imagen):
+        super().__init__(x, y, ancho, alto, False, settings.Color.BLANCO, imagen)
 
 
