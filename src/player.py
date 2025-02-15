@@ -141,10 +141,11 @@ class Player:
 
     def disparar(self):
         # Crear una nueva bala en la posición del cañón con el ángulo del cañón
-        nueva_bala = Bala(self.rect_canon.centerx, self.rect_canon.centery, self.angulo_cannon)
+        nueva_bala = Bala(self.rect_canon.centerx - 5, self.rect_canon.centery - 5, self.angulo_cannon)
         self.balas.append(nueva_bala)
 
     def draw(self, pantalla, mundo):
+
         # Dibujar las balas
         for bala in self.balas:
             bala.draw(pantalla, mundo)
