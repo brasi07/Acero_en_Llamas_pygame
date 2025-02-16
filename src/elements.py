@@ -25,7 +25,7 @@ class Elemento:
             pygame.draw.rect(pantalla, (255, 0, 0), self.rect_element)
 
     def check_collision(self, other_element):
-        if not other_element.colisiona: return False
+        if not other_element.colisiona or self is other_element: return False
 
         # Comprobar si el rectángulo de colisión se solapa
         if self.rect_element.colliderect(other_element.rect_element):

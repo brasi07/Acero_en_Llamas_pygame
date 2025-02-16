@@ -10,10 +10,8 @@ import math
 import numpy
 
 class Player(Elemento):
-    def __init__(self, pantalla):
-        self.pantalla = pantalla
-        self.ancho_pantalla, self.alto_pantalla = pantalla.get_size()
-        self.tamaño_tile = math.gcd(self.ancho_pantalla, self.alto_pantalla)
+    def __init__(self, x, y, tamaño_tile):
+        self.tamaño_tile = tamaño_tile
 
         # Cargar imágenes y escalarlas
         self.sprites = {
@@ -29,7 +27,7 @@ class Player(Elemento):
         }
 
         # Llamamos al constructor de la clase base (Elemento)
-        super().__init__(self.ancho_pantalla // 2 + self.ancho_pantalla, self.alto_pantalla // 2 + self.alto_pantalla, True, self.sprites["abajo"])
+        super().__init__(x, y,True, self.sprites["abajo"])
 
         # Inicializamos los atributos específicos del jugador
         self.sprite_cannon = self.sprites["canhon"]
@@ -46,7 +44,7 @@ class Player(Elemento):
         imagen = pygame.image.load(ruta)
         return pygame.transform.scale(imagen, (self.tamaño_tile * settings.RESIZE_PLAYER, self.tamaño_tile * settings.RESIZE_PLAYER))
 
-    def update(self, pantalla, mundo):
+    def update(self, mundo):
         teclas = pygame.key.get_pressed()
         direccion = None
 
@@ -127,7 +125,7 @@ class Player(Elemento):
 
         # Actualizar las balas
         for bala in self.balas[:]:
-            if bala.update(mundo, self.ancho_pantalla, self.alto_pantalla):
+            if bala.update(mundo, mundo.ancho_pantalla, mundo.alto_pantalla):
                 self.balas.remove(bala)
 
     def update_cannon_position(self, mundo):
@@ -149,21 +147,21 @@ class Player(Elemento):
         # Crear una nueva bala en la posición del cañón con el ángulo del cañón
         imagen = pygame.image.load("../res/tanque_player/bala.png")
         imagen = pygame.transform.scale(imagen,(self.tamaño_tile * 0.15, self.tamaño_tile * 0.15))
-        nueva_bala = Bala(self.rect_canon.centerx - 5, self.rect_canon.centery - 5, self.angulo_cannon, imagen)
+        nueva_bala = Bala(self.rect_canon.centerx - 5, self.rect_canon.centery - 5, self.angulo_cannon, imagen, "player")
         self.balas.append(nueva_bala)
 
 
-    def draw(self, pantalla, mundo):
+    def draw(self, mundo):
 
         # Dibujar las balas
         for bala in self.balas:
-            bala.draw(pantalla, mundo)
+            bala.draw(mundo.pantalla, mundo)
 
         # Dibujar tanque
-        self.dibujar(pantalla, mundo)
+        self.dibujar(mundo.pantalla, mundo)
         self.update_cannon_position(mundo)
 
-        pantalla.blit(self.imagen_canon, (self.rect_element.centerx - self.rect_canon.width // 2 - mundo.camara_x, self.rect_element.centery - self.rect_canon.height // 2 - mundo.camara_y))
+        mundo.pantalla.blit(self.imagen_canon, (self.rect_element.centerx - self.rect_canon.width // 2 - mundo.camara_x, self.rect_element.centery - self.rect_canon.height // 2 - mundo.camara_y))
 
         #Mostrar la Hitbox
         #pygame.draw.rect(pantalla, (255, 0, 0), (self.hitbox.x - mundo.camara_x, self.hitbox.y - mundo.camara_y, self.hitbox.width, self.hitbox.height), 2)

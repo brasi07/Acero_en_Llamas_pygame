@@ -1,3 +1,4 @@
+import math
 import pygame
 import settings
 from world import World
@@ -10,8 +11,9 @@ class Game:
         self.pantalla = pygame.display.set_mode((1280, 720), pygame.FULLSCREEN | pygame.SCALED | pygame.DOUBLEBUF)
         self.clock = pygame.time.Clock()
         self.ejecutando = True
-        self.jugador = Player(self.pantalla)
+
         self.mundo = World("mundo_1", self.pantalla)
+        self.jugador = self.mundo.player
 
     def run(self):
         self.set_cursor()
@@ -40,12 +42,12 @@ class Game:
 
 
     def update(self):
-        self.jugador.update(self.pantalla, self.mundo)
+        self.jugador.update(self.mundo)
         #self.mundo.update()
 
     def draw(self):
         self.pantalla.fill((0, 0, 0))
         self.mundo.draw(self.pantalla)
-        self.jugador.draw(self.pantalla, self.mundo)
+        self.jugador.draw(self.mundo)
         pygame.display.flip()
 

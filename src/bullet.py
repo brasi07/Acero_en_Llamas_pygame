@@ -5,11 +5,13 @@ import settings
 from elements import Elemento
 
 
+
 class Bala(Elemento):
-    def __init__(self, x, y, angulo, imagen):
+    def __init__(self, x, y, angulo, imagen, origen):
         super().__init__(x, y, True, imagen)
         self.angulo = math.radians(angulo)  # Convertir grados a radianes
         self.velocidad = 7  # Velocidad de la bala
+        self.origen = origen  # "player" o "enemigo"
 
         # Estado de la bala
         self.colisionando = False
@@ -37,6 +39,20 @@ class Bala(Elemento):
         # Velocidad en X e Y usando trigonometría
         self.vel_x = math.cos(self.angulo) * self.velocidad
         self.vel_y = math.sin(self.angulo) * self.velocidad
+
+    def check_collision(self, other_element):
+        # Evitar colisiones con el mismo tipo de entidad
+        if self.origen == "player" and type(other_element).__name__ == "Player":
+            return False
+
+        if self.origen == "enemigo" and type(other_element).__name__ == "Enemigo":
+            return False
+
+        if not other_element.colisiona:
+            return False
+
+        # Comprobar si los rectángulos colisionan
+        return self.rect_element.colliderect(other_element.rect_element)
 
     def update(self, mundo, ancho_pantalla, alto_pantalla):
         if self.colisionando:

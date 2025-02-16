@@ -1,5 +1,6 @@
 import pygame
 import maps
+from player import Player
 from settings import Color
 from elements import Muro, Arbol, Arbusto, Vacio, Boton, Trampa
 from enemy import Enemy
@@ -9,10 +10,13 @@ import math
 import pygame
 
 class World:
-    def __init__(self, nombre, pantalla):
+    def __init__(self, nombre, pantalla, player=None):
         self.nombre = nombre
         self.pantalla = pantalla
+        self.player = player
+
         self.ancho_pantalla, self.alto_pantalla = pantalla.get_size()
+        self.tamaño_tile = math.gcd(self.ancho_pantalla, self.alto_pantalla)
 
         # Cargar el mapa y redimensionarlo
         self.mapa_original = pygame.image.load(f"../res/mapas/{nombre}.png")
@@ -23,7 +27,6 @@ class World:
         self.num_columnas = len(maps.mapa1_tiles[0])
 
         self.ancho_pantalla, self.alto_pantalla = pantalla.get_size()
-        self.tamaño_tile = math.gcd(self.ancho_pantalla, self.alto_pantalla)
 
         # Cargar imágenes de los sprites
         self.sprites = {
@@ -32,7 +35,7 @@ class World:
             "wall16": pygame.image.load("../res/elementos/wall16.png"),
             "wall21": pygame.image.load("../res/elementos/wall21.png"),
             "boton": pygame.image.load("../res/elementos/boton.png"),
-            "cracks11": pygame.image.load("../res/elementos/cracks11.png"),
+            "cracks10": pygame.image.load("../res/elementos/cracks10.png"),
             "arbol1": pygame.image.load("../res/elementos/arbol1.png"),
             "arbusto1": pygame.image.load("../res/elementos/arbusto1.png"),
         }
@@ -53,7 +56,10 @@ class World:
         """Crea los elementos del mapa ajustándolos al tamaño de la pantalla."""
         for y, fila in enumerate(maps.mapa1_tiles):
             for x, valor in enumerate(fila):
-                if valor == 29:  # Muro
+                if valor == 23:  # Player
+                    if self.player is None:    self.player = Player(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile)
+                    self.elementos.append(self.player)
+                elif valor == 29:  # Muro
                     self.elementos.append(Muro(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile,  self.sprites["wall1"]))
                 elif valor == 35:  # Muro
                     self.elementos.append(Muro(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile,  self.sprites["wall7"]))
@@ -65,8 +71,8 @@ class World:
                     self.elementos.append(Enemy(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile))
                 elif valor == 80:  # Enemigo
                     self.elementos.append(Boton(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile,  self.sprites["boton"]))
-                elif valor == 60:  # Enemigo
-                    self.elementos.append(Trampa(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile,  self.sprites["cracks11"]))
+                elif valor == 59:  # Enemigo
+                    self.elementos.append(Trampa(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile,  self.sprites["cracks10"]))
                 elif valor == "2":  # Arbol
                     self.elementos.append(Arbol(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile,  self.sprites["arbol1"]))
                 elif valor == "3":  # Arbusto
