@@ -1,7 +1,7 @@
 import math
 import pygame
 from player import Player
-from elements import Muro, Arbol, Decoracion, Vacio, Boton, Trampa
+from elements import Muro, Decoracion, Vacio, Boton, Trampa, MuroBajo
 from enemy import Enemy
 import settings
 import csv
@@ -108,7 +108,9 @@ class World:
                     lista_elementos.append(self.player)
                 elif valor == 836:
                     lista_elementos.append(Trampa(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, sprites[valor]))
-                elif valor in (514, 515, 516, 517, 578, 579, 580, 581, 876, 878):
+                elif valor == 1168:
+                    lista_elementos.append(MuroBajo(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, sprites[valor]))
+                elif valor in (514, 515, 516, 517, 578, 579, 580, 581, 876, 878, 768):
                     lista_elementos.append(Decoracion(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, sprites[valor]))
                 elif valor != -1 and valor in sprites:
                     lista_elementos.append(Muro(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, sprites[valor]))

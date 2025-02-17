@@ -2,7 +2,6 @@ import math
 import pygame
 import settings
 
-
 class Elemento:
     def __init__(self, x, y, colisiona, imagen=None):
         self.x = x
@@ -52,6 +51,15 @@ class Muro(Elemento):
     def check_collision(self, other_element):
         return self.rect_element.colliderect(other_element.rect_element)
 
+
+class MuroBajo(Elemento):
+    def __init__(self, x, y, tamaño_tile, imagen):
+        imagen = pygame.transform.scale(imagen, (tamaño_tile, tamaño_tile))  # Escalamos la imagen
+        super().__init__(x, y, True, imagen)
+
+    def check_collision(self, other_element):
+        pass
+
 class Vacio(Elemento):
     def __init__(self, x, y, tamaño_tile, imagen):
         imagen = pygame.transform.scale(imagen, (tamaño_tile, tamaño_tile))  # Escalamos la imagen
@@ -61,12 +69,6 @@ class Trampa(Elemento):
     def __init__(self, x, y, tamaño_tile, imagen):
         imagen = pygame.transform.scale(imagen, (tamaño_tile, tamaño_tile))  # Escalamos la imagen
         super().__init__(x, y, False, imagen)
-
-class Arbol(Elemento):
-    def __init__(self, x, y, tamaño_tile, imagen):
-        imagen = pygame.transform.scale(imagen, (tamaño_tile, tamaño_tile))  # Escalamos la imagen
-        super().__init__(x, y, True, imagen)
-
 
 class Decoracion(Elemento):
     def __init__(self, x, y, tamaño_tile, imagen):

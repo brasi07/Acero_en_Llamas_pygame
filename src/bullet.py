@@ -2,8 +2,7 @@ import pygame
 import math
 import time
 import settings
-from elements import Elemento
-
+from elements import Elemento, MuroBajo
 
 
 class Bala(Elemento):
@@ -48,7 +47,7 @@ class Bala(Elemento):
         if self.origen == "enemigo" and type(other_element).__name__ == "Enemigo":
             return False
 
-        if not other_element.colisiona:
+        if not other_element.colisiona or other_element is MuroBajo:
             return False
 
         # Comprobar si los rectángulos colisionan
@@ -62,6 +61,11 @@ class Bala(Elemento):
             if self.frame_actual >= len(self.sprites_colision):  # Si la animación terminó
                 return True  # Eliminar la bala
             return False  # Mantener la animación
+
+        if not hasattr(self, "inicializado"):  # Verifica si la variable no existe
+            self.x += self.vel_x * 3
+            self.y += self.vel_y * 3
+            self.inicializado = True  # Marca que ya se hizo el desplazamiento inicial
 
         # Mover la bala si no ha colisionado
         self.x += self.vel_x
