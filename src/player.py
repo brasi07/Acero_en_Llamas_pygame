@@ -191,8 +191,6 @@ class Player(Elemento):
         self.dibujar(mundo.pantalla, mundo)
         self.update_cannon_position(mundo)
 
-        if(self.secundaria_activa):
-            self.arma_secundaria.dibujar()
 
         mundo.pantalla.blit(self.imagen_canon, (self.rect_element.centerx - self.rect_canon.width // 2 - mundo.camara_x, self.rect_element.centery - self.rect_canon.height // 2 - mundo.camara_y))
 
