@@ -100,6 +100,7 @@ class World:
         """Crea los elementos del mapa ajustándolos al tamaño de la pantalla."""
         for y, fila in enumerate(mapa_tiles):
             for x, valor in enumerate(fila):
+
                 valor = int(valor)  # Asegurarse de que el valor es un número
                 if valor == 0 and lista_elementos == self.elementos_por_capa[max(self.capas.keys())]:
                     # El jugador solo aparece en la capa superior
@@ -114,6 +115,9 @@ class World:
                     lista_elementos.append(Decoracion(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, sprites[valor]))
                 elif valor != -1 and valor in sprites:
                     lista_elementos.append(Muro(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, sprites[valor]))
+
+
+
 
     def cambiar_pantalla(self, direccion):
 
