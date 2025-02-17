@@ -1,87 +1,122 @@
+import math
 import pygame
-import maps
 from player import Player
-from settings import Color
-from elements import Muro, Arbol, Arbusto, Vacio, Boton, Trampa
+from elements import Muro, Arbol, Decoracion, Vacio, Boton, Trampa
 from enemy import Enemy
 import settings
-import math
-
-import pygame
+import csv
+import os
+import re  # Para extraer números del nombre del archivo
 
 class World:
-    def __init__(self, nombre, pantalla, player=None):
+    def __init__(self, nombre, pantalla, mundo="1", player=None):
         self.nombre = nombre
         self.pantalla = pantalla
         self.player = player
+        self.mundo = mundo  # Número del mundo actual
 
         self.ancho_pantalla, self.alto_pantalla = pantalla.get_size()
-        self.tamaño_tile = math.gcd(self.ancho_pantalla, self.alto_pantalla)
+        self.tamaño_tile = math.gcd(self.ancho_pantalla, self.alto_pantalla) / 2
 
-        # Cargar el mapa y redimensionarlo
-        self.mapa_original = pygame.image.load(f"../res/mapas/{nombre}.png")
-        self.mapa = pygame.transform.scale(self.mapa_original, (self.ancho_pantalla, self.alto_pantalla))
+        # Buscar archivos de mapa según el nuevo formato "Mapa_{mundo}_{capa}.csv"
+        archivos_mapa = self.buscar_archivos_mapa(f"../res/mapas/Mapa_{self.mundo}_")
+
+        # Diccionario para almacenar las capas
+        self.capas = {}
+
+        # Cargar los mapas desde los archivos CSV
+        for archivo in archivos_mapa:
+            capa_numero = self.extraer_numero_capa(archivo)  # Obtener número de capa desde el nombre
+            self.capas[capa_numero] = self.cargar_mapa_desde_csv(archivo)
 
         # Obtener dimensiones del mapa en tiles
-        self.num_filas = len(maps.mapa1_tiles)
-        self.num_columnas = len(maps.mapa1_tiles[0])
+        self.num_filas = len(self.capas[1]) if 1 in self.capas else 0
+        self.num_columnas = len(self.capas[1][0]) if self.num_filas > 0 else 0
 
-        self.ancho_pantalla, self.alto_pantalla = pantalla.get_size()
+        # Diccionario de sprites para cada capa
+        self.sprites_por_capa = {}
 
-        # Cargar imágenes de los sprites
-        self.sprites = {
-            "wall1": pygame.image.load("../res/elementos/wall1.png"),
-            "wall7": pygame.image.load("../res/elementos/wall7.png"),
-            "wall16": pygame.image.load("../res/elementos/wall16.png"),
-            "wall21": pygame.image.load("../res/elementos/wall21.png"),
-            "boton": pygame.image.load("../res/elementos/boton.png"),
-            "cracks10": pygame.image.load("../res/elementos/cracks10.png"),
-            "arbol1": pygame.image.load("../res/elementos/arbol1.png"),
-            "arbusto1": pygame.image.load("../res/elementos/arbusto1.png"),
-        }
+        # Cargar dinámicamente los sprites según la capa
+        for capa in self.capas.keys():
+            carpeta_elementos = f"../res/elementos/elementos_{self.mundo}_{capa}"
+            self.sprites_por_capa[capa] = self.cargar_sprites(carpeta_elementos)
 
         # Crear la cámara
         self.camara_x, self.camara_y = self.ancho_pantalla, self.alto_pantalla
 
-        # Lista de elementos
-        self.elementos = []
-        self.generar_elementos()
+        # Diccionario de elementos_1_2 para cada capa
+        self.elementos_por_capa = {capa: [] for capa in self.capas.keys()}
 
         # Variables de transición
         self.en_transicion = False
         self.tiempo_inicio = 0
         self.destino_camara_x, self.destino_camara_y = self.ancho_pantalla, self.alto_pantalla
 
-    def generar_elementos(self):
+        # Generar los elementos_1_2 de cada capa
+        for capa, tiles in self.capas.items():
+            self.generar_elementos(tiles, self.elementos_por_capa[capa], self.sprites_por_capa[capa])
+
+    def buscar_archivos_mapa(self, prefijo):
+        """Busca archivos que coincidan con el patrón 'Mapa_{mundo}_{capa}.csv'."""
+        carpeta = "../res/mapas"
+        archivos = []
+        if os.path.exists(carpeta):
+            for archivo in os.listdir(carpeta):
+                if archivo.startswith(f"Mapa_{self.mundo}_") and archivo.endswith(".csv"):
+                    archivos.append(os.path.join(carpeta, archivo))
+        return archivos
+
+    def extraer_numero_capa(self, archivo):
+        """Extrae el número de capa desde el nombre del archivo 'Mapa_X_Y.csv'."""
+        match = re.search(r'Mapa_\d+_(\d+)\.csv', archivo)
+        return int(match.group(1)) if match else 1  # Si no encuentra número, asume capa 1
+
+    def cargar_mapa_desde_csv(self, archivo):
+        """Carga el mapa desde un archivo CSV y lo convierte en una lista de listas."""
+        mapa = []
+        try:
+            with open(archivo, newline='') as csvfile:
+                lector = csv.reader(csvfile)
+                for fila in lector:
+                    mapa.append([int(valor) for valor in fila])
+        except FileNotFoundError:
+            print(f"Error: No se encontró el archivo {archivo}")
+        return mapa
+
+    def cargar_sprites(self, carpeta):
+        """Carga todas las imágenes de la carpeta y las asocia por su ID."""
+        sprites = {}
+        if not os.path.exists(carpeta):
+            print(f"Advertencia: La carpeta {carpeta} no existe.")
+            return sprites  # Retorna un diccionario vacío si la carpeta no existe
+
+        for archivo in os.listdir(carpeta):
+            if archivo.endswith(".png"):
+                id_sprite = archivo.split(".")[0]  # Obtiene el nombre sin la extensión
+                sprites[int(id_sprite)] = pygame.image.load(os.path.join(carpeta, archivo))
+        return sprites
+
+    def generar_elementos(self, mapa_tiles, lista_elementos, sprites):
         """Crea los elementos del mapa ajustándolos al tamaño de la pantalla."""
-        for y, fila in enumerate(maps.mapa1_tiles):
+        for y, fila in enumerate(mapa_tiles):
             for x, valor in enumerate(fila):
-                if valor == 23:  # Player
-                    if self.player is None:    self.player = Player(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile)
-                    self.elementos.append(self.player)
-                elif valor == 29:  # Muro
-                    self.elementos.append(Muro(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile,  self.sprites["wall1"]))
-                elif valor == 35:  # Muro
-                    self.elementos.append(Muro(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile,  self.sprites["wall7"]))
-                elif valor == 44:  # Muro
-                    self.elementos.append(Muro(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile,  self.sprites["wall16"]))
-                elif valor == 49:  # Vacio
-                    self.elementos.append(Vacio(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile,  self.sprites["wall21"]))
-                elif valor == 14:  # Enemigo
-                    self.elementos.append(Enemy(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile))
-                elif valor == 80:  # Enemigo
-                    self.elementos.append(Boton(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile,  self.sprites["boton"]))
-                elif valor == 59:  # Enemigo
-                    self.elementos.append(Trampa(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile,  self.sprites["cracks10"]))
-                elif valor == "2":  # Arbol
-                    self.elementos.append(Arbol(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile,  self.sprites["arbol1"]))
-                elif valor == "3":  # Arbusto
-                    self.elementos.append(Arbusto(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile,  self.sprites["arbusto1"]))
+                valor = int(valor)  # Asegurarse de que el valor es un número
+                if valor == 0 and lista_elementos == self.elementos_por_capa[max(self.capas.keys())]:
+                    # El jugador solo aparece en la capa superior
+                    if self.player is None:
+                        self.player = Player(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile)
+                    lista_elementos.append(self.player)
+                elif valor == 836:
+                    lista_elementos.append(Trampa(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, sprites[valor]))
+                elif valor in (514, 515, 516, 517, 578, 579, 580, 581, 876, 878):
+                    lista_elementos.append(Decoracion(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, sprites[valor]))
+                elif valor != -1 and valor in sprites:
+                    lista_elementos.append(Muro(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, sprites[valor]))
 
     def cambiar_pantalla(self, direccion):
 
         if not self.en_transicion:
-        # Si no hay transición en curso, iniciar una
+            # Si no hay transición en curso, iniciar una
             self.tiempo_inicio = pygame.time.get_ticks()  # Guarda el tiempo actual
             if direccion == "derecha" and self.camara_x + self.ancho_pantalla < self.num_columnas * self.ancho_pantalla:
                 self.destino_camara_x = self.camara_x + self.ancho_pantalla
@@ -118,16 +153,13 @@ class World:
                 self.en_transicion = False
 
     def draw(self, pantalla):
-        """Dibuja solo los elementos de la pantalla actual."""
-        pantalla.blit(self.mapa, (0, 0))
-
-
-        for elemento in self.elementos:
-            if (
-                self.camara_x - 80 <= elemento.rect_element.x < self.camara_x + self.ancho_pantalla + 80
-                and self.camara_y - 80 <= elemento.rect_element.y < self.camara_y + self.alto_pantalla + 80
-            ):
-                # Dibujar con ajuste de la cámara
-                elemento.dibujar(pantalla, self)
+        """Dibuja todas las capas en orden, desde la más baja hasta la más alta."""
+        for capa in sorted(self.capas.keys()):  # Dibuja en orden numérico
+            for elemento in self.elementos_por_capa[capa]:
+                if (
+                    self.camara_x - 80 <= elemento.rect_element.x < self.camara_x + self.ancho_pantalla + 80
+                    and self.camara_y - 80 <= elemento.rect_element.y < self.camara_y + self.alto_pantalla + 80
+                ):
+                    elemento.dibujar(pantalla, self)
 
         self.actualizar_transicion()

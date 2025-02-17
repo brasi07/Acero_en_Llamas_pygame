@@ -68,8 +68,8 @@ class Bala(Elemento):
         self.y += self.vel_y
         self.rect_element.topleft = (self.x, self.y)
 
-        # Verificar colisión con elementos
-        for elemento in mundo.elementos:
+        # Verificar colisión con elementos_1_2
+        for elemento in mundo.elementos_por_capa[2]:
             if self.check_collision(elemento):
                 self.colisionando = True
                 self.tiempo_colision = time.time()  # Guardar tiempo de colisión

@@ -1,8 +1,9 @@
 #ANCHO, ALTO = 1280, 720
 FPS = 60
 
-TILE_SIZE = 80
-RESIZE_PLAYER = 0.7
+TILE_SIZE = 32
+RESIZE_PLAYER = 1.7
+
 
 
 class Color:

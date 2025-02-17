@@ -12,7 +12,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.ejecutando = True
 
-        self.mundo = World("mundo_1", self.pantalla)
+        self.mundo = World("1", self.pantalla)
         self.jugador = self.mundo.player
 
     def run(self):
@@ -26,7 +26,7 @@ class Game:
         pygame.quit()
 
     def set_cursor(self):
-        cursor_image = pygame.image.load("../res/tanque_player/mirilla.png")
+        cursor_image = pygame.image.load("../res/tanques/mirilla.png")
         cursor = pygame.cursors.Cursor((cursor_image.get_width() // 2, cursor_image.get_height() // 2), cursor_image)
         pygame.mouse.set_cursor(cursor)
 
