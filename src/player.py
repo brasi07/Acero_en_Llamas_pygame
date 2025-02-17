@@ -65,6 +65,7 @@ class Player(Elemento):
         self.gestionar_disparo()
         self.gestionar_arma_secundaria()
         self.arma_secundaria.update(self)
+        self.verificar_fuera_pantalla(mundo)
 
         for bala in self.balas[:]:
             if bala.update(mundo, mundo.ancho_pantalla, mundo.alto_pantalla):
@@ -102,6 +103,16 @@ class Player(Elemento):
             self.rect_element.x -= dx
             self.rect_element.y -= dy
         return colision
+
+    def verificar_fuera_pantalla(self, mundo):
+        if self.rect_element.right > mundo.camara_x + mundo.ancho_pantalla + 50:
+            mundo.cambiar_pantalla("derecha")
+        elif self.rect_element.left < mundo.camara_x - 50:
+            mundo.cambiar_pantalla("izquierda")
+        elif self.rect_element.bottom > mundo.camara_y + mundo.alto_pantalla + 50:
+            mundo.cambiar_pantalla("abajo")
+        elif self.rect_element.top < mundo.camara_y - 50:
+            mundo.cambiar_pantalla("arriba")
 
     def determinar_direccion(self, dx, dy, colision_x, colision_y):
         direcciones = {
