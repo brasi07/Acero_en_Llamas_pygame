@@ -4,6 +4,7 @@ import settings
 import numpy
 from elements import Elemento
 from bullet import Bala
+import weapon
 
 import pygame
 import math
@@ -30,11 +31,19 @@ class Player(Elemento):
         self.imagen_canon = pygame.transform.rotate(self.sprite_cannon, -0)  # Cañón sin rotar inicialmente
         self.rect_canon = self.imagen_canon.get_rect(center=self.rect_element.center)
 
-        self.velocidad = 3
+        self.velocidad_base = 3 #Velocidad inicial del tanque
+        self.velocidad = self.velocidad_base #Velocidad actual del tanque
         self.direccion = "abajo"  # Dirección inicial del tanque
         self.balas = []  # Lista para almacenar las balas disparadas
         self.tiempo_ultimo_disparo = pygame.time.get_ticks()  # Tiempo del último disparo
         self.angulo_cannon = 0  # Ángulo del cañón
+
+        self.arma_secundaria = weapon.dash() #arma secundaria equipada actualmente (solo dash por ahora)
+        self.cooldown = 400 #cooldown para las armas secundarias
+        self.secundaria_activa= False
+        self.secudaria_duracion_max = 10 #duracion maxima de las armas secundarias
+        self.secudaria_duracion = self.secudaria_duracion_max #duracion actual de las armas secundarias
+        self.ultimo_uso_secundaria = pygame.time.get_ticks() #variable que guarda el tiempo del ultimo uso de la arma secundaria
 
     def escalar_y_cargar(self, ruta, resizex, resizey):
         imagen = pygame.image.load(ruta)
@@ -144,6 +153,11 @@ class Player(Elemento):
             if bala.update(mundo, mundo.ancho_pantalla, mundo.alto_pantalla):
                 self.balas.remove(bala)
 
+        # Utilizar arma secundaria
+        if pygame.mouse.get_pressed()[2] or self.secundaria_activa == True: # 2 es el botón derecho
+                self.usar_arma_secundaria()
+
+
     def update_cannon_position(self, mundo):
         # Obtener la posición del ratón en relación con la cámara
         cursorx, cursory = pygame.mouse.get_pos()
@@ -177,7 +191,23 @@ class Player(Elemento):
         self.dibujar(mundo.pantalla, mundo)
         self.update_cannon_position(mundo)
 
+        if(self.secundaria_activa):
+            self.arma_secundaria.dibujar()
+
         mundo.pantalla.blit(self.imagen_canon, (self.rect_element.centerx - self.rect_canon.width // 2 - mundo.camara_x, self.rect_element.centery - self.rect_canon.height // 2 - mundo.camara_y))
 
         #Mostrar la Hitbox
         #pygame.draw.rect(pantalla, (255, 0, 0), (self.hitbox.x - mundo.camara_x, self.hitbox.y - mundo.camara_y, self.hitbox.width, self.hitbox.height), 2)
+
+    def usar_arma_secundaria(self):
+        tiempo_actual = pygame.time.get_ticks()
+        if tiempo_actual - self.ultimo_uso_secundaria >= self.cooldown or self.secundaria_activa == True: 
+            if self.arma_secundaria.tipo == "dash":
+                    if (self.secudaria_duracion >= 0):
+                        self.secundaria_activa = True
+                        self.velocidad = self.arma_secundaria.use(self.velocidad, self.secudaria_duracion ,self.velocidad_base)
+                        self.secudaria_duracion -= 1
+                    else: 
+                        self.secudaria_duracion = self.secudaria_duracion_max
+                        self.secundaria_activa = False
+            self.ultimo_uso_secundaria = pygame.time.get_ticks()

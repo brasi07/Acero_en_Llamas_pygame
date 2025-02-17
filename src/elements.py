@@ -43,6 +43,8 @@ class Boton(Elemento):
         imagen = pygame.transform.scale(imagen, (tamaño_tile, tamaño_tile))  # Escalamos la imagen
         super().__init__(x, y, False, imagen)
 
+    
+
 class Muro(Elemento):
     def __init__(self, x, y, tamaño_tile, imagen):
         imagen = pygame.transform.scale(imagen, (tamaño_tile, tamaño_tile))  # Escalamos la imagen
