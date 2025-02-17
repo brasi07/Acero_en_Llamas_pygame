@@ -57,8 +57,7 @@ class MuroBajo(Elemento):
         imagen = pygame.transform.scale(imagen, (tamaño_tile, tamaño_tile))  # Escalamos la imagen
         super().__init__(x, y, True, imagen)
 
-    def check_collision(self, other_element):
-        pass
+
 
 class Vacio(Elemento):
     def __init__(self, x, y, tamaño_tile, imagen):

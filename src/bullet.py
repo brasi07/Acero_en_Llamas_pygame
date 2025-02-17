@@ -47,7 +47,7 @@ class Bala(Elemento):
         if self.origen == "enemigo" and type(other_element).__name__ == "Enemigo":
             return False
 
-        if not other_element.colisiona or other_element is MuroBajo:
+        if not other_element.colisiona or type(other_element).__name__ == "MuroBajo":
             return False
 
         # Comprobar si los rectángulos colisionan
