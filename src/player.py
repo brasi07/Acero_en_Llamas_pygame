@@ -1,6 +1,6 @@
 import pygame
 import settings
-import numpy
+import numpy as np
 import math
 
 from settings import CollisionLayer
@@ -132,8 +132,21 @@ class Player(Elemento):
                 self.tiempo_ultimo_disparo = pygame.time.get_ticks()
 
     def disparar(self):
-        nueva_bala = Bala(self.rect_canon.centerx, self.rect_canon.centery, self.angulo_cannon, self.tamaño_tile, CollisionLayer.BULLET_PLAYER)
+        cannon_tip = self.get_cannon_tip()  # Obtener la punta del cañón
+        nueva_bala = Bala(cannon_tip, self.angulo_cannon, self.tamaño_tile, CollisionLayer.BULLET_PLAYER)
         self.balas.append(nueva_bala)
+
+    def get_cannon_tip(self):
+        """Calcula la punta del cañón después de la rotación"""
+        angle_rad = np.radians(self.angulo_cannon)  # Convertir ángulo a radianes
+        cannon_length = self.rect_canon.height // 4  # Mitad de la altura del cañón
+
+        # Calcular desplazamiento desde el centro del cañón
+        x_offset = cannon_length * np.cos(angle_rad)
+        y_offset = cannon_length * np.sin(angle_rad)
+
+        # Devolver la nueva posición del midtop corregido
+        return self.rect_canon.centerx + x_offset, self.rect_canon.centery + y_offset
 
     def update_cannon_position(self, mundo):
         # Obtener la posición del ratón en relación con la cámara
@@ -142,7 +155,7 @@ class Player(Elemento):
         diff_y = cursory - (self.rect_element.centery - mundo.camara_y)
 
         # Calcular el ángulo del cañón
-        self.angulo_cannon = numpy.degrees(numpy.arctan2(diff_y, diff_x))  # Guardar el ángulo para disparos
+        self.angulo_cannon = np.degrees(np.arctan2(diff_y, diff_x))  # Guardar el ángulo para disparos
 
         # Rotar la imagen del cañón
         self.imagen_canon = pygame.transform.rotate(self.sprite_cannon, -self.angulo_cannon - 90)

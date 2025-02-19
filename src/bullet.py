@@ -11,11 +11,12 @@ class Bala(Elemento):
     sprites_colision = [pygame.transform.scale(pygame.image.load(f"../res/disparos/expl{i}.png"), (20, 20))
                         for i in range(1, 11)]
 
-    def __init__(self, x, y, angulo, tamaño_tile, tipoColision):
+    def __init__(self, cannon_tip, angulo, tamaño_tile, tipoColision):
         self.tamaño_tile = tamaño_tile
         self.imagen = self.escalar_y_cargar("../res/entidades/balas/bala.png", 0.15, 0.15)
+        self.x, self.y = cannon_tip
 
-        super().__init__(x, y, self.imagen, tipoColision)
+        super().__init__(self.x, self.y, self.imagen, tipoColision)
 
         # Convertir ángulo a radianes y calcular velocidad
         self.angulo = math.radians(angulo)
