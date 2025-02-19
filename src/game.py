@@ -46,6 +46,8 @@ class Game:
                             if isinstance(elemento, Boton) and self.jugador.rect_element.colliderect(
                                     elemento.rect_element):
                                 elemento.activar()
+                if evento.key == pygame.K_g: #cambiar arma secundaria con la tecla G (temporario mientras no se pueden encontrar las armas en el juego)
+                    self.jugador.cambiar_arma_secundaria()
 
 
     def update(self):

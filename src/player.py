@@ -6,7 +6,11 @@ import math
 from settings import CollisionLayer
 from elements import Elemento
 from bullet import Bala
-from weapon import Dash
+import weapon
+
+import pygame
+import math
+import numpy
 
 
 class Player(Elemento):
@@ -36,8 +40,12 @@ class Player(Elemento):
         self.angulo_cannon = 0
 
         # Equipamos armas
-        self.arma_secundaria = Dash()  # Equipar el Dash
+        self.armas_secundarias = [ None, weapon.Dash(), weapon.Escopeta()]  # Lista de las posibles armas
+        self.arma_secundaria_pos = 0 #posicion en la lista de la arma secundaria actualmente equipada
+        self.arma_secundaria = None # se inicia el juego sin ninguna arma secundaria equipada
         self.ultimo_uso_secundaria = pygame.time.get_ticks()
+        self.sprite_arma_secundaria = None
+        self.rect_secundaria = None
 
     def escalar_y_cargar(self, ruta, resizex, resizey):
         imagen = pygame.image.load(ruta)
@@ -60,7 +68,8 @@ class Player(Elemento):
         self.mover(mundo)
         self.gestionar_disparo()
         self.gestionar_arma_secundaria()
-        self.arma_secundaria.update(self)
+        if self.arma_secundaria != None:
+            self.arma_secundaria.update(self)
         self.verificar_fuera_pantalla(mundo)
 
         for bala in self.balas[:]:
@@ -164,15 +173,44 @@ class Player(Elemento):
         self.rect_canon = self.imagen_canon.get_rect(center=self.rect_element.center)
 
     def gestionar_arma_secundaria(self):
-        if pygame.mouse.get_pressed()[2]:
-            tiempo_actual = pygame.time.get_ticks()
-            if tiempo_actual - self.ultimo_uso_secundaria >= settings.COOLDOWN:
-                self.arma_secundaria.activar(self)
-                self.ultimo_uso_secundaria = tiempo_actual  # Reinicia el cooldown
+        if self.arma_secundaria != None:
+            if pygame.mouse.get_pressed()[2]:
+                tiempo_actual = pygame.time.get_ticks()
+                if tiempo_actual - self.ultimo_uso_secundaria >= settings.COOLDOWN:
+                    self.arma_secundaria.activar(self)
+                    self.ultimo_uso_secundaria = tiempo_actual  # Reinicia el cooldown
+
+    def cambiar_arma_secundaria(self):
+        if self.arma_secundaria_pos < (len(self.armas_secundarias) - 1):
+            self.arma_secundaria_pos += 1
+        else:
+            self.arma_secundaria_pos = 0
+        self.arma_secundaria = self.armas_secundarias[self.arma_secundaria_pos]
+        if self.arma_secundaria != None:
+            if self.arma_secundaria.tipo == "escopeta":
+                self.sprite_cannon = pygame.transform.scale(self.arma_secundaria.imagen, (self.tamaño_tile * settings.RESIZE_PLAYER, self.tamaño_tile * settings.RESIZE_PLAYER))
+                self.arma_secundaria.animacion = [pygame.transform.scale(self.arma_secundaria.animacion [i], (settings.RESIZE_PLAYER* self.tamaño_tile, settings.RESIZE_PLAYER * self.tamaño_tile))
+                        for i in range(0, len(self.arma_secundaria.animacion ) - 1)]
+                self.sprite_arma_secundaria = None
+            else:
+                self.sprite_arma_secundaria = self.escalar_y_cargar(self.arma_secundaria.imagen, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER)
+                self.sprite_cannon = self.sprites["canhon"]
+
+
+    def dibujar_arma_secundaria(self, mundo):
+        #aun hay que hacer con que el propulsor de dash estea correctamente alineado con el tanque
+        if self.sprite_arma_secundaria != None: #dibujar arma secundaria si necesario
+            self.rect_secundaria = self.sprite_arma_secundaria.get_rect(top=self.rect_element.bottom)
+            mundo.pantalla.blit(self.sprite_arma_secundaria, (self.rect_element.centerx - self.rect_secundaria.width // 2 - mundo.camara_x, self.rect_element.centery - self.rect_secundaria.height // 2 - mundo.camara_y))
+        
+
+        
 
     def draw(self, mundo):
         for bala in self.balas:
             bala.draw(mundo.pantalla, mundo)
         self.dibujar(mundo.pantalla, mundo)
         self.update_cannon_position(mundo)
+        if (self.arma_secundaria != None):
+                self.dibujar_arma_secundaria(mundo)
         mundo.pantalla.blit(self.imagen_canon, (self.rect_element.centerx - self.rect_canon.width // 2 - mundo.camara_x, self.rect_element.centery - self.rect_canon.height // 2 - mundo.camara_y))
