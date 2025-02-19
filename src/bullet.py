@@ -13,7 +13,7 @@ class Bala(Elemento):
 
     def __init__(self, x, y, angulo, tamaño_tile, tipoColision):
         self.tamaño_tile = tamaño_tile
-        self.imagen = self.escalar_y_cargar("../res/entidades/armas/bala.png", 0.15, 0.15)
+        self.imagen = self.escalar_y_cargar("../res/entidades/balas/bala.png", 0.15, 0.15)
 
         super().__init__(x, y, self.imagen, tipoColision)
 

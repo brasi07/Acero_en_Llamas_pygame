@@ -15,8 +15,8 @@ class Player(Elemento):
         self.tamaño_tile = tamaño_tile
 
         # Cargar sprites
-        self.sprite_base = self.escalar_y_cargar("../res/entidades/jugador/body_tracks.png", settings.RESIZE_PLAYER, settings.RESIZE_PLAYER)
-        self.sprite_base_45 = self.escalar_y_cargar("../res/entidades/jugador/body_tracks_45.png", settings.RESIZE_PLAYER, settings.RESIZE_PLAYER)
+        self.sprite_base = self.escalar_y_cargar("../res/entidades/jugador/bodies/body_tracks.png", settings.RESIZE_PLAYER, settings.RESIZE_PLAYER)
+        self.sprite_base_45 = self.escalar_y_cargar("../res/entidades/jugador/bodies/body_tracks_45.png", settings.RESIZE_PLAYER, settings.RESIZE_PLAYER)
         self.sprites = self.generar_sprites()
         self.sprite_cannon = self.sprites["canhon"]
 
@@ -53,7 +53,7 @@ class Player(Elemento):
             "arriba_derecha": pygame.transform.rotate(self.sprite_base_45, -90),
             "abajo_izquierda": pygame.transform.rotate(self.sprite_base_45, 90),
             "abajo_derecha": pygame.transform.rotate(self.sprite_base_45, 180),
-            "canhon": self.escalar_y_cargar("../res/entidades/armas/tanque_canon.png", settings.RESIZE_PLAYER, settings.RESIZE_PLAYER)
+            "canhon": self.escalar_y_cargar("../res/entidades/jugador/armas/tanque_canon.png", settings.RESIZE_PLAYER, settings.RESIZE_PLAYER)
         }
 
     def update(self, mundo):
