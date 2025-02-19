@@ -1,6 +1,7 @@
 import math
 import pygame
 import settings
+from settings import CollisionLayer, COLLISION_RULES
 from elements import Elemento
 
 class Enemy(Elemento):
@@ -9,7 +10,7 @@ class Enemy(Elemento):
         self.sprites = {
             "abajo": self.escalar_y_cargar("../res/enemigos/tanque_rojo.png"),
         }
-        super().__init__(x, y, True, self.sprites["abajo"])
+        super().__init__(x, y, self.sprites["abajo"], CollisionLayer.ENEMY)
 
     def escalar_y_cargar(self, ruta):
         imagen = pygame.image.load(ruta)

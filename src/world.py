@@ -1,7 +1,7 @@
 import math
 import pygame
 from player import Player
-from elements import Muro, Decoracion, Vacio, Boton, Trampa, MuroBajo
+from elements import Muro, Decoracion, Boton, Trampa, MuroBajo, Puerta
 from enemy import Enemy
 import settings
 import csv
@@ -98,6 +98,19 @@ class World:
 
     def generar_elementos(self, mapa_tiles, lista_elementos, sprites):
         """Crea los elementos del mapa ajustándolos al tamaño de la pantalla."""
+
+        self.puertas = {}
+
+        # Primer pase: Almacenar puertas
+        for y, fila in enumerate(mapa_tiles):
+            for x, valor in enumerate(fila):
+                valor = int(valor)  # Asegurarse de que el valor es un número
+
+                if 5100 <= valor <= 5199:  # Rango de valores reservados para puertas
+                    puerta = Puerta(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, sprites.get(5100))
+                    self.puertas[valor].append(puerta)  # Guardar la puerta con su ID único
+                    lista_elementos.append(puerta)
+
         for y, fila in enumerate(mapa_tiles):
             for x, valor in enumerate(fila):
 
@@ -107,11 +120,15 @@ class World:
                     if self.player is None:
                         self.player = Player(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile)
                     lista_elementos.append(self.player)
+                elif 5000 <= valor <= 5099:  # Rango de valores reservados para botones
+                    puerta_id = valor + 100  # Ejemplo: Botón 5000 activa puerta 5100
+                    puertas_a_activar = self.puertas.get(puerta_id)
+                    lista_elementos.append(Boton(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, sprites[valor], puertas_a_activar))
                 elif valor == 836:
                     lista_elementos.append(Trampa(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, sprites[valor]))
                 elif valor == 1168:
                     lista_elementos.append(MuroBajo(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, sprites[valor]))
-                elif valor in (514, 515, 516, 517, 578, 579, 580, 581, 876, 878, 768):
+                elif valor in (514, 515, 516, 517, 578, 579, 580, 581, 876, 878, 768, 2436, 2437, 2438, 2500, 2502, 2564, 2565, 2566):
                     lista_elementos.append(Decoracion(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, sprites[valor]))
                 elif valor != -1 and valor in sprites:
                     lista_elementos.append(Muro(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, sprites[valor]))

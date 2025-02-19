@@ -1,15 +1,12 @@
-import math
 import pygame
 import settings
 import numpy
+import math
+
+from settings import CollisionLayer
 from elements import Elemento
 from bullet import Bala
 from weapon import Dash
-import weapon
-
-import pygame
-import math
-import numpy
 
 
 class Player(Elemento):
@@ -18,13 +15,13 @@ class Player(Elemento):
         self.tamaño_tile = tamaño_tile
 
         # Cargar sprites
-        self.sprite_base = self.escalar_y_cargar("../res/tanques/body_tracks.png", settings.RESIZE_PLAYER, settings.RESIZE_PLAYER)
-        self.sprite_base_45 = self.escalar_y_cargar("../res/tanques/body_tracks_45.png", settings.RESIZE_PLAYER, settings.RESIZE_PLAYER)
+        self.sprite_base = self.escalar_y_cargar("../res/entidades/jugador/body_tracks.png", settings.RESIZE_PLAYER, settings.RESIZE_PLAYER)
+        self.sprite_base_45 = self.escalar_y_cargar("../res/entidades/jugador/body_tracks_45.png", settings.RESIZE_PLAYER, settings.RESIZE_PLAYER)
         self.sprites = self.generar_sprites()
         self.sprite_cannon = self.sprites["canhon"]
 
         # Llamamos al constructor de la clase base (Elemento)
-        super().__init__(x, y, True, self.sprites["abajo"])
+        super().__init__(x, y, self.sprites["abajo"], CollisionLayer.PLAYER)
 
         # Inicialización de atributos del jugador
         self.imagen_canon = pygame.transform.rotate(self.sprite_cannon, 0)
@@ -44,7 +41,7 @@ class Player(Elemento):
 
     def escalar_y_cargar(self, ruta, resizex, resizey):
         imagen = pygame.image.load(ruta)
-        return pygame.transform.scale(imagen, (self.tamaño_tile * resizex, self.tamaño_tile * resizey))
+        return pygame.transform.scale(imagen, (resizex * self.tamaño_tile, resizey * self.tamaño_tile))
 
     def generar_sprites(self):
         return {
@@ -56,8 +53,7 @@ class Player(Elemento):
             "arriba_derecha": pygame.transform.rotate(self.sprite_base_45, -90),
             "abajo_izquierda": pygame.transform.rotate(self.sprite_base_45, 90),
             "abajo_derecha": pygame.transform.rotate(self.sprite_base_45, 180),
-            "canhon": self.escalar_y_cargar("../res/tanques/tanque_canon.png", settings.RESIZE_PLAYER,
-                                            settings.RESIZE_PLAYER)
+            "canhon": self.escalar_y_cargar("../res/entidades/armas/tanque_canon.png", settings.RESIZE_PLAYER, settings.RESIZE_PLAYER)
         }
 
     def update(self, mundo):
@@ -136,8 +132,7 @@ class Player(Elemento):
                 self.tiempo_ultimo_disparo = pygame.time.get_ticks()
 
     def disparar(self):
-        imagen = self.escalar_y_cargar("../res/tanques/bala.png", 0.15, 0.15)
-        nueva_bala = Bala(self.rect_canon.centerx, self.rect_canon.centery, self.angulo_cannon, imagen, "player")
+        nueva_bala = Bala(self.rect_canon.centerx, self.rect_canon.centery, self.angulo_cannon, self.tamaño_tile, CollisionLayer.BULLET_PLAYER)
         self.balas.append(nueva_bala)
 
     def update_cannon_position(self, mundo):

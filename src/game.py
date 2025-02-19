@@ -1,6 +1,7 @@
 import math
 import pygame
 import settings
+from elements import Boton
 from world import World
 from player import Player
 
@@ -8,7 +9,7 @@ class Game:
     def __init__(self):
         pygame.init()
         self.tamaño_pantalla = 1
-        self.pantalla = pygame.display.set_mode((1280, 720), pygame.FULLSCREEN | pygame.SCALED | pygame.DOUBLEBUF)
+        self.pantalla = pygame.display.set_mode((settings.ANCHO, settings.ALTO), pygame.FULLSCREEN | pygame.SCALED | pygame.DOUBLEBUF)
         self.clock = pygame.time.Clock()
         self.ejecutando = True
 
@@ -21,12 +22,12 @@ class Game:
             self.handle_events()
             self.update()
             self.draw()
-            self.clock.tick(60)
+            self.clock.tick(settings.FPS)
 
         pygame.quit()
 
     def set_cursor(self):
-        cursor_image = pygame.image.load("../res/tanques/mirilla.png")
+        cursor_image = pygame.image.load("../res/UI/mirilla.png")
         cursor = pygame.cursors.Cursor((cursor_image.get_width() // 2, cursor_image.get_height() // 2), cursor_image)
         pygame.mouse.set_cursor(cursor)
 
@@ -39,6 +40,12 @@ class Game:
                     self.ejecutando = False  # Termina el juego
                 elif evento.key == pygame.K_F11:
                     self.pantalla = pygame.display.set_mode((1280, 720))
+                elif evento.key == pygame.K_e:  # Presionar "E" para activar botones
+                    for capa in self.mundo.elementos_por_capa.values():
+                        for elemento in capa:
+                            if isinstance(elemento, Boton) and self.jugador.rect_element.colliderect(
+                                    elemento.rect_element):
+                                elemento.activar()
 
 
     def update(self):
