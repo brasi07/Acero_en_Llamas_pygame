@@ -7,7 +7,18 @@ import settings
 
 class Weapon(abc.ABC):  # Clase base abstracta para armas
     def __init__(self, tipo):
-        self.imagen = f"../res/entidades/jugador/armas/{tipo}.png"
+        self.imagen = self.escalar_y_cargar_imagen(f"../res/entidades/jugador/armas/{tipo}.png")
+
+    @staticmethod
+    def escalar_y_cargar_imagen(ruta):
+        imagen = pygame.image.load(ruta)
+        return pygame.transform.scale(imagen, (settings.TILE_SIZE * settings.RESIZE_PLAYER, settings.TILE_SIZE * settings.RESIZE_PLAYER))
+
+    @staticmethod
+    def escalar_y_cargar_animacion(ruta):
+        sprite_sheet = spritesheet.SpriteSheet(ruta)
+        animacion = sprite_sheet.load_strip((0, 0, 128, 128), 8, (0, 0, 0))
+        return [pygame.transform.scale(frame, (settings.RESIZE_PLAYER * settings.TILE_SIZE, settings.RESIZE_PLAYER * settings.TILE_SIZE)) for frame in animacion]
 
     @abc.abstractmethod
     def activar(self, jugador):
@@ -46,33 +57,31 @@ class Escopeta(Weapon):
     def __init__(self):
         super().__init__("escopeta")
         self.tiempo_inicio = None #Guarda el tiempo de activacivación
-        self.sprite_sheet = spritesheet.SpriteSheet("../res/entidades/jugador/armas/escopeta.png")
-        self.imagen = self.sprite_sheet.image_at((0,0,128,128))
-        self.imagen.set_colorkey((0,0,0))
-        self.animacion = self.sprite_sheet.load_strip((0,0,128,128), 8, (0,0,0))
+        self.animacion = self.escalar_y_cargar_animacion("../res/entidades/jugador/armas/escopeta.png")
         self.frame_actual = 0
+        self.imagen = self.animacion[0]
         self.activo = False
         
-    def activar(self, jugador):
+    def activar(self, tank):
         self.tiempo_inicio = pygame.time.get_ticks()
-        bala_central = Bala(jugador.get_cannon_tip(), jugador.angulo_cannon, jugador.tamano_tile, settings.CollisionLayer.BULLET_PLAYER)
-        bala_izquierda = Bala(jugador.get_cannon_tip(), jugador.angulo_cannon - 15, jugador.tamano_tile, settings.CollisionLayer.BULLET_PLAYER)
-        bala_derecha = Bala(jugador.get_cannon_tip(), jugador.angulo_cannon + 15, jugador.tamano_tile, settings.CollisionLayer.BULLET_PLAYER)
-        jugador.balas.append(bala_central)
-        jugador.balas.append(bala_izquierda)
-        jugador.balas.append(bala_derecha)
+        bala_central = Bala(tank.get_cannon_tip(), tank.angulo_cannon, settings.CollisionLayer.BULLET_PLAYER)
+        bala_izquierda = Bala(tank.get_cannon_tip(), tank.angulo_cannon - 15, settings.CollisionLayer.BULLET_PLAYER)
+        bala_derecha = Bala(tank.get_cannon_tip(), tank.angulo_cannon + 15, settings.CollisionLayer.BULLET_PLAYER)
+        tank.balas.append(bala_central)
+        tank.balas.append(bala_izquierda)
+        tank.balas.append(bala_derecha)
         self.activo = True
     
-    def update(self, jugador):
+    def update(self, tank):
         if self.activo:
             if self.frame_actual < len(self.animacion):
                 self.imagen = self.animacion[self.frame_actual]
-                jugador.sprite_cannon = self.imagen
+                tank.sprites["cannon"] = self.imagen
                 self.frame_actual += 1
             else:
                 self.frame_actual = 0
                 self.imagen = self.animacion[0]
-                jugador.sprite_cannon = self.imagen
+                tank.sprites["cannon"] = self.imagen
                 self.activo = False
         
         

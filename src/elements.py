@@ -16,12 +16,12 @@ class Elemento:
             self.rect_element = pygame.Rect(x, y, 0, 0)
             self.mask = None
 
-    def dibujar(self, pantalla, mundo):
+    def dibujar(self, mundo):
         """Dibuja el elemento en la pantalla."""
         if self.imagen:
-            pantalla.blit(self.imagen, (self.rect_element.x - mundo.camara_x, self.rect_element.y - mundo.camara_y))
+            mundo.pantalla.blit(self.imagen, (self.rect_element.x - mundo.camara_x, self.rect_element.y - mundo.camara_y))
         else:
-            pygame.draw.rect(pantalla, (255, 0, 0), self.rect_element)
+            pygame.draw.rect(mundo.pantalla, (255, 0, 0), self.rect_element)
 
     def check_collision(self, other_element):
         """Verifica colisión con otro elemento basado en la tabla de colisiones."""

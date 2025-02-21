@@ -75,37 +75,39 @@ class Player(Tank):
         self.rotar_canon(diff_x, diff_y)
 
     def gestionar_arma_secundaria(self):
-        if self.arma_secundaria != None:
+        if self.arma_secundaria is not None:
             if pygame.mouse.get_pressed()[2]:
-                self.use_special()
+                self.usar_arma_especial()
 
     def cambiar_arma_secundaria(self):
-        if self.arma_secundaria_pos < (len(self.armas_secundarias) - 1):
-            self.arma_secundaria_pos += 1
-        else:
-            self.arma_secundaria_pos = 0
+        # Cambia a la siguiente arma en la lista (ciclo circular)
+        self.arma_secundaria_pos = (self.arma_secundaria_pos + 1) % len(self.armas_secundarias)
         self.arma_secundaria = self.armas_secundarias[self.arma_secundaria_pos]
-        if self.arma_secundaria is not None:
-            if self.arma_secundaria is Escopeta:
-                self.sprite_cannon = pygame.transform.scale(self.arma_secundaria.imagen, (settings.TILE_SIZE * settings.RESIZE_PLAYER, settings.TILE_SIZE * settings.RESIZE_PLAYER))
-                self.arma_secundaria.animacion = [pygame.transform.scale(self.arma_secundaria.animacion [i], (settings.RESIZE_PLAYER * settings.TILE_SIZE, settings.RESIZE_PLAYER * settings.TILE_SIZE))
-                        for i in range(0, len(self.arma_secundaria.animacion ) - 1)]
-                self.sprite_arma_secundaria = None
-            else:
-                self.sprite_arma_secundaria = self.escalar_y_cargar(self.arma_secundaria.imagen)
-                self.sprite_cannon = self.sprites["cannon"]
 
+        if self.arma_secundaria is not None:
+            # Si es una Escopeta, cambia su sprite y ajusta animación
+            if isinstance(self.arma_secundaria, Escopeta):
+                self.sprites["cannon"] = self.arma_secundaria.imagen
+                self.sprite_arma_secundaria = None  # No hay sprite separado para la escopeta
+
+            else:
+                # Otras armas secundarias usan su sprite propio y el cañón por defecto
+                self.sprite_arma_secundaria = self.arma_secundaria.imagen
+                self.sprites["cannon"] = self.escalar_y_cargar("../res/entidades/jugador/armas/tanque_canon.png")
+        else:
+            self.sprites["cannon"] = self.escalar_y_cargar("../res/entidades/jugador/armas/tanque_canon.png")
+            self.sprite_arma_secundaria = None
 
     def dibujar_arma_secundaria(self, mundo):
         #aun hay que hacer con que el propulsor de dash estea correctamente alineado con el tanque
-        if self.sprite_arma_secundaria != None: #dibujar arma secundaria si necesario
+        if self.sprite_arma_secundaria is not None: #dibujar arma secundaria si necesario
             self.rect_secundaria = self.sprite_arma_secundaria.get_rect(top=self.rect_element.bottom)
             mundo.pantalla.blit(self.sprite_arma_secundaria, (self.rect_element.centerx - self.rect_secundaria.width // 2 - mundo.camara_x, self.rect_element.centery - self.rect_secundaria.height // 2 - mundo.camara_y))
 
     def draw(self, mundo):
         for bala in self.balas:
-            bala.draw(mundo.pantalla, mundo)
-        self.dibujar(mundo.pantalla, mundo)
+            bala.draw( mundo)
+        self.dibujar(mundo)
         self.update_cannon_position(mundo)
         if self.arma_secundaria is not None:
                 self.dibujar_arma_secundaria(mundo)

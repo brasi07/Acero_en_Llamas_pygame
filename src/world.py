@@ -179,6 +179,6 @@ class World:
                     self.camara_x - 80 <= elemento.rect_element.x < self.camara_x + self.ancho_pantalla + 80
                     and self.camara_y - 80 <= elemento.rect_element.y < self.camara_y + self.alto_pantalla + 80
                 ):
-                    elemento.dibujar(pantalla, self)
+                    elemento.dibujar(self)
 
         self.actualizar_transicion()

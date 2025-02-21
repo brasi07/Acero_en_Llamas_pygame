@@ -10,6 +10,7 @@ from weapon import Dash
 
 class Tank(Elemento):
     def __init__(self, vida, velocidad, x, y, collision_layer=CollisionLayer.NONE, ruta=""):
+
         self.vida = vida
         self.velocidad = velocidad
         self.velocidad_base = 3
@@ -32,10 +33,10 @@ class Tank(Elemento):
         self.arma_secundaria = None
         self.ultimo_uso_secundaria = pygame.time.get_ticks()
 
-    def equipar_especial(self, weapon=None):
-        # Equipamos armas
-        self.arma_secundaria = weapon  # Equipar el Dash
-        self.ultimo_uso_secundaria = pygame.time.get_ticks()
+    @staticmethod
+    def escalar_y_cargar(ruta):
+        imagen = pygame.image.load(ruta)
+        return pygame.transform.scale(imagen, (settings.TILE_SIZE * settings.RESIZE_PLAYER, settings.TILE_SIZE * settings.RESIZE_PLAYER))
 
     def generar_sprites(self, ruta):
         sprite_base = self.escalar_y_cargar(ruta + "bodies/body_tracks.png")
@@ -54,9 +55,10 @@ class Tank(Elemento):
             "cannon": sprite_cannon
         }
 
-    def escalar_y_cargar(self, ruta):
-        imagen = pygame.image.load(ruta)
-        return pygame.transform.scale(imagen, (settings.TILE_SIZE * settings.RESIZE_PLAYER, settings.TILE_SIZE * settings.RESIZE_PLAYER))
+    def equipar_especial(self, weapon=None):
+        # Equipamos armas
+        self.arma_secundaria = weapon  # Equipar el Dash
+        self.ultimo_uso_secundaria = pygame.time.get_ticks()
 
     def rotar_canon(self, dirx, diry):
         # Calcular el ángulo del cañón
@@ -98,12 +100,11 @@ class Tank(Elemento):
             self.rect_element.y -= dy
         return colision
 
-    def use_special(self): #usar habilidad especial
+    def usar_arma_especial(self): #usar habilidad especial
         tiempo_actual = pygame.time.get_ticks()
         if tiempo_actual - self.ultimo_uso_secundaria >= settings.COOLDOWN:
             self.arma_secundaria.activar(self)
             self.ultimo_uso_secundaria = tiempo_actual  # Reinicia el cooldown
-
 
     def disparar(self):
         cannon_tip = self.get_cannon_tip()  # Obtener la punta del cañón
@@ -113,7 +114,7 @@ class Tank(Elemento):
     def get_cannon_tip(self):
         """Calcula la punta del cañón después de la rotación"""
         angle_rad = np.radians(self.angulo_cannon)  # Convertir ángulo a radianes
-        cannon_length = self.rect_canon.height // 4  # Mitad de la altura del cañón
+        cannon_length = self.rect_canon.height // 4  # Largo del cañon
 
         # Calcular desplazamiento desde el centro del cañón
         x_offset = cannon_length * np.cos(angle_rad)

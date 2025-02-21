@@ -55,7 +55,6 @@ class Game:
         #self.mundo.update()
 
     def draw(self):
-        self.pantalla.fill((0, 0, 0))
         self.mundo.draw(self.pantalla)
         self.jugador.draw(self.mundo)
         pygame.display.flip()

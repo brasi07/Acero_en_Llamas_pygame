@@ -27,7 +27,6 @@ COLLISION_RULES = {
     CollisionLayer.NONE: set()  # No colisiona con nada
 }
 
-
 class Color(Enum):
     NEGRO = (0, 0, 0)
     BLANCO = (255, 255, 255)

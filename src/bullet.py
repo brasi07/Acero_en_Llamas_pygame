@@ -81,11 +81,11 @@ class Bala(Elemento):
         return (self.x < mundo.camara_x or self.x > mundo.camara_x + ancho_pantalla or
                 self.y < mundo.camara_y or self.y > mundo.camara_y + alto_pantalla)
 
-    def draw(self, pantalla, mundo):
+    def draw(self, mundo):
         """Dibuja la bala o su animación de colisión."""
         if self.colisionando:
             if self.frame_actual < len(self.sprites_colision):
-                pantalla.blit(self.sprites_colision[self.frame_actual],
+                mundo.pantalla.blit(self.sprites_colision[self.frame_actual],
                               (self.rect_element.x - mundo.camara_x, self.rect_element.y - mundo.camara_y))
         else:
-            self.dibujar(pantalla, mundo)
+            self.dibujar(mundo)
