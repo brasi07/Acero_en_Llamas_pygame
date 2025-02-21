@@ -39,7 +39,7 @@ class Game:
                 if evento.key == pygame.K_ESCAPE:  # Detecta cuando se presiona ESC
                     self.ejecutando = False  # Termina el juego
                 elif evento.key == pygame.K_F11:
-                    self.pantalla = pygame.display.set_mode((1280, 720))
+                    self.pantalla = pygame.display.set_mode((settings.ANCHO, settings.ALTO))
                 elif evento.key == pygame.K_e:  # Presionar "E" para activar botones
                     for capa in self.mundo.elementos_por_capa.values():
                         for elemento in capa:

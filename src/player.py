@@ -8,17 +8,14 @@ import weapon
 import pygame
 
 from tank import Tank
+from weapon import Escopeta
 
 
 class Player(Tank):
 
-    def __init__(self, x, y, tamano_tile):
+    def __init__(self, x, y):
         # Llamamos primero al constructor de la clase base (Tank)
-        super().__init__(3, 3, x, y, tamano_tile, CollisionLayer.PLAYER, "../res/entidades/jugador/")
-
-        # Definir velocidad
-        self.velocidad_base = 3
-        self.velocidad = self.velocidad_base
+        super().__init__(3, 3, x, y, CollisionLayer.PLAYER, "../res/entidades/jugador/")
 
         # Equipamos armas
         self.armas_secundarias = [None, weapon.Dash(), weapon.Escopeta()]  # Lista de armas
@@ -89,14 +86,14 @@ class Player(Tank):
             self.arma_secundaria_pos = 0
         self.arma_secundaria = self.armas_secundarias[self.arma_secundaria_pos]
         if self.arma_secundaria is not None:
-            if self.arma_secundaria.tipo == "escopeta":
-                self.sprite_cannon = pygame.transform.scale(self.arma_secundaria.imagen, (self.tamano_tile * settings.RESIZE_PLAYER, self.tamano_tile * settings.RESIZE_PLAYER))
-                self.arma_secundaria.animacion = [pygame.transform.scale(self.arma_secundaria.animacion [i], (settings.RESIZE_PLAYER * self.tamano_tile, settings.RESIZE_PLAYER * self.tamano_tile))
+            if self.arma_secundaria is Escopeta:
+                self.sprite_cannon = pygame.transform.scale(self.arma_secundaria.imagen, (settings.TILE_SIZE * settings.RESIZE_PLAYER, settings.TILE_SIZE * settings.RESIZE_PLAYER))
+                self.arma_secundaria.animacion = [pygame.transform.scale(self.arma_secundaria.animacion [i], (settings.RESIZE_PLAYER * settings.TILE_SIZE, settings.RESIZE_PLAYER * settings.TILE_SIZE))
                         for i in range(0, len(self.arma_secundaria.animacion ) - 1)]
                 self.sprite_arma_secundaria = None
             else:
                 self.sprite_arma_secundaria = self.escalar_y_cargar(self.arma_secundaria.imagen)
-                self.sprite_cannon = self.sprites["canhon"]
+                self.sprite_cannon = self.sprites["cannon"]
 
 
     def dibujar_arma_secundaria(self, mundo):
@@ -105,14 +102,11 @@ class Player(Tank):
             self.rect_secundaria = self.sprite_arma_secundaria.get_rect(top=self.rect_element.bottom)
             mundo.pantalla.blit(self.sprite_arma_secundaria, (self.rect_element.centerx - self.rect_secundaria.width // 2 - mundo.camara_x, self.rect_element.centery - self.rect_secundaria.height // 2 - mundo.camara_y))
 
-
-
-
     def draw(self, mundo):
         for bala in self.balas:
             bala.draw(mundo.pantalla, mundo)
         self.dibujar(mundo.pantalla, mundo)
         self.update_cannon_position(mundo)
-        if (self.arma_secundaria != None):
+        if self.arma_secundaria is not None:
                 self.dibujar_arma_secundaria(mundo)
         mundo.pantalla.blit(self.imagen_canon, (self.rect_element.centerx - self.rect_canon.width // 2 - mundo.camara_x, self.rect_element.centery - self.rect_canon.height // 2 - mundo.camara_y))

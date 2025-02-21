@@ -40,32 +40,26 @@ class Elemento:
         return False
 
 class Boton(Elemento):
-    def __init__(self, x, y, tamaño_tile, imagen):
-        imagen = pygame.transform.scale(imagen, (tamaño_tile, tamaño_tile))  # Escalamos la imagen
+    def __init__(self, x, y, imagen):
         super().__init__(x, y, imagen, CollisionLayer.NONE)
 
 class Puerta(Elemento):
-    def __init__(self, x, y, tamaño_tile, imagen):
-        imagen = pygame.transform.scale(imagen, (tamaño_tile, tamaño_tile))  # Escalamos la imagen
+    def __init__(self, x, y, imagen):
         super().__init__(x, y, imagen, CollisionLayer.WALL)
 
 class Muro(Elemento):
-    def __init__(self, x, y, tamaño_tile, imagen):
-        imagen = pygame.transform.scale(imagen, (tamaño_tile, tamaño_tile))  # Escalamos la imagen
+    def __init__(self, x, y, imagen):
         super().__init__(x, y, imagen, CollisionLayer.WALL)
 
 class MuroBajo(Elemento):
-    def __init__(self, x, y, tamaño_tile, imagen):
-        imagen = pygame.transform.scale(imagen, (tamaño_tile, tamaño_tile))  # Escalamos la imagen
+    def __init__(self, x, y, imagen):
         super().__init__(x, y, imagen, CollisionLayer.LOW_WALL)
 
 class Trampa(Elemento):
-    def __init__(self, x, y, tamaño_tile, imagen):
-        imagen = pygame.transform.scale(imagen, (tamaño_tile, tamaño_tile))  # Escalamos la imagen
+    def __init__(self, x, y, imagen):
         super().__init__(x, y, imagen, CollisionLayer.NONE)
 
 class Decoracion(Elemento):
-    def __init__(self, x, y, tamaño_tile, imagen):
-        imagen = pygame.transform.scale(imagen, (tamaño_tile, tamaño_tile))  # Escalamos la imagen
+    def __init__(self, x, y, imagen):
         super().__init__(x, y, imagen, CollisionLayer.NONE)
 

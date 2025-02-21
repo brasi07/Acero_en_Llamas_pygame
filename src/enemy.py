@@ -5,8 +5,7 @@ from settings import CollisionLayer, COLLISION_RULES
 from elements import Elemento
 
 class Enemy(Elemento):
-    def __init__(self, x, y, tamaño_tile):
-        self.tamaño_tile = tamaño_tile
+    def __init__(self, x, y):
         self.sprites = {
             "abajo": self.escalar_y_cargar("../res/enemigos/tanque_rojo.png"),
         }
@@ -14,7 +13,7 @@ class Enemy(Elemento):
 
     def escalar_y_cargar(self, ruta):
         imagen = pygame.image.load(ruta)
-        return pygame.transform.scale(imagen, (self.tamaño_tile * settings.RESIZE_PLAYER, self.tamaño_tile * settings.RESIZE_PLAYER))
+        return pygame.transform.scale(imagen, (settings.TILE_SIZE * settings.RESIZE_PLAYER, settings.TILE_SIZE * settings.RESIZE_PLAYER))
 
     def update(self):
         pass  # Aquí iría la IA de movimiento

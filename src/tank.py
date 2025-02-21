@@ -9,10 +9,10 @@ from weapon import Dash
 
 
 class Tank(Elemento):
-    def __init__(self, hp, speed, x, y, tamano_tile, collision_layer=CollisionLayer.NONE, ruta=""):
-        self.hp = hp
-        self.speed = speed
-        self.tamano_tile = tamano_tile
+    def __init__(self, vida, velocidad, x, y, collision_layer=CollisionLayer.NONE, ruta=""):
+        self.vida = vida
+        self.velocidad = velocidad
+        self.velocidad_base = 3
 
         # Generamos sprites para el tanque
         self.sprites = self.generar_sprites(ruta)
@@ -31,9 +31,6 @@ class Tank(Elemento):
 
         self.arma_secundaria = None
         self.ultimo_uso_secundaria = pygame.time.get_ticks()
-
-        # Equipamos armas
-        self.equipar_especial(Dash())
 
     def equipar_especial(self, weapon=None):
         # Equipamos armas
@@ -59,7 +56,7 @@ class Tank(Elemento):
 
     def escalar_y_cargar(self, ruta):
         imagen = pygame.image.load(ruta)
-        return pygame.transform.scale(imagen, (self.tamano_tile * settings.RESIZE_PLAYER, self.tamano_tile * settings.RESIZE_PLAYER))
+        return pygame.transform.scale(imagen, (settings.TILE_SIZE * settings.RESIZE_PLAYER, settings.TILE_SIZE * settings.RESIZE_PLAYER))
 
     def rotar_canon(self, dirx, diry):
         # Calcular el ángulo del cañón
@@ -110,7 +107,7 @@ class Tank(Elemento):
 
     def disparar(self):
         cannon_tip = self.get_cannon_tip()  # Obtener la punta del cañón
-        nueva_bala = Bala(cannon_tip, self.angulo_cannon, self.tamano_tile, CollisionLayer.BULLET_PLAYER)
+        nueva_bala = Bala(cannon_tip, self.angulo_cannon, CollisionLayer.BULLET_PLAYER)
         self.balas.append(nueva_bala)
 
     def get_cannon_tip(self):

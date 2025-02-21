@@ -16,7 +16,6 @@ class World:
         self.mundo = mundo  # Número del mundo actual
 
         self.ancho_pantalla, self.alto_pantalla = pantalla.get_size()
-        self.tamaño_tile = math.gcd(self.ancho_pantalla, self.alto_pantalla) / 2
 
         # Buscar archivos de mapa según el nuevo formato "Mapa_{mundo}_{capa}.csv"
         archivos_mapa = self.buscar_archivos_mapa(f"../res/mapas/Mapa_{self.mundo}_")
@@ -107,7 +106,7 @@ class World:
                 valor = int(valor)  # Asegurarse de que el valor es un número
 
                 if 5100 <= valor <= 5199:  # Rango de valores reservados para puertas
-                    puerta = Puerta(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, sprites.get(5100))
+                    puerta = Puerta(x * settings.TILE_SIZE, y * settings.TILE_SIZE, settings.TILE_SIZE, sprites.get(5100))
                     self.puertas[valor].append(puerta)  # Guardar la puerta con su ID único
                     lista_elementos.append(puerta)
 
@@ -118,23 +117,20 @@ class World:
                 if valor == 0 and lista_elementos == self.elementos_por_capa[max(self.capas.keys())]:
                     # El jugador solo aparece en la capa superior
                     if self.player is None:
-                        self.player = Player(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile)
+                        self.player = Player(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
                     lista_elementos.append(self.player)
                 elif 5000 <= valor <= 5099:  # Rango de valores reservados para botones
                     puerta_id = valor + 100  # Ejemplo: Botón 5000 activa puerta 5100
                     puertas_a_activar = self.puertas.get(puerta_id)
-                    lista_elementos.append(Boton(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, sprites[valor], puertas_a_activar))
+                    lista_elementos.append(Boton(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor], puertas_a_activar))
                 elif valor == 836:
-                    lista_elementos.append(Trampa(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, sprites[valor]))
+                    lista_elementos.append(Trampa(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor]))
                 elif valor == 1168:
-                    lista_elementos.append(MuroBajo(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, sprites[valor]))
+                    lista_elementos.append(MuroBajo(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor]))
                 elif valor in (514, 515, 516, 517, 578, 579, 580, 581, 876, 878, 768, 2436, 2437, 2438, 2500, 2502, 2564, 2565, 2566):
-                    lista_elementos.append(Decoracion(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, sprites[valor]))
+                    lista_elementos.append(Decoracion(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor]))
                 elif valor != -1 and valor in sprites:
-                    lista_elementos.append(Muro(x * self.tamaño_tile, y * self.tamaño_tile, self.tamaño_tile, sprites[valor]))
-
-
-
+                    lista_elementos.append(Muro(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor]))
 
     def cambiar_pantalla(self, direccion):
 

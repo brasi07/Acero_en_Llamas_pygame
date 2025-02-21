@@ -1,6 +1,7 @@
 import pygame
 import math
 import time
+import settings
 from settings import CollisionLayer, COLLISION_RULES
 from elements import Elemento
 
@@ -11,9 +12,8 @@ class Bala(Elemento):
     sprites_colision = [pygame.transform.scale(pygame.image.load(f"../res/disparos/expl{i}.png"), (20, 20))
                         for i in range(1, 11)]
 
-    def __init__(self, cannon_tip, angulo, tamaño_tile, tipoColision):
-        self.tamaño_tile = tamaño_tile
-        self.imagen = self.escalar_y_cargar("../res/entidades/balas/bala.png", 0.15, 0.15)
+    def __init__(self, cannon_tip, angulo, tipoColision):
+        self.imagen = self.escalar_y_cargar("../res/entidades/balas/bala.png", settings.RESIZE_PLAYER * 0.07, settings.RESIZE_PLAYER * 0.07)
         self.x, self.y = cannon_tip
 
         super().__init__(self.x, self.y, self.imagen, tipoColision)
@@ -31,7 +31,7 @@ class Bala(Elemento):
 
     def escalar_y_cargar(self, ruta, resizex, resizey):
         imagen = pygame.image.load(ruta)
-        return pygame.transform.scale(imagen, (resizex * self.tamaño_tile, resizey * self.tamaño_tile))
+        return pygame.transform.scale(imagen, (resizex * settings.TILE_SIZE, resizey * settings.TILE_SIZE))
 
     def check_collision(self, other_element):
 
