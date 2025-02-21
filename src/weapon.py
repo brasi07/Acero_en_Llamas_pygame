@@ -7,7 +7,6 @@ import settings
 
 class Weapon(abc.ABC):  # Clase base abstracta para armas
     def __init__(self, tipo):
-        self.tipo = tipo
         self.imagen = f"../res/entidades/jugador/armas/{tipo}.png"
 
     @abc.abstractmethod
@@ -56,9 +55,9 @@ class Escopeta(Weapon):
         
     def activar(self, jugador):
         self.tiempo_inicio = pygame.time.get_ticks()
-        bala_central = Bala(jugador.get_cannon_tip(), jugador.angulo_cannon, jugador.tamaño_tile, settings.CollisionLayer.BULLET_PLAYER)
-        bala_izquierda = Bala(jugador.get_cannon_tip(), jugador.angulo_cannon - 15, jugador.tamaño_tile, settings.CollisionLayer.BULLET_PLAYER)
-        bala_derecha = Bala(jugador.get_cannon_tip(), jugador.angulo_cannon + 15, jugador.tamaño_tile, settings.CollisionLayer.BULLET_PLAYER)
+        bala_central = Bala(jugador.get_cannon_tip(), jugador.angulo_cannon, jugador.tamano_tile, settings.CollisionLayer.BULLET_PLAYER)
+        bala_izquierda = Bala(jugador.get_cannon_tip(), jugador.angulo_cannon - 15, jugador.tamano_tile, settings.CollisionLayer.BULLET_PLAYER)
+        bala_derecha = Bala(jugador.get_cannon_tip(), jugador.angulo_cannon + 15, jugador.tamano_tile, settings.CollisionLayer.BULLET_PLAYER)
         jugador.balas.append(bala_central)
         jugador.balas.append(bala_izquierda)
         jugador.balas.append(bala_derecha)

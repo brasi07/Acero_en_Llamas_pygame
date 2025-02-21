@@ -12,19 +12,17 @@ from tank import Tank
 
 class Player(Tank):
 
-    def __init__(self, x, y, tamaño_tile):
+    def __init__(self, x, y, tamano_tile):
+        # Llamamos primero al constructor de la clase base (Tank)
+        super().__init__(3, 3, x, y, tamano_tile, CollisionLayer.PLAYER, "../res/entidades/jugador/")
 
+        # Definir velocidad
         self.velocidad_base = 3
         self.velocidad = self.velocidad_base
 
-        # Llamamos al constructor de la clase base (Elemento)
-        super().__init__(3, self.velocidad_base, x, y, tamaño_tile, CollisionLayer.PLAYER)
-
         # Equipamos armas
-        self.armas_secundarias = [ None, weapon.Dash(), weapon.Escopeta()]  # Lista de las posibles armas
-        self.arma_secundaria_pos = 0 #posicion en la lista de la arma secundaria actualmente equipada
-        self.arma_secundaria = None # se inicia el juego sin ninguna arma secundaria equipada
-        self.ultimo_uso_secundaria = pygame.time.get_ticks()
+        self.armas_secundarias = [None, weapon.Dash(), weapon.Escopeta()]  # Lista de armas
+        self.arma_secundaria_pos = 0  # Índice de arma secundaria equipada
         self.sprite_arma_secundaria = None
         self.rect_secundaria = None
 
@@ -32,7 +30,7 @@ class Player(Tank):
         self.mover(mundo)
         self.gestionar_disparo()
         self.gestionar_arma_secundaria()
-        if self.arma_secundaria != None:
+        if self.arma_secundaria is not None:
             self.arma_secundaria.update(self)
         self.verificar_fuera_pantalla(mundo)
 
@@ -77,7 +75,7 @@ class Player(Tank):
         diff_x = cursorx - (self.rect_element.centerx - mundo.camara_x)
         diff_y = cursory - (self.rect_element.centery - mundo.camara_y)
 
-        self.aim(diff_x, diff_y)
+        self.rotar_canon(diff_x, diff_y)
 
     def gestionar_arma_secundaria(self):
         if self.arma_secundaria != None:
@@ -90,14 +88,14 @@ class Player(Tank):
         else:
             self.arma_secundaria_pos = 0
         self.arma_secundaria = self.armas_secundarias[self.arma_secundaria_pos]
-        if self.arma_secundaria != None:
+        if self.arma_secundaria is not None:
             if self.arma_secundaria.tipo == "escopeta":
-                self.sprite_cannon = pygame.transform.scale(self.arma_secundaria.imagen, (self.tamaño_tile * settings.RESIZE_PLAYER, self.tamaño_tile * settings.RESIZE_PLAYER))
-                self.arma_secundaria.animacion = [pygame.transform.scale(self.arma_secundaria.animacion [i], (settings.RESIZE_PLAYER* self.tamaño_tile, settings.RESIZE_PLAYER * self.tamaño_tile))
+                self.sprite_cannon = pygame.transform.scale(self.arma_secundaria.imagen, (self.tamano_tile * settings.RESIZE_PLAYER, self.tamano_tile * settings.RESIZE_PLAYER))
+                self.arma_secundaria.animacion = [pygame.transform.scale(self.arma_secundaria.animacion [i], (settings.RESIZE_PLAYER * self.tamano_tile, settings.RESIZE_PLAYER * self.tamano_tile))
                         for i in range(0, len(self.arma_secundaria.animacion ) - 1)]
                 self.sprite_arma_secundaria = None
             else:
-                self.sprite_arma_secundaria = self.escalar_y_cargar(self.arma_secundaria.imagen, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER)
+                self.sprite_arma_secundaria = self.escalar_y_cargar(self.arma_secundaria.imagen)
                 self.sprite_cannon = self.sprites["canhon"]
 
 
@@ -106,9 +104,9 @@ class Player(Tank):
         if self.sprite_arma_secundaria != None: #dibujar arma secundaria si necesario
             self.rect_secundaria = self.sprite_arma_secundaria.get_rect(top=self.rect_element.bottom)
             mundo.pantalla.blit(self.sprite_arma_secundaria, (self.rect_element.centerx - self.rect_secundaria.width // 2 - mundo.camara_x, self.rect_element.centery - self.rect_secundaria.height // 2 - mundo.camara_y))
-        
 
-        
+
+
 
     def draw(self, mundo):
         for bala in self.balas:

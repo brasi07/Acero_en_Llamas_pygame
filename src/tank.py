@@ -9,62 +9,63 @@ from weapon import Dash
 
 
 class Tank(Elemento):
-    def __init__(self, hp, speed, x, y, tamaño_tile, collision_layer=CollisionLayer.NONE):
+    def __init__(self, hp, speed, x, y, tamano_tile, collision_layer=CollisionLayer.NONE, ruta=""):
         self.hp = hp
         self.speed = speed
-        self.tamaño_tile = tamaño_tile
+        self.tamano_tile = tamano_tile
 
-        # Cargar sprites
-        self.sprite_base = self.escalar_y_cargar("../res/entidades/jugador/bodies/body_tracks.png")
-        self.sprite_base_45 = self.escalar_y_cargar("../res/entidades/jugador/bodies/body_tracks_45.png")
+        # Generamos sprites para el tanque
+        self.sprites = self.generar_sprites(ruta)
 
-        self.sprite_cannon = self.escalar_y_cargar("../res/entidades/jugador/armas/tanque_canon.png")
-        self.sprites = self.generar_sprites()
-
+        # Llamamos a la clase base Elemento después de inicializar los atributos de Tank
         super().__init__(x, y, self.sprites["abajo"], collision_layer)
 
-        self.imagen_canon = pygame.transform.rotate(self.sprite_cannon, 0)
+        # Ahora podemos usar sprite_cannon sin problemas
+        self.imagen_canon = self.sprites["cannon"]
         self.rect_canon = self.imagen_canon.get_rect(center=self.rect_element.center)
 
         self.direccion = "abajo"
-
         self.balas = []
         self.tiempo_ultimo_disparo = pygame.time.get_ticks()
         self.angulo_cannon = 0
 
-        # Equipamos armas
-        self.equip_special(Dash())
+        self.arma_secundaria = None
+        self.ultimo_uso_secundaria = pygame.time.get_ticks()
 
-    def equip_special(self, weapon=Dash()):
+        # Equipamos armas
+        self.equipar_especial(Dash())
+
+    def equipar_especial(self, weapon=None):
         # Equipamos armas
         self.arma_secundaria = weapon  # Equipar el Dash
         self.ultimo_uso_secundaria = pygame.time.get_ticks()
 
-    def generar_sprites(self):
+    def generar_sprites(self, ruta):
+        sprite_base = self.escalar_y_cargar(ruta + "bodies/body_tracks.png")
+        sprite_base_45 = self.escalar_y_cargar(ruta + "bodies/body_tracks_45.png")
+        sprite_cannon = self.escalar_y_cargar(ruta + "armas/tanque_canon.png")
+
         return {
-            "arriba": self.sprite_base,
-            "derecha": pygame.transform.rotate(self.sprite_base, -90),
-            "izquierda": pygame.transform.rotate(self.sprite_base, 90),
-            "abajo": pygame.transform.rotate(self.sprite_base, 180),
-            "arriba_izquierda": self.sprite_base_45,
-            "arriba_derecha": pygame.transform.rotate(self.sprite_base_45, -90),
-            "abajo_izquierda": pygame.transform.rotate(self.sprite_base_45, 90),
-            "abajo_derecha": pygame.transform.rotate(self.sprite_base_45, 180),
-            "canhon": self.sprite_cannon
+            "arriba": sprite_base,
+            "derecha": pygame.transform.rotate(sprite_base, -90),
+            "izquierda": pygame.transform.rotate(sprite_base, 90),
+            "abajo": pygame.transform.rotate(sprite_base, 180),
+            "arriba_izquierda": sprite_base_45,
+            "arriba_derecha": pygame.transform.rotate(sprite_base_45, -90),
+            "abajo_izquierda": pygame.transform.rotate(sprite_base_45, 90),
+            "abajo_derecha": pygame.transform.rotate(sprite_base_45, 180),
+            "cannon": sprite_cannon
         }
 
     def escalar_y_cargar(self, ruta):
         imagen = pygame.image.load(ruta)
-        return pygame.transform.scale(imagen, (self.tamaño_tile * settings.RESIZE_PLAYER, self.tamaño_tile * settings.RESIZE_PLAYER))
+        return pygame.transform.scale(imagen, (self.tamano_tile * settings.RESIZE_PLAYER, self.tamano_tile * settings.RESIZE_PLAYER))
 
-    def aim(self, dirx, diry):
+    def rotar_canon(self, dirx, diry):
         # Calcular el ángulo del cañón
         self.angulo_cannon = np.degrees(np.arctan2(diry, dirx))  # Guardar el ángulo para disparos
 
-        # Rotar la imagen del cañón
-        self.imagen_canon = pygame.transform.rotate(self.sprite_cannon, -self.angulo_cannon - 90)
-
-        # Mantener el cañón centrado en el tanque
+        self.imagen_canon = pygame.transform.rotate(self.sprites["cannon"], -self.angulo_cannon - 90)
         self.rect_canon = self.imagen_canon.get_rect(center=self.rect_element.center)
 
     def actualizar_posicion(self, movimiento_x, movimiento_y, mundo):
@@ -109,7 +110,7 @@ class Tank(Elemento):
 
     def disparar(self):
         cannon_tip = self.get_cannon_tip()  # Obtener la punta del cañón
-        nueva_bala = Bala(cannon_tip, self.angulo_cannon, self.tamaño_tile, CollisionLayer.BULLET_PLAYER)
+        nueva_bala = Bala(cannon_tip, self.angulo_cannon, self.tamano_tile, CollisionLayer.BULLET_PLAYER)
         self.balas.append(nueva_bala)
 
     def get_cannon_tip(self):
