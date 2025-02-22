@@ -14,7 +14,7 @@ class Game:
         self.ejecutando = True
 
         self.jugador = Player(0, 0)
-        self.mundo = World(self.pantalla, "1", self.jugador)
+        self.mundo = World(self.pantalla, "2", self.jugador)
 
     def run(self):
         self.set_cursor()

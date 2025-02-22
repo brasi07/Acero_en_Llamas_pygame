@@ -116,15 +116,17 @@ class World:
                 if valor == 0 and lista_elementos == self.elementos_por_capa[max(self.capas.keys())]:
                     self.player.establecer_posicion(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
                     lista_elementos.append(self.player)
-                elif 5000 <= valor <= 5099:  # Rango de valores reservados para botones
+                elif 5000 <= valor <= 5099 and self.mundo_number == "1":  # Rango de valores reservados para botones
                     puerta_id = valor + 100  # Ejemplo: Botón 5000 activa puerta 5100
                     puertas_a_activar = self.puertas.get(puerta_id)
                     lista_elementos.append(Boton(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor], puertas_a_activar))
-                elif valor == 836:
+                elif valor == 836 and self.mundo_number == "1" \
+                        or valor == 1425 and self.mundo_number == "2":
                     lista_elementos.append(Trampa(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor]))
-                elif valor == 1168:
+                elif valor == 1168 and self.mundo_number == "1":
                     lista_elementos.append(MuroBajo(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor]))
-                elif valor in (514, 515, 516, 517, 578, 579, 580, 581, 876, 878, 768, 2436, 2437, 2438, 2500, 2502, 2564, 2565, 2566):
+                elif valor in (514, 515, 516, 517, 578, 579, 580, 581, 876, 878, 768, 2436, 2437, 2438, 2500, 2502, 2564, 2565, 2566) and self.mundo_number == "1" \
+                        or valor in (512, 513, 576, 577, 1360, 1361, 1362, 1424, 1426, 1488, 1489, 1490, 1486, 1550, 1614, 1678) and self.mundo_number == "2":
                     lista_elementos.append(Decoracion(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor]))
                 elif valor != -1 and valor in sprites:
                     lista_elementos.append(Muro(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor]))
