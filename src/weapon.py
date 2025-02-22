@@ -7,7 +7,23 @@ import settings
 
 class Weapon(abc.ABC):  # Clase base abstracta para armas
     def __init__(self, tipo):
-        self.imagen = self.escalar_y_cargar_imagen(f"../res/entidades/jugador/armas/{tipo}.png")
+        self.imagen_canon_especial = self.escalar_y_cargar_imagen(f"../res/entidades/jugador/armas/{tipo}.png")
+        self.imagen_accesorio = self.escalar_y_cargar_imagen(f"../res/entidades/jugador/armas/{tipo}.png")
+
+    def generar_sprites(self, ruta):
+        sprite_base = self.escalar_y_cargar_imagen(ruta + "bodies/body_tracks.png")
+        sprite_base_45 = self.escalar_y_cargar_imagen(ruta + "bodies/body_tracks_45.png")
+
+        return {
+            "arriba": sprite_base,
+            "derecha": pygame.transform.rotate(sprite_base, -90),
+            "izquierda": pygame.transform.rotate(sprite_base, 90),
+            "abajo": pygame.transform.rotate(sprite_base, 180),
+            "arriba_izquierda": sprite_base_45,
+            "arriba_derecha": pygame.transform.rotate(sprite_base_45, -90),
+            "abajo_izquierda": pygame.transform.rotate(sprite_base_45, 90),
+            "abajo_derecha": pygame.transform.rotate(sprite_base_45, 180),
+        }
 
     @staticmethod
     def escalar_y_cargar_imagen(ruta):
@@ -19,6 +35,11 @@ class Weapon(abc.ABC):  # Clase base abstracta para armas
         sprite_sheet = spritesheet.SpriteSheet(ruta)
         animacion = sprite_sheet.load_strip((0, 0, 128, 128), 8, (0, 0, 0))
         return [pygame.transform.scale(frame, (settings.RESIZE_PLAYER * settings.TILE_SIZE, settings.RESIZE_PLAYER * settings.TILE_SIZE)) for frame in animacion]
+
+    @abc.abstractmethod
+    def cambio_de_arma(self, tank):
+        """Método abstracto que todas las armas deben implementar"""
+        pass
 
     @abc.abstractmethod
     def activar(self, jugador):
@@ -36,6 +57,10 @@ class Dash(Weapon):
         self.duracion_ms = 300  # Duración del Dash en milisegundos
         self.tiempo_inicio = None  # Guarda el tiempo de activación
         self.activo = False  # Indica si el Dash está activo
+
+    def cambio_de_arma(self, tank):
+        tank.sprites["cannon"] = self.escalar_y_cargar_imagen("../res/entidades/jugador/armas/tanque_canon.png")
+        tank.sprite_arma_secundaria = self.imagen_accesorio
 
     def activar(self, jugador):
         """Activa el Dash si no está en uso."""
@@ -59,8 +84,12 @@ class Escopeta(Weapon):
         self.tiempo_inicio = None #Guarda el tiempo de activacivación
         self.animacion = self.escalar_y_cargar_animacion("../res/entidades/jugador/armas/escopeta.png")
         self.frame_actual = 0
-        self.imagen = self.animacion[0]
+        self.imagen_canon_especial = self.animacion[0]
         self.activo = False
+
+    def cambio_de_arma(self, tank):
+        tank.sprites["cannon"] = self.imagen_canon_especial
+        tank.sprite_arma_secundaria = None  # No hay sprite separado para la escopeta
         
     def activar(self, tank):
         self.tiempo_inicio = pygame.time.get_ticks()
@@ -75,14 +104,16 @@ class Escopeta(Weapon):
     def update(self, tank):
         if self.activo:
             if self.frame_actual < len(self.animacion):
-                self.imagen = self.animacion[self.frame_actual]
-                tank.sprites["cannon"] = self.imagen
+                self.imagen_canon_especial = self.animacion[self.frame_actual]
+                tank.sprites["cannon"] = self.imagen_canon_especial
                 self.frame_actual += 1
             else:
                 self.frame_actual = 0
-                self.imagen = self.animacion[0]
-                tank.sprites["cannon"] = self.imagen
+                self.imagen_canon_especial = self.animacion[0]
+                tank.sprites["cannon"] = self.imagen_canon_especial
                 self.activo = False
+
+
         
         
         

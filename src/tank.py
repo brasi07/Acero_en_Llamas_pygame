@@ -30,7 +30,6 @@ class Tank(Elemento):
         self.tiempo_ultimo_disparo = pygame.time.get_ticks()
         self.angulo_cannon = 0
 
-        self.arma_secundaria = None
         self.ultimo_uso_secundaria = pygame.time.get_ticks()
 
     @staticmethod

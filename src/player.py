@@ -85,15 +85,7 @@ class Player(Tank):
         self.arma_secundaria = self.armas_secundarias[self.arma_secundaria_pos]
 
         if self.arma_secundaria is not None:
-            # Si es una Escopeta, cambia su sprite y ajusta animación
-            if isinstance(self.arma_secundaria, Escopeta):
-                self.sprites["cannon"] = self.arma_secundaria.imagen
-                self.sprite_arma_secundaria = None  # No hay sprite separado para la escopeta
-
-            else:
-                # Otras armas secundarias usan su sprite propio y el cañón por defecto
-                self.sprite_arma_secundaria = self.arma_secundaria.imagen
-                self.sprites["cannon"] = self.escalar_y_cargar("../res/entidades/jugador/armas/tanque_canon.png")
+            self.arma_secundaria.cambio_de_arma(self)
         else:
             self.sprites["cannon"] = self.escalar_y_cargar("../res/entidades/jugador/armas/tanque_canon.png")
             self.sprite_arma_secundaria = None
