@@ -50,7 +50,7 @@ class Game:
                     self.jugador.cambiar_arma_secundaria()
                 if evento.key == pygame.K_m:
                     if self.mundo.mundo_number == "1":
-                        self.mundo = World(self.pantalla, "2", self.jugador)
+                        self.mundo = World(self.pantalla, "2", self.jugador, True)
                     elif self.mundo.mundo_number == "2":
                         self.mundo = World(self.pantalla, "1", self.jugador)
                     elif self.mundo.mundo_number == "3":
@@ -62,7 +62,9 @@ class Game:
         #self.mundo.update()
 
     def draw(self):
-        self.mundo.draw(self.pantalla)
+        self.mundo.draw()
         self.jugador.draw(self.mundo)
+        if self.mundo.hasSky:
+            self.mundo.draw_sky()
         pygame.display.flip()
 

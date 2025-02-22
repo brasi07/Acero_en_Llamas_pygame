@@ -9,10 +9,11 @@ import os
 import re  # Para extraer números del nombre del archivo
 
 class World:
-    def __init__(self, pantalla, mundo_number="1", player=None):
+    def __init__(self, pantalla, mundo_number="1", player=None, hasSky=False):
         self.pantalla = pantalla
         self.player = player
         self.mundo_number = mundo_number  # Número del mundo actual
+        self.hasSky = hasSky
 
         self.ancho_pantalla, self.alto_pantalla = pantalla.get_size()
 
@@ -49,6 +50,8 @@ class World:
         self.en_transicion = False
         self.tiempo_inicio = 0
         self.destino_camara_x, self.destino_camara_y = 0,0
+
+        self.puertas = {}
 
         # Generar los elementos_1_2 de cada capa
         for capa, tiles in self.capas.items():
@@ -97,8 +100,6 @@ class World:
     def generar_elementos(self, mapa_tiles, lista_elementos, sprites):
         """Crea los elementos del mapa ajustándolos al tamaño de la pantalla."""
 
-        self.puertas = {}
-
         # Primer pase: Almacenar puertas
         for y, fila in enumerate(mapa_tiles):
             for x, valor in enumerate(fila):
@@ -113,7 +114,7 @@ class World:
             for x, valor in enumerate(fila):
 
                 valor = int(valor)  # Asegurarse de que el valor es un número
-                if valor == 0 and lista_elementos == self.elementos_por_capa[max(self.capas.keys())]:
+                if valor == 0:
                     self.camara_x = x // (self.ancho_pantalla / settings.TILE_SIZE) * self.ancho_pantalla
                     self.camara_y = y // (self.alto_pantalla / settings.TILE_SIZE) * self.alto_pantalla
                     self.player.establecer_posicion(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
@@ -128,7 +129,7 @@ class World:
                 elif valor == 1168 and self.mundo_number == "1":
                     lista_elementos.append(MuroBajo(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor]))
                 elif valor in (514, 515, 516, 517, 578, 579, 580, 581, 876, 878, 768, 2436, 2437, 2438, 2500, 2502, 2564, 2565, 2566) and self.mundo_number == "1" \
-                        or valor in (512, 513, 576, 577, 1360, 1361, 1362, 1424, 1426, 1488, 1489, 1490, 1486, 1550, 1614, 1678) and self.mundo_number == "2":
+                        or valor in (1, 512, 513, 576, 577, 1360, 1361, 1362, 1424, 1426, 1488, 1489, 1490, 1486, 1550, 1614, 1678) and self.mundo_number == "2":
                     lista_elementos.append(Decoracion(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor]))
                 elif valor != -1 and valor in sprites:
                     lista_elementos.append(Muro(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor]))
@@ -172,14 +173,26 @@ class World:
                 self.camara_y = self.destino_camara_y
                 self.en_transicion = False
 
-    def draw(self, pantalla):
+    def elemento_en_pantalla(self, elemento):
+        """Verifica si el elemento está dentro del área visible."""
+        return (
+                self.camara_x - 80 <= elemento.rect_element.x < self.camara_x + self.ancho_pantalla + 80
+                and self.camara_y - 80 <= elemento.rect_element.y < self.camara_y + self.alto_pantalla + 80
+        )
+
+    def draw(self):
         """Dibuja todas las capas en orden, desde la más baja hasta la más alta."""
         for capa in sorted(self.capas.keys()):  # Dibuja en orden numérico
             for elemento in self.elementos_por_capa[capa]:
-                if (
-                    self.camara_x - 80 <= elemento.rect_element.x < self.camara_x + self.ancho_pantalla + 80
-                    and self.camara_y - 80 <= elemento.rect_element.y < self.camara_y + self.alto_pantalla + 80
-                ):
+                if self.elemento_en_pantalla(elemento):
                     elemento.dibujar(self)
 
         self.actualizar_transicion()
+
+    def draw_sky(self):
+        """Dibuja solo la última capa (capa más alta)."""
+        capa_mas_alta = max(self.capas.keys())  # Encuentra la última capa
+        for elemento in self.elementos_por_capa[capa_mas_alta]:
+            if self.elemento_en_pantalla(elemento):
+                elemento.dibujar(self)
+
