@@ -14,7 +14,7 @@ class Game:
         self.ejecutando = True
 
         self.jugador = Player(0, 0)
-        self.mundo = World(self.pantalla, "2", self.jugador)
+        self.mundo = World(self.pantalla, "1", self.jugador)
 
     def run(self):
         self.set_cursor()
@@ -48,6 +48,8 @@ class Game:
                                 elemento.activar()
                 if evento.key == pygame.K_g: #cambiar arma secundaria con la tecla G (temporario mientras no se pueden encontrar las armas en el juego)
                     self.jugador.cambiar_arma_secundaria()
+                if evento.key == pygame.K_m:
+                    self.mundo = World(self.pantalla, "2", self.jugador)
 
 
     def update(self):

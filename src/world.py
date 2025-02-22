@@ -48,7 +48,7 @@ class World:
         # Variables de transición
         self.en_transicion = False
         self.tiempo_inicio = 0
-        self.destino_camara_x, self.destino_camara_y = self.ancho_pantalla, self.alto_pantalla
+        self.destino_camara_x, self.destino_camara_y = 0,0
 
         # Generar los elementos_1_2 de cada capa
         for capa, tiles in self.capas.items():
@@ -114,6 +114,8 @@ class World:
 
                 valor = int(valor)  # Asegurarse de que el valor es un número
                 if valor == 0 and lista_elementos == self.elementos_por_capa[max(self.capas.keys())]:
+                    self.camara_x = x // (self.ancho_pantalla / settings.TILE_SIZE) * self.ancho_pantalla
+                    self.camara_y = y // (self.alto_pantalla / settings.TILE_SIZE) * self.alto_pantalla
                     self.player.establecer_posicion(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
                     lista_elementos.append(self.player)
                 elif 5000 <= valor <= 5099 and self.mundo_number == "1":  # Rango de valores reservados para botones
