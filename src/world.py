@@ -183,6 +183,9 @@ class World:
     def draw(self):
         """Dibuja todas las capas en orden, desde la más baja hasta la más alta."""
         for capa in sorted(self.capas.keys()):  # Dibuja en orden numérico
+            if self.hasSky and max(self.capas.keys()) == capa:
+                break
+
             for elemento in self.elementos_por_capa[capa]:
                 if self.elemento_en_pantalla(elemento):
                     elemento.dibujar(self)
