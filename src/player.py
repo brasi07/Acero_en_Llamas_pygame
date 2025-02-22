@@ -22,7 +22,6 @@ class Player(Tank):
         self.arma_secundaria_pos = 0  # Índice de arma secundaria equipada
         self.sprite_arma_secundaria = None
         self.rect_secundaria = None
-        self.arma_secundaria = None
 
     def update(self, mundo):
         self.mover(mundo)

@@ -13,8 +13,8 @@ class Game:
         self.clock = pygame.time.Clock()
         self.ejecutando = True
 
-        self.mundo = World("1", self.pantalla)
-        self.jugador = self.mundo.player
+        self.jugador = Player(0, 0)
+        self.mundo = World(self.pantalla, "1", self.jugador)
 
     def run(self):
         self.set_cursor()

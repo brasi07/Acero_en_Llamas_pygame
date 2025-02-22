@@ -31,6 +31,7 @@ class Tank(Elemento):
         self.angulo_cannon = 0
 
         self.ultimo_uso_secundaria = pygame.time.get_ticks()
+        self.arma_secundaria = None
 
     @staticmethod
     def escalar_y_cargar(ruta):
@@ -54,6 +55,10 @@ class Tank(Elemento):
             "cannon": sprite_cannon
         }
 
+    def establecer_posicion(self, x, y):
+        self.rect_element.x = x
+        self.rect_element.y = y
+
     def equipar_especial(self, weapon=None):
         # Equipamos armas
         self.arma_secundaria = weapon  # Equipar el Dash
@@ -67,15 +72,23 @@ class Tank(Elemento):
         self.rect_canon = self.imagen_canon.get_rect(center=self.rect_element.center)
 
     def actualizar_posicion(self, movimiento_x, movimiento_y, mundo):
-        colision_x = self.verificar_colision(movimiento_x, 0, mundo)
-        colision_y = self.verificar_colision(0, movimiento_y, mundo)
+        self.verificar_colision(movimiento_x, 0, mundo)
+        self.verificar_colision(0, movimiento_y, mundo)
 
-        direccion = self.determinar_direccion(movimiento_x, movimiento_y, colision_x, colision_y)
+        direccion = self.determinar_direccion(movimiento_x, movimiento_y)
         if direccion:
             self.direccion = direccion
             self.imagen = self.sprites[direccion]
 
-    def determinar_direccion(self, dx, dy, colision_x, colision_y):
+    def verificar_colision(self, dx, dy, mundo):
+        self.rect_element.x += dx
+        self.rect_element.y += dy
+
+        if any(self.check_collision(e) for e in mundo.elementos_por_capa[2]):
+            self.rect_element.x -= dx
+            self.rect_element.y -= dy
+
+    def determinar_direccion(self, dx, dy):
         direcciones = {
             (-1, -1): "arriba_izquierda",
             (1, -1): "arriba_derecha",
@@ -89,15 +102,6 @@ class Tank(Elemento):
         dx = -1 if dx < 0 else (1 if dx > 0 else 0)
         dy = -1 if dy < 0 else (1 if dy > 0 else 0)
         return direcciones.get((dx, dy), self.direccion)  # Usa la última dirección si no encuentra coincidencia
-
-    def verificar_colision(self, dx, dy, mundo):
-        self.rect_element.x += dx
-        self.rect_element.y += dy
-        colision = any(self.check_collision(e) for e in mundo.elementos_por_capa[2])
-        if colision:
-            self.rect_element.x -= dx
-            self.rect_element.y -= dy
-        return colision
 
     def usar_arma_especial(self): #usar habilidad especial
         tiempo_actual = pygame.time.get_ticks()

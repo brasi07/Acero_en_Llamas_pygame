@@ -9,16 +9,15 @@ import os
 import re  # Para extraer números del nombre del archivo
 
 class World:
-    def __init__(self, nombre, pantalla, mundo="1", player=None):
-        self.nombre = nombre
+    def __init__(self, pantalla, mundo_number="1", player=None):
         self.pantalla = pantalla
         self.player = player
-        self.mundo = mundo  # Número del mundo actual
+        self.mundo_number = mundo_number  # Número del mundo actual
 
         self.ancho_pantalla, self.alto_pantalla = pantalla.get_size()
 
         # Buscar archivos de mapa según el nuevo formato "Mapa_{mundo}_{capa}.csv"
-        archivos_mapa = self.buscar_archivos_mapa(f"../res/mapas/Mapa_{self.mundo}_")
+        archivos_mapa = self.buscar_archivos_mapa(f"../res/mapas/Mapa_{self.mundo_number}_")
 
         # Diccionario para almacenar las capas
         self.capas = {}
@@ -37,7 +36,7 @@ class World:
 
         # Cargar dinámicamente los sprites según la capa
         for capa in self.capas.keys():
-            carpeta_elementos = f"../res/elementos/elementos_{self.mundo}_{capa}"
+            carpeta_elementos = f"../res/elementos/elementos_{self.mundo_number}_{capa}"
             self.sprites_por_capa[capa] = self.cargar_sprites(carpeta_elementos)
 
         # Crear la cámara
@@ -61,7 +60,7 @@ class World:
         archivos = []
         if os.path.exists(carpeta):
             for archivo in os.listdir(carpeta):
-                if archivo.startswith(f"Mapa_{self.mundo}_") and archivo.endswith(".csv"):
+                if archivo.startswith(f"Mapa_{self.mundo_number}_") and archivo.endswith(".csv"):
                     archivos.append(os.path.join(carpeta, archivo))
         return archivos
 
@@ -115,9 +114,7 @@ class World:
 
                 valor = int(valor)  # Asegurarse de que el valor es un número
                 if valor == 0 and lista_elementos == self.elementos_por_capa[max(self.capas.keys())]:
-                    # El jugador solo aparece en la capa superior
-                    if self.player is None:
-                        self.player = Player(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
+                    self.player.establecer_posicion(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
                     lista_elementos.append(self.player)
                 elif 5000 <= valor <= 5099:  # Rango de valores reservados para botones
                     puerta_id = valor + 100  # Ejemplo: Botón 5000 activa puerta 5100
