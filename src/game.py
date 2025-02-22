@@ -49,7 +49,12 @@ class Game:
                 if evento.key == pygame.K_g: #cambiar arma secundaria con la tecla G (temporario mientras no se pueden encontrar las armas en el juego)
                     self.jugador.cambiar_arma_secundaria()
                 if evento.key == pygame.K_m:
-                    self.mundo = World(self.pantalla, "2", self.jugador)
+                    if self.mundo.mundo_number == "1":
+                        self.mundo = World(self.pantalla, "2", self.jugador)
+                    elif self.mundo.mundo_number == "2":
+                        self.mundo = World(self.pantalla, "1", self.jugador)
+                    elif self.mundo.mundo_number == "3":
+                        self.mundo = World(self.pantalla, "1", self.jugador)
 
 
     def update(self):
