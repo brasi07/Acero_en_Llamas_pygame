@@ -15,7 +15,7 @@ class Player(Tank):
 
     def __init__(self, x, y):
         # Llamamos primero al constructor de la clase base (Tank)
-        super().__init__(3, 3, x, y, CollisionLayer.PLAYER, "../res/entidades/jugador/")
+        super().__init__(3, 3, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, collision_layer=CollisionLayer.PLAYER, ruta="../res/entidades/jugador/")
 
         # Equipamos armas
         self.armas_secundarias = [None, weapon.Dash(), weapon.Escopeta()]  # Lista de armas
@@ -87,7 +87,7 @@ class Player(Tank):
         if self.arma_secundaria is not None:
             self.arma_secundaria.cambio_de_arma(self)
         else:
-            self.sprites["cannon"] = self.escalar_y_cargar("../res/entidades/jugador/armas/tanque_canon.png")
+            self.sprites["cannon"] = self.cargar_canon_base("../res/entidades/jugador/")
             self.sprite_arma_secundaria = None
 
     def dibujar_arma_secundaria(self, mundo):

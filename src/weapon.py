@@ -59,7 +59,7 @@ class Dash(Weapon):
         self.activo = False  # Indica si el Dash está activo
 
     def cambio_de_arma(self, tank):
-        tank.sprites["cannon"] = self.escalar_y_cargar_imagen("../res/entidades/jugador/armas/tanque_canon.png")
+        tank.sprites["cannon"] = tank.cargar_canon_base("../res/entidades/jugador/")
         tank.sprite_arma_secundaria = self.imagen_accesorio
 
     def activar(self, jugador):
