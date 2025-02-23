@@ -102,10 +102,18 @@ class BalaRebote(Bala):
             self.rect_element = self.sprites_colision[0].get_rect(center=self.rect_element.center)  # Centrar explosión
         else:
             self.rebote_count += 1
-            if self.rect_element.right > elemento.rect_element.left or self.rect_element.left < elemento.rect_element.right:
-                self.vel_x = -self.vel_x
-            elif self.rect_element.top < elemento.rect_element.bottom or self.rect_element.bottom > elemento.rect_element.top:
-                self.vel_yel = -self.vel_y
+            overlap_x = min(self.rect_element.right - elemento.rect_element.left, 
+                elemento.rect_element.right - self.rect_element.left) #calcula cuanto colisionan los rectangulos por la lateral
+
+            overlap_y = min(self.rect_element.bottom - elemento.rect_element.top, 
+                elemento.rect_element.bottom - self.rect_element.top) #calcula cuanto colisionan los rectangulos por arriba y abajo
+
+            #decide cual velocidad cambiar basado en si la colisión es mayor por la lateral o por arriba/abajo
+            if overlap_x < overlap_y:
+                self.vel_x = -self.vel_x 
+            else:
+                self.vel_y = -self.vel_y 
+
 
     def check_collision(self, other_element):
         if other_element.collision_layer not in COLLISION_RULES.get(self.collision_layer, set()):
