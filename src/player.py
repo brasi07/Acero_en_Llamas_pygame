@@ -1,39 +1,26 @@
-import settings
-import numpy as np
 
 from settings import CollisionLayer
-from bullet import Bala
-import weapon
-
-import pygame
-
 from tank import Tank
-from weapon import Escopeta
+from weapon import *
 
 
 class Player(Tank):
 
     def __init__(self, x, y):
+
         # Llamamos primero al constructor de la clase base (Tank)
         super().__init__(3, 3, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, collision_layer=CollisionLayer.PLAYER, ruta="../res/entidades/jugador/")
 
         # Equipamos armas
-        self.armas_secundarias = [None, weapon.Dash(), weapon.Escopeta(), weapon.Rebote()]  # Lista de armas
-        self.arma_secundaria_pos = 0  # Índice de arma secundaria equipada
-        self.sprite_arma_secundaria = None
-        self.rect_secundaria = None
+        self.armas = [Weapon(self), Dash(self), Escopeta(self), Rebote(self)]  # Lista de armas
+        self.armas_pos = 0  # Índice de arma secundaria equipada
 
     def update(self, mundo):
         self.mover(mundo)
-        self.gestionar_disparo()
-        self.gestionar_arma_secundaria()
-        if self.arma_secundaria is not None:
-            self.arma_secundaria.update(self)
+        self.arma.update_secundaria(self)
+        self.arma.update(mundo)
+        self.gestionar_armas()
         self.verificar_fuera_pantalla(mundo)
-
-        for bala in self.balas[:]:
-            if bala.update(mundo, mundo.ancho_pantalla, mundo.alto_pantalla):
-                self.balas.remove(bala)
 
     def mover(self, mundo):
         teclas = pygame.key.get_pressed()
@@ -60,47 +47,21 @@ class Player(Tank):
         elif self.rect_element.top < mundo.camara_y - 50:
             mundo.cambiar_pantalla("arriba")
 
-    def gestionar_disparo(self):
+    def gestionar_armas(self):
         if pygame.mouse.get_pressed()[0]:
             if pygame.time.get_ticks() - self.tiempo_ultimo_disparo >= 1000:
-                self.disparar()
+                self.arma.activar()
                 self.tiempo_ultimo_disparo = pygame.time.get_ticks()
 
-    def update_cannon_position(self, mundo):
-        # Obtener la posición del ratón en relación con la cámara
-        cursorx, cursory = pygame.mouse.get_pos()
-        diff_x = cursorx - (self.rect_element.centerx - mundo.camara_x)
-        diff_y = cursory - (self.rect_element.centery - mundo.camara_y)
-
-        self.rotar_canon(diff_x, diff_y)
-
-    def gestionar_arma_secundaria(self):
-        if self.arma_secundaria is not None:
-            if pygame.mouse.get_pressed()[2]:
-                self.usar_arma_especial()
+        if pygame.mouse.get_pressed()[2]:
+            self.usar_arma_especial()
 
     def cambiar_arma_secundaria(self):
         # Cambia a la siguiente arma en la lista (ciclo circular)
-        self.arma_secundaria_pos = (self.arma_secundaria_pos + 1) % len(self.armas_secundarias)
-        self.arma_secundaria = self.armas_secundarias[self.arma_secundaria_pos]
-
-        if self.arma_secundaria is not None:
-            self.arma_secundaria.cambio_de_arma(self)
-        else:
-            self.sprites["cannon"] = self.cargar_canon_base("../res/entidades/jugador/")
-            self.sprite_arma_secundaria = None
-
-    def dibujar_arma_secundaria(self, mundo):
-        #aun hay que hacer con que el propulsor de dash estea correctamente alineado con el tanque
-        if self.sprite_arma_secundaria is not None: #dibujar arma secundaria si necesario
-            self.rect_secundaria = self.sprite_arma_secundaria.get_rect(top=self.rect_element.bottom)
-            mundo.pantalla.blit(self.sprite_arma_secundaria, (self.rect_element.centerx - self.rect_secundaria.width // 2 - mundo.camara_x, self.rect_element.centery - self.rect_secundaria.height // 2 - mundo.camara_y))
+        self.armas_pos = (self.armas_pos + 1) % len(self.armas)
+        self.arma = self.armas[self.armas_pos]
+        self.arma.cambio_de_arma()
 
     def draw(self, mundo):
-        for bala in self.balas:
-            bala.draw( mundo)
         self.dibujar(mundo)
-        self.update_cannon_position(mundo)
-        if self.arma_secundaria is not None:
-                self.dibujar_arma_secundaria(mundo)
-        mundo.pantalla.blit(self.imagen_canon, (self.rect_element.centerx - self.rect_canon.width // 2 - mundo.camara_x, self.rect_element.centery - self.rect_canon.height // 2 - mundo.camara_y))
+        self.arma.draw(mundo)
