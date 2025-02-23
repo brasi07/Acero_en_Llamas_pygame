@@ -31,9 +31,9 @@ class Weapon(abc.ABC):  # Clase base abstracta para armas
         return pygame.transform.scale(imagen, (settings.TILE_SIZE * settings.RESIZE_PLAYER, settings.TILE_SIZE * settings.RESIZE_PLAYER))
 
     @staticmethod
-    def escalar_y_cargar_animacion(ruta):
+    def escalar_y_cargar_animacion(ruta, numberSprites):
         sprite_sheet = spritesheet.SpriteSheet(ruta)
-        animacion = sprite_sheet.load_strip((0, 0, 128, 128), 8, settings.ELIMINAR_FONDO)
+        animacion = sprite_sheet.load_strip((0, 0, 128, 128), numberSprites, settings.ELIMINAR_FONDO)
         return [pygame.transform.scale(frame, (settings.RESIZE_PLAYER * settings.TILE_SIZE, settings.RESIZE_PLAYER * settings.TILE_SIZE)) for frame in animacion]
 
     @abc.abstractmethod
@@ -80,12 +80,16 @@ class Dash(Weapon):
 
 class Escopeta(Weapon):
     def __init__(self):
-        super().__init__("turret_01_mk1")
+        self.nombre_sprite = "turret_01_mk4"
+
+        super().__init__(self.nombre_sprite)
         self.tiempo_inicio = None #Guarda el tiempo de activacivación
-        self.animacion = self.escalar_y_cargar_animacion("../res/entidades/jugador/armas/turret_01_mk4.png")
-        self.frame_actual = 0
+        self.animacion = self.escalar_y_cargar_animacion(f"../res/entidades/jugador/armas/{self.nombre_sprite}.png", 8)
         self.imagen_canon_especial = self.animacion[0]
         self.activo = False
+
+        self.frame_actual = 0
+        self.ultimo_cambio_frame = 0
 
     def cambio_de_arma(self, tank):
         tank.sprites["cannon"] = self.imagen_canon_especial
@@ -103,15 +107,21 @@ class Escopeta(Weapon):
     
     def update(self, tank):
         if self.activo:
-            if self.frame_actual < len(self.animacion):
+            tiempo_actual = pygame.time.get_ticks()  # Obtener el tiempo actual
+
+            # Si han pasado 100 ms desde el último cambio de frame
+            if tiempo_actual - self.ultimo_cambio_frame >= settings.TIME_FRAME:
+                self.ultimo_cambio_frame = tiempo_actual  # Actualizar el tiempo del último cambio
+
+                if self.frame_actual < len(self.animacion) - 1:
+                    self.frame_actual += 1
+                else:
+                    self.frame_actual = 0
+                    self.activo = False  # Desactiva la animación cuando termina
+
+                # Actualizar la imagen del cañón
                 self.imagen_canon_especial = self.animacion[self.frame_actual]
                 tank.sprites["cannon"] = self.imagen_canon_especial
-                self.frame_actual += 1
-            else:
-                self.frame_actual = 0
-                self.imagen_canon_especial = self.animacion[0]
-                tank.sprites["cannon"] = self.imagen_canon_especial
-                self.activo = False
 
 
         
