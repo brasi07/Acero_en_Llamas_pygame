@@ -214,5 +214,5 @@ class World:
     def update(self):
         """Actualiza el mundo y los elementos."""
         for enemigo in self.enemigos:
-            enemigo.update(self)
+            enemigo.update(self.player)
 
