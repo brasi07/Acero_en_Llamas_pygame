@@ -11,17 +11,17 @@ import spritesheet
 
 class Tank(Elemento):
 
-    def __init__(self, vida, velocidad, x, y, resizex, resizey, tank_type="", collision_layer=CollisionLayer.NONE, ruta=""):
+    def __init__(self, vida, velocidad, x, y, resizex, resizey, tank_type, tank_color="", collision_layer=CollisionLayer.NONE):
 
         self.vida = vida
         self.velocidad = velocidad
         self.velocidad_base = 3
 
-        self.ruta = ruta
         self.tank_type = tank_type
+        self.tank_color = tank_color
 
         # Generamos sprites para el tanque
-        self.sprites = self.generar_sprites(ruta, resizex, resizey, tank_type)
+        self.sprites = self.generar_sprites(resizex, resizey, tank_type, "bodies/body_tracks", tank_color)
 
         super().__init__(x, y, self.sprites["abajo"], collision_layer)
 
@@ -32,9 +32,9 @@ class Tank(Elemento):
 
         self.ultimo_uso_secundaria = pygame.time.get_ticks()
 
-    def generar_sprites(self, ruta, resizex, resizey, tank_type):
-        sprite_base = self.escalar_y_cargar(self, ruta + "bodies/body_tracks" + tank_type + ".png", resizex, resizey)
-        sprite_base_45 = self.escalar_y_cargar(self, ruta + "bodies/body_tracks_45" + tank_type + ".png", resizex, resizey)
+    def generar_sprites(self,resizex, resizey, tank_type, sprite_type, tank_color):
+        sprite_base = self.escalar_y_cargar(self, f"../res/entidades/{tank_type}/{sprite_type}{tank_color}.png" , resizex, resizey)
+        sprite_base_45 = self.escalar_y_cargar(self, f"../res/entidades/{tank_type}/{sprite_type}_45{tank_color}.png" , resizex, resizey)
 
         return {
             "arriba": sprite_base,

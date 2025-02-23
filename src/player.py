@@ -9,7 +9,7 @@ class Player(Tank):
     def __init__(self, x, y):
 
         # Llamamos primero al constructor de la clase base (Tank)
-        super().__init__(3, 3, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, collision_layer=CollisionLayer.PLAYER, ruta="../res/entidades/jugador/")
+        super().__init__(3, 3, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, tank_type="jugador", collision_layer=CollisionLayer.PLAYER)
 
         # Equipamos armas
         self.armas = [Weapon(self), Dash(self), Escopeta(self), Rebote(self)]  # Lista de armas
@@ -17,7 +17,7 @@ class Player(Tank):
 
     def update(self, mundo):
         self.mover(mundo)
-        self.arma.update_secundaria(self)
+        self.arma.update_secundaria(self, mundo)
         self.arma.update(mundo)
         self.gestionar_armas()
         self.verificar_fuera_pantalla(mundo)

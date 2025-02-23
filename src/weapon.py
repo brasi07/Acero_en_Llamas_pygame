@@ -8,7 +8,7 @@ import settings
 class Weapon:
     def __init__(self, tank):
         self.tank = tank
-        self.imagen_canon_base = self.cargar_canon(0, tank.ruta, tank.tank_type)
+        self.imagen_canon_base = self.cargar_canon(0, tank.tank_type, "armas/weapons", tank.tank_color)
         self.imagen_accesorio_base = None
 
         self.imagen_canon = self.imagen_canon_base
@@ -21,8 +21,8 @@ class Weapon:
         self.balas = []
 
     @staticmethod
-    def cargar_canon(numberweapon, ruta, tank_type=""):
-        weapon_sprite_sheet = spritesheet.SpriteSheet(ruta + "armas/weapons" + tank_type + ".png")
+    def cargar_canon(numberweapon, tank_type, sprite_type, tank_color):
+        weapon_sprite_sheet = spritesheet.SpriteSheet(f"../res/entidades/{tank_type}/{sprite_type}{tank_color}.png")
         weapon_strip = weapon_sprite_sheet.load_strip((0, 0, 96, 96), 16, settings.ELIMINAR_FONDO)
         weapon_sprites = [pygame.transform.scale(frame, (settings.RESIZE_CANNON * settings.TILE_SIZE, settings.RESIZE_CANNON * settings.TILE_SIZE)) for frame in weapon_strip]
         sprite_weapon = weapon_sprites[numberweapon]
@@ -89,32 +89,58 @@ class Weapon:
     def activar_secundaria(self, tank):
         pass
 
-    def update_secundaria(self, mundo):
+    def update_secundaria(self, tank, mundo):
         pass
 
 class Dash(Weapon):
     def __init__(self, tank):
         super().__init__(tank)
         self.nombre_sprite = "dash"
-        self.duracion_ms = 300  # Duración del Dash en milisegundos
-        self.tiempo_inicio = None  # Guarda el tiempo de activación
-        self.activo = False  # Indica si el Dash está activo
         self.imagen_accesorio_base = self.escalar_y_cargar_imagen(f"../res/entidades/jugador/armas/{self.nombre_sprite}.png")
 
+        self.duracion_ms = 200  # Duración total del Dash en milisegundos
+        self.tiempo_inicio = None
+        self.activo = False
+
+        self.velocidad_dash = 0.1  # Velocidad del Dash (píxeles por milisegundo)
+        self.dx = 0
+        self.dy = 0
+
     def activar_secundaria(self, tank):
-        """Activa el Dash si no está en uso."""
+        """Activa el Dash con desplazamiento en función del tiempo."""
         if not self.activo:
             self.activo = True
-            self.tiempo_inicio = pygame.time.get_ticks()  # Guarda el tiempo de inicio
-            tank.velocidad = tank.velocidad_base * 3  # Aumenta velocidad
+            self.tiempo_inicio = pygame.time.get_ticks()
 
-    def update_secundaria(self, tank):
-        """Verifica si el Dash debe desactivarse automáticamente."""
+            # Direcciones normalizadas para mantener velocidad constante en diagonales
+            direcciones = {
+                "arriba": (0, -1),
+                "abajo": (0, 1),
+                "izquierda": (-1, 0),
+                "derecha": (1, 0),
+                "arriba_izquierda": (-0.707, -0.707),
+                "arriba_derecha": (0.707, -0.707),
+                "abajo_izquierda": (-0.707, 0.707),
+                "abajo_derecha": (0.707, 0.707),
+            }
+
+            # Obtener dirección normalizada del tanque
+            direccion_normalizada = direcciones.get(tank.direccion, (0, 0))
+            self.dx = direccion_normalizada[0] * self.velocidad_dash
+            self.dy = direccion_normalizada[1] * self.velocidad_dash
+
+    def update_secundaria(self, tank, mundo):
+        """Mueve el tanque progresivamente basado en el tiempo transcurrido."""
         if self.activo:
             tiempo_actual = pygame.time.get_ticks()
-            if tiempo_actual - self.tiempo_inicio >= self.duracion_ms:
-                self.activo = False  # Desactivar Dash
-                tank.velocidad = tank.velocidad_base  # Restablecer velocidad
+            tiempo_transcurrido = tiempo_actual - self.tiempo_inicio  # Milisegundos desde el inicio del Dash
+
+            if tiempo_transcurrido < self.duracion_ms:
+                movimiento_x = self.dx * tiempo_transcurrido
+                movimiento_y = self.dy * tiempo_transcurrido
+                tank.actualizar_posicion(movimiento_x, movimiento_y, mundo)
+            else:
+                self.activo = False  # Finaliza el Dash
 
 
 class Escopeta(Weapon):
@@ -139,7 +165,7 @@ class Escopeta(Weapon):
         self.balas.append(bala_derecha)
         self.activo = True
     
-    def update_secundaria(self, tank):
+    def update_secundaria(self, tank, mundo):
         if self.activo:
             tiempo_actual = pygame.time.get_ticks()  # Obtener el tiempo actual
 
@@ -175,7 +201,7 @@ class Rebote(Weapon):
         self.balas.append(bala_rebote)
         self.activo = True
 
-    def update_secundaria(self, tank):
+    def update_secundaria(self, tank, mundo):
         if self.activo:
             tiempo_actual = pygame.time.get_ticks()  # Obtener el tiempo actual
 
