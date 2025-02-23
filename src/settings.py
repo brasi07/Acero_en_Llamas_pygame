@@ -8,6 +8,11 @@ TILE_SIZE = 32
 
 COOLDOWN = 2000
 
+NEGRO = (0, 0, 0)
+BLANCO = (255, 255, 255)
+GRIS_OSCURO = (30, 30, 30)
+ELIMINAR_FONDO = (248, 0, 255)
+
 class CollisionLayer(Enum):
     PLAYER = 1
     ENEMY = 2
@@ -26,8 +31,3 @@ COLLISION_RULES = {
     CollisionLayer.LOW_WALL: set(),
     CollisionLayer.NONE: set()  # No colisiona con nada
 }
-
-class Color(Enum):
-    NEGRO = (0, 0, 0)
-    BLANCO = (255, 255, 255)
-    GRIS_OSCURO = (30, 30, 30)

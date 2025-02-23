@@ -33,7 +33,7 @@ class Weapon(abc.ABC):  # Clase base abstracta para armas
     @staticmethod
     def escalar_y_cargar_animacion(ruta):
         sprite_sheet = spritesheet.SpriteSheet(ruta)
-        animacion = sprite_sheet.load_strip((0, 0, 128, 128), 8, (0, 0, 0))
+        animacion = sprite_sheet.load_strip((0, 0, 128, 128), 8, settings.ELIMINAR_FONDO)
         return [pygame.transform.scale(frame, (settings.RESIZE_PLAYER * settings.TILE_SIZE, settings.RESIZE_PLAYER * settings.TILE_SIZE)) for frame in animacion]
 
     @abc.abstractmethod
@@ -80,9 +80,9 @@ class Dash(Weapon):
 
 class Escopeta(Weapon):
     def __init__(self):
-        super().__init__("escopeta")
+        super().__init__("turret_01_mk1")
         self.tiempo_inicio = None #Guarda el tiempo de activacivación
-        self.animacion = self.escalar_y_cargar_animacion("../res/entidades/jugador/armas/escopeta.png")
+        self.animacion = self.escalar_y_cargar_animacion("../res/entidades/jugador/armas/turret_01_mk4.png")
         self.frame_actual = 0
         self.imagen_canon_especial = self.animacion[0]
         self.activo = False
