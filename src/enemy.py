@@ -18,8 +18,14 @@ class Enemy(Tank):
         # Inicializamos en patrulla
         self.state = EnemyState.PATROLLING
 
+        self.patrol_direction = 1  # 1 derecha, -1 izquierda
+        self.patrol_movement = 100  # Rango de patrulla
+
+        self.chase_range = 150  # Distancia para empezar a perseguir
+        self.attack_range = 40 # Distancia para atacar
+
    
-    def update(self):
+    def update(self, mundo):
         if self.state == EnemyState.PATROLLING:
             # Movimiento en una ruta fija
             pass
@@ -29,16 +35,28 @@ class Enemy(Tank):
         elif self.state == EnemyState.ATTACKING:
             # Animación de ataque o colisión
             pass
-        pass  # Aquí iría la IA de movimiento
+        pass  
 
-    def draw(self, pantalla):
-        pantalla.blit(self.image, self.rect)
+    def calcular_direccion_canon(self, jugador):
+        # Obtener la posición del ratón en relación con la cámara
+        dirx = jugador.rect_element.x - self.rect_element.x
+        diry = jugador.rect_element.y - self.rect_element.y
 
-    # def distancia_player(self, player):
+        return dirx, diry
+
+       
+    def draw(self, mundo, jugador):
+        self.dibujar(mundo)
+        # self.update_cannon_position(jugador)
+
+        # mundo.pantalla.blit(self.imagen_canon, (self.rect_element.centerx - self.rect_canon.width // 2 - mundo.camara_x, self.rect_element.centery - self.rect_canon.height // 2 - mundo.camara_y))
+
+    def distancia_player(self, player):
+        return math.hypot(player.rect_element.x - self.rect_element.x, player.rect_element.y - self.rect_element.y)
 
 
 class Enemy_Brown(Enemy):
 
     def __init__(self, x, y):
-        super().__init__(3, 3, x, y, settings.RESIZE_ENEMY_BROWN, settings.RESIZE_ENEMY_BROWN, "_brown")
+        super().__init__(3, 3, x, y, settings.RESIZE_ENEMY_BROWN, settings.RESIZE_ENEMY_BROWN, tank_color="_brown")
 

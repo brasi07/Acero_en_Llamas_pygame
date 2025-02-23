@@ -59,11 +59,23 @@ class Game:
 
     def update(self):
         self.jugador.update(self.mundo)
-        #self.mundo.update()
+        self.mundo.update()
 
     def draw(self):
-        self.mundo.draw()
+        self.mundo.draw(self.jugador)
+        
+        for enemigo in self.mundo.enemigos:
+            enemigo.draw(self.mundo, self.jugador)
+            #arma
+            
+    
         self.jugador.draw(self.mundo)
+
+        # for enemigo in self.mundo.enemigos:
+            #balas
+
+        self.jugador.arma.dibujar_balas(self.mundo)
+
         if self.mundo.hasSky:
             self.mundo.draw_sky()
         pygame.display.flip()

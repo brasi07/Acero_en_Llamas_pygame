@@ -18,7 +18,7 @@ class Player(Tank):
     def update(self, mundo):
         self.mover(mundo)
         self.arma.update_secundaria(self, mundo)
-        self.arma.update(mundo)
+        self.arma.update(mundo=mundo)
         self.gestionar_armas()
         self.verificar_fuera_pantalla(mundo)
 
@@ -64,4 +64,12 @@ class Player(Tank):
 
     def draw(self, mundo):
         self.dibujar(mundo)
-        self.arma.draw(mundo)
+        self.arma.dibujar_arma(mundo)
+
+    def calcular_direccion_canon(self, mundo, jugador):
+        # Obtener la posición del ratón en relación con la cámara
+        cursorx, cursory = pygame.mouse.get_pos()
+        dirx = cursorx - (self.rect_element.centerx - mundo.camara_x)
+        diry = cursory - (self.rect_element.centery - mundo.camara_y)
+
+        return dirx, diry

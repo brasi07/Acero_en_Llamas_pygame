@@ -56,12 +56,10 @@ class Weapon:
         nueva_bala = Bala(cannon_tip, self.angulo_cannon, settings.CollisionLayer.BULLET_PLAYER)
         self.balas.append(nueva_bala)
 
-    def update(self, mundo):
-        # Obtener la posición del ratón en relación con la cámara
-        cursorx, cursory = pygame.mouse.get_pos()
-        dirx = cursorx - (self.tank.rect_element.centerx - mundo.camara_x)
-        diry = cursory - (self.tank.rect_element.centery - mundo.camara_y)
-
+    def update(self, mundo=None, jugador=None):
+        # Calcular la dirección del cañón
+        dirx, diry = self.tank.calcular_direccion_canon(mundo, jugador)
+        
         # Calcular el ángulo del cañón
         self.angulo_cannon = np.degrees(np.arctan2(diry, dirx))  # Guardar el ángulo para disparos
 
@@ -76,10 +74,11 @@ class Weapon:
         self.imagen_canon = self.imagen_canon_base
         self.imagen_accesorio = self.imagen_accesorio_base
 
-    def draw(self, mundo):
+    def dibujar_balas(self, mundo):
         for bala in self.balas:
             bala.draw(mundo)
 
+    def dibujar_arma(self, mundo):
         if self.imagen_accesorio: #dibujar arma secundaria si necesario
             self.rect_accesorio = self.imagen_accesorio.get_rect(top=self.tank.rect_element.bottom)
             mundo.pantalla.blit(self.imagen_accesorio, (self.tank.rect_element.centerx - self.rect_accesorio.width // 2 - mundo.camara_x, self.tank.rect_element.centery - self.tank.rect_element.height // 2 - mundo.camara_y))

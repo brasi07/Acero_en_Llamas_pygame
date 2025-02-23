@@ -93,6 +93,7 @@ class Tank(Elemento):
         if tiempo_actual - self.ultimo_uso_secundaria >= settings.COOLDOWN:
             self.arma.activar_secundaria(self)
             self.ultimo_uso_secundaria = tiempo_actual  # Reinicia el cooldown
+            
 
 
 

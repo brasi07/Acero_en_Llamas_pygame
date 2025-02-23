@@ -29,15 +29,6 @@ class Bala(Elemento):
         self.tiempo_colision = 0
         self.frame_actual = 0
 
-
-    def check_collision(self, other_element):
-
-        if other_element.collision_layer not in COLLISION_RULES.get(self.collision_layer, set()):
-            return False
-
-        # Comprobar si los rectángulos colisionan
-        return self.rect_element.colliderect(other_element.rect_element)
-
     def update(self, mundo, ancho_pantalla, alto_pantalla):
         """Actualiza la posición de la bala y verifica colisiones."""
         if self.colisionando:

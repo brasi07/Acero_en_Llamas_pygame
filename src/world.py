@@ -2,7 +2,7 @@ import math
 import pygame
 from player import Player
 from elements import Muro, Decoracion, Boton, Trampa, MuroBajo, Puerta
-from enemy import Enemy
+from enemy import *
 import settings
 import csv
 import os
@@ -46,6 +46,9 @@ class World:
         # Diccionario de elementos_1_2 para cada capa
         self.elementos_por_capa = {capa: [] for capa in self.capas.keys()}
 
+        # Diccionario de enemigos por capa
+        self.enemigos = []
+
         # Variables de transición
         self.en_transicion = False
         self.tiempo_inicio = 0
@@ -55,7 +58,7 @@ class World:
 
         # Generar los elementos_1_2 de cada capa
         for capa, tiles in self.capas.items():
-            self.generar_elementos(tiles, self.elementos_por_capa[capa], self.sprites_por_capa[capa])
+            self.generar_elementos(tiles, self.elementos_por_capa[capa], self.sprites_por_capa[capa], self.enemigos)
 
     def buscar_archivos_mapa(self, prefijo):
         """Busca archivos que coincidan con el patrón 'Mapa_{mundo}_{capa}.csv'."""
@@ -97,7 +100,7 @@ class World:
                 sprites[int(id_sprite)] = pygame.image.load(os.path.join(carpeta, archivo))
         return sprites
 
-    def generar_elementos(self, mapa_tiles, lista_elementos, sprites):
+    def generar_elementos(self, mapa_tiles, lista_elementos, sprites, lista_enemigos):
         """Crea los elementos del mapa ajustándolos al tamaño de la pantalla."""
 
         # Primer pase: Almacenar puertas
@@ -131,6 +134,10 @@ class World:
                 elif valor in (514, 515, 516, 517, 578, 579, 580, 581, 876, 878, 768, 2436, 2437, 2438, 2500, 2502, 2564, 2565, 2566) and self.mundo_number == "1" \
                         or valor in (1, 512, 513, 576, 577, 1360, 1361, 1362, 1424, 1426, 1488, 1489, 1490, 1486, 1550, 1614, 1678) and self.mundo_number == "2":
                     lista_elementos.append(Decoracion(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor]))
+                elif valor == 7777:
+                    brown_enemy = Enemy_Brown(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
+                    lista_elementos.append(brown_enemy)
+                    lista_enemigos.append(brown_enemy)
                 elif valor != -1 and valor in sprites:
                     lista_elementos.append(Muro(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor]))
 
@@ -180,7 +187,7 @@ class World:
                 and self.camara_y - 80 <= elemento.rect_element.y < self.camara_y + self.alto_pantalla + 80
         )
 
-    def draw(self):
+    def draw(self, jugador):
         """Dibuja todas las capas en orden, desde la más baja hasta la más alta."""
         for capa in sorted(self.capas.keys()):  # Dibuja en orden numérico
             if self.hasSky and max(self.capas.keys()) == capa:
@@ -189,6 +196,11 @@ class World:
             for elemento in self.elementos_por_capa[capa]:
                 if self.elemento_en_pantalla(elemento):
                     elemento.dibujar(self)
+            
+            if capa == 2:
+                for enemigo in self.enemigos:
+                    if self.elemento_en_pantalla(enemigo):
+                        enemigo.draw(self, jugador)
 
         self.actualizar_transicion()
 
@@ -198,4 +210,9 @@ class World:
         for elemento in self.elementos_por_capa[capa_mas_alta]:
             if self.elemento_en_pantalla(elemento):
                 elemento.dibujar(self)
+
+    def update(self):
+        """Actualiza el mundo y los elementos."""
+        for enemigo in self.enemigos:
+            enemigo.update(self)
 
