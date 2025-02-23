@@ -101,7 +101,11 @@ class BalaRebote(Bala):
             self.tiempo_colision = time.time()
             self.rect_element = self.sprites_colision[0].get_rect(center=self.rect_element.center)  # Centrar explosión
         else:
+            if self.rebote_count == 0:
+                self.collision_layer = CollisionLayer.BULLET_ANY
+
             self.rebote_count += 1
+
             overlap_x = min(self.rect_element.right - elemento.rect_element.left, 
                 elemento.rect_element.right - self.rect_element.left) #calcula cuanto colisionan los rectangulos por la lateral
 
