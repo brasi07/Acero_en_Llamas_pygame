@@ -196,11 +196,6 @@ class World:
             for elemento in self.elementos_por_capa[capa]:
                 if self.elemento_en_pantalla(elemento):
                     elemento.dibujar(self)
-            
-            if capa == 2:
-                for enemigo in self.enemigos:
-                    if self.elemento_en_pantalla(enemigo):
-                        enemigo.draw(self, jugador)
 
         self.actualizar_transicion()
 

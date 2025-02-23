@@ -65,7 +65,7 @@ class Game:
         self.mundo.draw(self.jugador)
         
         for enemigo in self.mundo.enemigos:
-            enemigo.draw(self.mundo, self.jugador)
+            enemigo.dibujar_enemigo(self.mundo, self.jugador)
             #arma
             
     
