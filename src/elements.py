@@ -1,4 +1,5 @@
 import pygame
+import settings
 from settings import CollisionLayer, COLLISION_RULES
 
 class Elemento:
@@ -38,6 +39,11 @@ class Elemento:
                 return bool(self.mask.overlap(other_element.mask, (offset_x, offset_y)))
             return True  # Si no hay máscaras, pero hay colisión de rectángulos
         return False
+    
+    @staticmethod
+    def escalar_y_cargar(self, ruta, resizex, resizey):
+        imagen = pygame.image.load(ruta)
+        return pygame.transform.scale(imagen, (resizex * settings.TILE_SIZE, resizey * settings.TILE_SIZE))
 
 class Boton(Elemento):
     def __init__(self, x, y, imagen):

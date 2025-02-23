@@ -13,7 +13,7 @@ class Bala(Elemento):
                         for i in range(1, 11)]
 
     def __init__(self, cannon_tip, angulo, tipoColision):
-        self.imagen = self.escalar_y_cargar("../res/entidades/balas/bala.png", settings.RESIZE_PLAYER * 0.07, settings.RESIZE_PLAYER * 0.07)
+        self.imagen = self.escalar_y_cargar(self, "../res/entidades/balas/bala.png", settings.RESIZE_PLAYER * 0.07, settings.RESIZE_PLAYER * 0.07)
         self.x, self.y = cannon_tip
 
         super().__init__(self.x, self.y, self.imagen, tipoColision)
@@ -29,9 +29,6 @@ class Bala(Elemento):
         self.tiempo_colision = 0
         self.frame_actual = 0
 
-    def escalar_y_cargar(self, ruta, resizex, resizey):
-        imagen = pygame.image.load(ruta)
-        return pygame.transform.scale(imagen, (resizex * settings.TILE_SIZE, resizey * settings.TILE_SIZE))
 
     def check_collision(self, other_element):
 

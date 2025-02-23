@@ -6,17 +6,19 @@ from bullet import Bala
 from elements import Elemento
 from settings import CollisionLayer
 from weapon import Dash
+import spritesheet
 
 
 class Tank(Elemento):
-    def __init__(self, vida, velocidad, x, y, collision_layer=CollisionLayer.NONE, ruta=""):
+
+    def __init__(self, vida, velocidad, x, y, resizex, resizey, tank_type="", collision_layer=CollisionLayer.NONE, ruta=""):
 
         self.vida = vida
         self.velocidad = velocidad
         self.velocidad_base = 3
 
         # Generamos sprites para el tanque
-        self.sprites = self.generar_sprites(ruta)
+        self.sprites = self.generar_sprites(ruta, resizex, resizey, tank_type)
 
         # Llamamos a la clase base Elemento después de inicializar los atributos de Tank
         super().__init__(x, y, self.sprites["abajo"], collision_layer)
@@ -33,15 +35,11 @@ class Tank(Elemento):
         self.ultimo_uso_secundaria = pygame.time.get_ticks()
         self.arma_secundaria = None
 
-    @staticmethod
-    def escalar_y_cargar(ruta):
-        imagen = pygame.image.load(ruta)
-        return pygame.transform.scale(imagen, (settings.TILE_SIZE * settings.RESIZE_PLAYER, settings.TILE_SIZE * settings.RESIZE_PLAYER))
-
-    def generar_sprites(self, ruta):
-        sprite_base = self.escalar_y_cargar(ruta + "bodies/body_tracks.png")
-        sprite_base_45 = self.escalar_y_cargar(ruta + "bodies/body_tracks_45.png")
-        sprite_cannon = self.escalar_y_cargar(ruta + "armas/tanque_canon.png")
+    def generar_sprites(self, ruta, resizex, resizey, tank_type):
+        sprite_base = self.escalar_y_cargar(self, ruta + "bodies/body_tracks" + tank_type + ".png", resizex, resizey)
+        sprite_base_45 = self.escalar_y_cargar(self, ruta + "bodies/body_tracks_45" + tank_type + ".png", resizex, resizey)
+        sprite_cannon = self.cargar_canon_base(ruta, tank_type=tank_type)
+        
 
         return {
             "arriba": sprite_base,
@@ -54,6 +52,14 @@ class Tank(Elemento):
             "abajo_derecha": pygame.transform.rotate(sprite_base_45, 180),
             "cannon": sprite_cannon
         }
+    
+    def cargar_canon_base(self, ruta, tank_type=""):
+        weapon_sprite_sheet = spritesheet.SpriteSheet(ruta + "armas/weapons" + tank_type + ".png")
+        weapon_strip = weapon_sprite_sheet.load_strip((0, 0, 96, 96), 16, settings.ELIMINAR_FONDO)
+        weapon_sprites =  [pygame.transform.scale(frame, (settings.RESIZE_CANNON * settings.TILE_SIZE, settings.RESIZE_CANNON  * settings.TILE_SIZE)) for frame in weapon_strip]
+        sprite_cannon = weapon_sprites[0]
+        return sprite_cannon
+
 
     def establecer_posicion(self, x, y):
         self.rect_element.x = x
