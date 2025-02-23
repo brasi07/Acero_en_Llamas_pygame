@@ -26,7 +26,7 @@ class Enemy(Tank):
         self.attack_range = 40 # Distancia para atacar
 
         self.arma = Weapon(self)
-
+        self.colision_layer_balas = CollisionLayer.BULLET_ENEMY
    
     def update(self, jugador):
 

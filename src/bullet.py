@@ -13,7 +13,7 @@ class Bala(Elemento):
                         for i in range(1, 11)]
 
     def __init__(self, cannon_tip, angulo, tipoColision):
-        self.imagen = self.escalar_y_cargar(self, "../res/entidades/balas/bala.png", settings.RESIZE_PLAYER * 0.07, settings.RESIZE_PLAYER * 0.07)
+        self.imagen = self.escalar_y_cargar("../res/entidades/balas/bala.png", settings.RESIZE_PLAYER * 0.07, settings.RESIZE_PLAYER * 0.07)
         self.x, self.y = cannon_tip
 
         super().__init__(self.x, self.y, self.imagen, tipoColision)
@@ -51,7 +51,7 @@ class Bala(Elemento):
 
         return False
 
-    def iniciar_colision(self):
+    def iniciar_colision(self, elemento=None):
         """Activa la animación de colisión y detiene el movimiento."""
         self.colisionando = True
         self.tiempo_colision = time.time()
@@ -107,15 +107,14 @@ class BalaRebote(Bala):
             if overlap_x < overlap_y:
                 self.vel_x = -self.vel_x 
             else:
-                self.vel_y = -self.vel_y 
-
+                self.vel_y = -self.vel_y
 
     def check_collision(self, other_element):
         if other_element.collision_layer not in COLLISION_RULES.get(self.collision_layer, set()):
             return False
 
         # Comprobar si los rectángulos colisionan y devuelve el element colisionado
-        return (self.rect_element.colliderect(other_element.rect_element), other_element)
+        return self.rect_element.colliderect(other_element.rect_element), other_element
     
     def update(self, mundo, ancho_pantalla, alto_pantalla):
         """Actualiza la posición de la bala y verifica colisiones."""

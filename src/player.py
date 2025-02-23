@@ -14,6 +14,7 @@ class Player(Tank):
         # Equipamos armas
         self.armas = [Weapon(self), Dash(self), Escopeta(self), Rebote(self)]  # Lista de armas
         self.armas_pos = 0  # Índice de arma secundaria equipada
+        self.colision_layer_balas = CollisionLayer.BULLET_PLAYER
 
     def update(self, mundo):
         self.mover(mundo)

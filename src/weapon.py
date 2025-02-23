@@ -9,10 +9,10 @@ class Weapon:
     def __init__(self, tank):
         self.tank = tank
         self.imagen_canon_base = self.cargar_canon(0, tank.tank_type, "armas/weapons", tank.tank_color)
-        self.imagen_accesorio_base = None
+        self.imagenes_accesorio_base = None
 
         self.imagen_canon = self.imagen_canon_base
-        self.imagen_accesorio = self.imagen_accesorio_base
+        self.imagen_accesorio = self.imagenes_accesorio_base
 
         self.rect_canon = self.imagen_canon.get_rect(center=tank.rect_element.center)
         self.rect_accesorio = None
@@ -53,7 +53,7 @@ class Weapon:
 
     def activar(self):
         cannon_tip = self.get_cannon_tip()  # Obtener la punta del cañón
-        nueva_bala = Bala(cannon_tip, self.angulo_cannon, settings.CollisionLayer.BULLET_PLAYER)
+        nueva_bala = Bala(cannon_tip, self.angulo_cannon, self.tank.colision_layer_balas)
         self.balas.append(nueva_bala)
 
     def update(self, mundo=None, jugador=None):
@@ -72,7 +72,7 @@ class Weapon:
 
     def cambio_de_arma(self):
         self.imagen_canon = self.imagen_canon_base
-        self.imagen_accesorio = self.imagen_accesorio_base
+        self.imagen_accesorio = self.imagenes_accesorio_base
 
     def dibujar_balas(self, mundo):
         for bala in self.balas:
@@ -95,7 +95,7 @@ class Dash(Weapon):
     def __init__(self, tank):
         super().__init__(tank)
         self.nombre_sprite = "dash"
-        self.imagen_accesorio_base = self.escalar_y_cargar_imagen(f"../res/entidades/jugador/armas/{self.nombre_sprite}.png")
+        self.imagenes_accesorio_base = self.tank.generar_sprites(settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, "jugador", "armas/dash")
 
         self.duracion_ms = 200  # Duración total del Dash en milisegundos
         self.tiempo_inicio = None
@@ -130,6 +130,8 @@ class Dash(Weapon):
 
     def update_secundaria(self, tank, mundo):
         """Mueve el tanque progresivamente basado en el tiempo transcurrido."""
+        self.imagen_accesorio = self.imagenes_accesorio_base[tank.direccion]
+
         if self.activo:
             tiempo_actual = pygame.time.get_ticks()
             tiempo_transcurrido = tiempo_actual - self.tiempo_inicio  # Milisegundos desde el inicio del Dash
@@ -156,9 +158,9 @@ class Escopeta(Weapon):
 
     def activar_secundaria(self, tank):
         self.tiempo_inicio = pygame.time.get_ticks()
-        bala_central = Bala(self.get_cannon_tip(), self.angulo_cannon, settings.CollisionLayer.BULLET_PLAYER)
-        bala_izquierda = Bala(self.get_cannon_tip(), self.angulo_cannon - 15, settings.CollisionLayer.BULLET_PLAYER)
-        bala_derecha = Bala(self.get_cannon_tip(), self.angulo_cannon + 15, settings.CollisionLayer.BULLET_PLAYER)
+        bala_central = Bala(self.get_cannon_tip(), self.angulo_cannon, self.tank.colision_layer_balas)
+        bala_izquierda = Bala(self.get_cannon_tip(), self.angulo_cannon - 15, self.tank.colision_layer_balas)
+        bala_derecha = Bala(self.get_cannon_tip(), self.angulo_cannon + 15, self.tank.colision_layer_balas)
         self.balas.append(bala_central)
         self.balas.append(bala_izquierda)
         self.balas.append(bala_derecha)
@@ -196,7 +198,7 @@ class Rebote(Weapon):
 
     def activar_secundaria(self, tank):
         self.tiempo_inicio = pygame.time.get_ticks()
-        bala_rebote = BalaRebote(self.get_cannon_tip(), self.angulo_cannon, settings.CollisionLayer.BULLET_PLAYER)
+        bala_rebote = BalaRebote(self.get_cannon_tip(), self.angulo_cannon, self.tank.colision_layer_balas)
         self.balas.append(bala_rebote)
         self.activo = True
 

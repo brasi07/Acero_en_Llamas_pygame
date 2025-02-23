@@ -32,9 +32,9 @@ class Tank(Elemento):
 
         self.ultimo_uso_secundaria = pygame.time.get_ticks()
 
-    def generar_sprites(self,resizex, resizey, tank_type, sprite_type, tank_color):
-        sprite_base = self.escalar_y_cargar(self, f"../res/entidades/{tank_type}/{sprite_type}{tank_color}.png" , resizex, resizey)
-        sprite_base_45 = self.escalar_y_cargar(self, f"../res/entidades/{tank_type}/{sprite_type}_45{tank_color}.png" , resizex, resizey)
+    def generar_sprites(self,resizex, resizey, tank_type, sprite_type, tank_color=""):
+        sprite_base = self.escalar_y_cargar(f"../res/entidades/{tank_type}/{sprite_type}{tank_color}.png" , resizex, resizey)
+        sprite_base_45 = self.escalar_y_cargar(f"../res/entidades/{tank_type}/{sprite_type}_45{tank_color}.png" , resizex, resizey)
 
         return {
             "arriba": sprite_base,

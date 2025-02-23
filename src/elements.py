@@ -41,7 +41,7 @@ class Elemento:
         return False
     
     @staticmethod
-    def escalar_y_cargar(self, ruta, resizex, resizey):
+    def escalar_y_cargar(ruta, resizex, resizey):
         imagen = pygame.image.load(ruta)
         return pygame.transform.scale(imagen, (resizex * settings.TILE_SIZE, resizey * settings.TILE_SIZE))
 
