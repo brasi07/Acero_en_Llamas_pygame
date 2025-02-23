@@ -18,7 +18,7 @@ class Player(Tank):
         super().__init__(3, 3, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, collision_layer=CollisionLayer.PLAYER, ruta="../res/entidades/jugador/")
 
         # Equipamos armas
-        self.armas_secundarias = [None, weapon.Dash(), weapon.Escopeta()]  # Lista de armas
+        self.armas_secundarias = [None, weapon.Dash(), weapon.Escopeta(), weapon.Rebote()]  # Lista de armas
         self.arma_secundaria_pos = 0  # Índice de arma secundaria equipada
         self.sprite_arma_secundaria = None
         self.rect_secundaria = None

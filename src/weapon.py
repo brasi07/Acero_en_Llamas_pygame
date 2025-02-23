@@ -2,6 +2,7 @@ import pygame
 import abc
 import math
 from bullet import Bala
+from bullet import BalaRebote
 import spritesheet
 import settings
 
@@ -122,6 +123,38 @@ class Escopeta(Weapon):
                 # Actualizar la imagen del cañón
                 self.imagen_canon_especial = self.animacion[self.frame_actual]
                 tank.sprites["cannon"] = self.imagen_canon_especial
+
+class Rebote(Weapon):
+    def __init__(self):
+        super().__init__("turret_02_mk1")
+        self.tiempo_inicio = None #Guarda el tiempo de activacivación
+        self.animacion = self.escalar_y_cargar_animacion("../res/entidades/jugador/armas/turret_02_mk1.png", 11)
+        self.frame_actual = 0
+        self.imagen_canon_especial = self.animacion[0]
+        self.activo = False
+
+    def cambio_de_arma(self, tank):
+        tank.sprites["cannon"] = self.imagen_canon_especial
+        tank.sprite_arma_secundaria = None
+
+    def activar(self, tank):
+        self.tiempo_inicio = pygame.time.get_ticks()
+        bala_rebote = BalaRebote(tank.get_cannon_tip(), tank.angulo_cannon, settings.CollisionLayer.BULLET_PLAYER)
+        tank.balas.append(bala_rebote)
+        self.activo = True
+
+    
+    def update(self, tank):
+        if self.activo:
+            if self.frame_actual < len(self.animacion):
+                self.imagen_canon_especial = self.animacion[self.frame_actual]
+                tank.sprites["cannon"] = self.imagen_canon_especial
+                self.frame_actual += 1
+            else:
+                self.frame_actual = 0
+                self.imagen_canon_especial = self.animacion[0]
+                tank.sprites["cannon"] = self.imagen_canon_especial
+                self.activo = False
 
 
         
