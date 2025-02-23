@@ -18,6 +18,9 @@ COOLDOWN = 2000
 NEGRO = (0, 0, 0)
 BLANCO = (255, 255, 255)
 GRIS_OSCURO = (30, 30, 30)
+ROJO = (255, 0, 0)
+VERDE = (0, 255, 0)
+AMARILLO = (255, 255, 0)
 ELIMINAR_FONDO = (248, 0, 255)
 
 class CollisionLayer(Enum):

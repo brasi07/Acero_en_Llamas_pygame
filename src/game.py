@@ -2,6 +2,7 @@ import math
 import pygame
 import settings
 from elements import Boton
+from ui import Ui
 from world import World
 from player import Player
 
@@ -13,8 +14,10 @@ class Game:
         self.clock = pygame.time.Clock()
         self.ejecutando = True
 
+
         self.jugador = Player(0, 0)
         self.mundo = World(self.pantalla, "1", self.jugador)
+        self.ui = Ui(self.pantalla, self.jugador)
 
     def run(self):
         self.set_cursor()
@@ -78,5 +81,7 @@ class Game:
 
         if self.mundo.hasSky:
             self.mundo.draw_sky()
+
+        self.ui.draw_ui()
         pygame.display.flip()
 
