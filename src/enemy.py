@@ -13,7 +13,7 @@ class Enemy(Tank):
 
     def __init__(self, vida, velocidad, x, y, resizex, resizey, tank_color):
         
-        super().__init__(vida, velocidad, x, y, resizex, resizey, tank_type="enemigos", tank_color=tank_color, collision_layer=CollisionLayer.ENEMY)
+        super().__init__(vida, velocidad, x, y, resizex, resizey, collision_layer=CollisionLayer.ENEMY, tank_color=tank_color)
 
         # Inicializamos en patrulla
         self.state = EnemyState.PATROLLING

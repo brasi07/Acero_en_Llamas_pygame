@@ -11,7 +11,7 @@ import spritesheet
 
 class Tank(Elemento):
 
-    def __init__(self, vida, velocidad, x, y, resizex, resizey, tank_type, tank_color="", collision_layer=CollisionLayer.NONE):
+    def __init__(self, vida, velocidad, x, y, resizex, resizey, collision_layer=CollisionLayer.NONE, tank_type="enemigos", tank_color=""):
 
         self.vida = vida
         self.velocidad = velocidad
