@@ -99,10 +99,10 @@ class Tank(Elemento):
         self.arma = weapon  # Equipar el Dash
         self.ultimo_uso_secundaria = pygame.time.get_ticks()
 
-    def usar_arma_especial(self):  # usar habilidad especial
+    def usar_arma_especial(self, mundo):  # usar habilidad especial
         tiempo_actual = pygame.time.get_ticks()
         if tiempo_actual - self.ultimo_uso_secundaria >= settings.COOLDOWN:
-            self.arma.activar_secundaria(self)
+            self.arma.activar_secundaria(self, mundo)
             self.ultimo_uso_secundaria = tiempo_actual  # Reinicia el cooldown
 
     def recibir_dano(self, dano):
