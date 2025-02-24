@@ -13,6 +13,7 @@ class Game:
         self.pantalla = pygame.display.set_mode((settings.ANCHO, settings.ALTO), pygame.FULLSCREEN | pygame.SCALED | pygame.DOUBLEBUF)
         self.clock = pygame.time.Clock()
         self.ejecutando = True
+        self.en_juego = True
 
 
         self.jugador = Player(0, 0)
@@ -23,7 +24,8 @@ class Game:
         self.set_cursor()
         while self.ejecutando:
             self.handle_events()
-            self.update()
+            if self.en_juego:
+                self.update()
             self.draw()
             self.clock.tick(settings.FPS)
 
@@ -40,7 +42,8 @@ class Game:
                 self.ejecutando = False
             if evento.type == pygame.KEYDOWN:
                 if evento.key == pygame.K_ESCAPE:  # Detecta cuando se presiona ESC
-                    self.ejecutando = False  # Termina el juego
+                    #self.ejecutando = False  # Termina el juego
+                    self.en_juego = not self.en_juego
                 elif evento.key == pygame.K_F11:
                     self.pantalla = pygame.display.set_mode((settings.ANCHO, settings.ALTO))
                 elif evento.key == pygame.K_e:  # Presionar "E" para activar botones
