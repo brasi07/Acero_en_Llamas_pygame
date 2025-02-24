@@ -11,7 +11,7 @@ class Interactuable(Elemento):
         super().__init__(x, y, imagen, layer)
 
     @abc.abstractmethod
-    def activar(self, objeto):
+    def interactuar(self, objeto):
         """Método que se ejecutará cuando se active el objeto."""
         raise NotImplementedError("Debe implementarse en la subclase")
 
@@ -34,7 +34,7 @@ class Boton(Interactuable):
 
         self.objeto_colisionando = False  # 🚀 Nueva bandera para controlar la colisión previa
 
-    def activar(self, objeto):
+    def interactuar(self, objeto):
         """Solo activa el botón si el jugador NO estaba colisionando en el frame anterior."""
         if not self.camara_temporal_activa and self.check_collision(objeto) and not self.objeto_colisionando:
             self.presionar_boton()
@@ -48,7 +48,7 @@ class Boton(Interactuable):
             # ⚡ Activar los objetos después de 1 segundo
             if not self.objetos_activados and tiempo_actual - self.tiempo_objetos >= 1000:
                 for objeto in self.objetos_a_activar:
-                    objeto.activar()
+                    objeto.interactuar()
                 self.objetos_activados = True
 
             # ⏳ Restaurar la cámara después de 2 segundos
@@ -83,7 +83,7 @@ class Trampa(Interactuable):
         super().__init__(x, y, imagen, CollisionLayer.INTERACTUABLE)
         self.explotada=False
 
-    def activar(self, objeto):
+    def interactuar(self, objeto):
         # Suponiendo que el mundo tiene una referencia al jugador: mundo.jugador
         if not self.explotada and self.check_collision(objeto):
             self.explotar()

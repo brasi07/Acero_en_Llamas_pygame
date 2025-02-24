@@ -26,10 +26,13 @@ class Elemento:
             else:
                 pygame.draw.rect(mundo.pantalla, (255, 0, 0), self.rect_element)
 
+    def animacion_elimninar(self):
+        pass
+
     def check_collision(self, other_element):
         """Verifica colisión con otro elemento basado en la tabla de colisiones."""
         # Si las capas no pueden colisionar, retorna False
-        if not other_element.habilitado or other_element.collision_layer not in COLLISION_RULES.get(self.collision_layer, set()):
+        if other_element.collision_layer not in COLLISION_RULES.get(self.collision_layer, set()):
             return False
 
         # Verificar colisión por máscara si ambos tienen imagen
@@ -41,12 +44,6 @@ class Elemento:
                 return bool(self.mask.overlap(other_element.mask, (offset_x, offset_y)))
             return True  # Si no hay máscaras, pero hay colisión de rectángulos
         return False
-    
-    @staticmethod
-    def escalar_y_cargar(ruta, resizex, resizey):
-        imagen = pygame.image.load(ruta)
-        return pygame.transform.scale(imagen, (resizex * settings.TILE_SIZE, resizey * settings.TILE_SIZE))
-
 
 class Muro(Elemento):
     def __init__(self, x, y, imagen):

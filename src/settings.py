@@ -37,6 +37,25 @@ def escalar_y_cargar_animacion(ruta, sizex, sizey, numberSprites, resizex= RESIZ
     animacion = sprite_sheet.load_strip((0, 0, sizex, sizey), numberSprites, ELIMINAR_FONDO)
     return [pygame.transform.scale(frame, (resizex * TILE_SIZE, resizey * TILE_SIZE)) for frame in animacion]
 
+def escalar_y_cargar(ruta, resizex, resizey):
+    imagen = pygame.image.load(ruta)
+    return pygame.transform.scale(imagen, (resizex * TILE_SIZE, resizey * TILE_SIZE))
+
+def generar_sprites(resizex, resizey, ruta):
+    sprite_base = escalar_y_cargar(f"{ruta}.png" , resizex, resizey)
+    sprite_base_45 = escalar_y_cargar(f"{ruta}_45.png" , resizex, resizey)
+
+    return {
+        "arriba": sprite_base,
+        "derecha": pygame.transform.rotate(sprite_base, -90),
+        "izquierda": pygame.transform.rotate(sprite_base, 90),
+        "abajo": pygame.transform.rotate(sprite_base, 180),
+        "arriba_izquierda": sprite_base_45,
+        "arriba_derecha": pygame.transform.rotate(sprite_base_45, -90),
+        "abajo_izquierda": pygame.transform.rotate(sprite_base_45, 90),
+        "abajo_derecha": pygame.transform.rotate(sprite_base_45, 180)
+    }
+
 class CollisionLayer(Enum):
     PLAYER = 1
     ENEMY = 2

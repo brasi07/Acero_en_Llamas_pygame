@@ -9,7 +9,7 @@ from mina import Mina
 class Weapon:
     def __init__(self, tank):
         self.tank = tank
-        self.imagen_canon_base = self.cargar_canon(0, tank.tank_type, "armas/weapons", tank.tank_color)
+        self.imagen_canon_base = self.cargar_canon(0, tank.tank_type,"armas/weapons", tank.tank_level)
         self.imagenes_accesorio_base = None
 
         self.imagen_canon = self.imagen_canon_base
@@ -93,7 +93,7 @@ class Dash(Weapon):
     def __init__(self, tank):
         super().__init__(tank)
         self.nombre_sprite = "dash"
-        self.imagenes_accesorio_base = self.tank.generar_sprites(settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, "jugador", "armas/dash")
+        self.imagenes_accesorio_base = settings.generar_sprites(settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, "../res/entidades/jugador/armas/dash")
 
         self.duracion_ms = 200  # Duración total del Dash en milisegundos
         self.tiempo_inicio = None
@@ -239,7 +239,7 @@ class Arma_Minas(Weapon):
 
         for mina in self.minas:
             if (tiempo_actual - mina.tiempo_creacion) > mina.duracion:
-                mina.activar(mundo)
+                mina.interactuar(mundo)
                 self.minas.remove(mina)
     
 

@@ -14,7 +14,7 @@ class Bala(Elemento):
                         for i in range(1, 11)]
 
     def __init__(self, cannon_tip, angulo, tipoColision):
-        self.imagen = self.escalar_y_cargar("../res/entidades/balas/bala.png", settings.RESIZE_PLAYER * 0.07, settings.RESIZE_PLAYER * 0.07)
+        self.imagen = settings.escalar_y_cargar("../res/entidades/balas/bala.png", settings.RESIZE_PLAYER * 0.07, settings.RESIZE_PLAYER * 0.07)
         self.x, self.y = cannon_tip
 
         super().__init__(self.x, self.y, self.imagen, tipoColision)
@@ -95,7 +95,7 @@ class BalaRebote(Bala):
 
     def iniciar_colision(self, elemento):
         if isinstance(elemento, Interactuable):
-            elemento.activar(self)
+            elemento.interactuar(self)
         if self.rebote_count >= self.rebote_max:
             """Activa la animación de colisión y detiene el movimiento."""
             self.colisionando = True
@@ -121,7 +121,7 @@ class BalaRebote(Bala):
 
 
     def check_collision(self, other_element):
-        if not other_element.habilitado or other_element.collision_layer not in COLLISION_RULES.get(self.collision_layer, set()):
+        if other_element.collision_layer not in COLLISION_RULES.get(self.collision_layer, set()):
             return False
 
         # Comprobar si los rectángulos colisionan y devuelve el element colisionado

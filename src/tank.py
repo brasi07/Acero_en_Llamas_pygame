@@ -11,19 +11,19 @@ from weapon import Dash, Weapon
 
 class Tank(Elemento):
 
-    def __init__(self, vida, velocidad, x, y, resizex, resizey, collision_layer=CollisionLayer.NONE, tank_type="enemigos", tank_color=""):
+    def __init__(self, vida, velocidad, x, y, resizex, resizey, collision_layer=CollisionLayer.NONE, tank_type="enemigos", tank_level=""):
 
         self.vida = vida
         self.velocidad = velocidad
         self.velocidad_base = 3
 
         self.tank_type = tank_type
-        self.tank_color = tank_color
+        self.tank_level = tank_level
 
+        ruta = f"../res/entidades/{tank_type}/bodies/body_tracks{tank_level}"
         # Generamos sprites para el tanque
-        self.sprites = self.generar_sprites(resizex, resizey, tank_type, "bodies/body_tracks", tank_color)
+        self.sprites = settings.generar_sprites(resizex, resizey, ruta)
         super().__init__(x, y, self.sprites["abajo"], collision_layer)
-
 
         self.arma = Weapon(self)
 
@@ -31,21 +31,6 @@ class Tank(Elemento):
         self.tiempo_ultimo_disparo = pygame.time.get_ticks()
 
         self.ultimo_uso_secundaria = pygame.time.get_ticks()
-
-    def generar_sprites(self,resizex, resizey, tank_type, sprite_type, tank_color=""):
-        sprite_base = self.escalar_y_cargar(f"../res/entidades/{tank_type}/{sprite_type}{tank_color}.png" , resizex, resizey)
-        sprite_base_45 = self.escalar_y_cargar(f"../res/entidades/{tank_type}/{sprite_type}_45{tank_color}.png" , resizex, resizey)
-
-        return {
-            "arriba": sprite_base,
-            "derecha": pygame.transform.rotate(sprite_base, -90),
-            "izquierda": pygame.transform.rotate(sprite_base, 90),
-            "abajo": pygame.transform.rotate(sprite_base, 180),
-            "arriba_izquierda": sprite_base_45,
-            "arriba_derecha": pygame.transform.rotate(sprite_base_45, -90),
-            "abajo_izquierda": pygame.transform.rotate(sprite_base_45, 90),
-            "abajo_derecha": pygame.transform.rotate(sprite_base_45, 180)
-        }
 
     def establecer_posicion(self, x, y):
         self.rect_element.x = x
@@ -70,10 +55,8 @@ class Tank(Elemento):
                 colision = True
 
             if isinstance(e, Interactuable):
-                    e.activar(self)
-            #Por si queremos mirar el boton aquí
-            #if isinstance(e, Boton):
-            #        e.update(self)
+                    e.interactuar(self)
+
 
         if colision:
             self.rect_element.x -= dx

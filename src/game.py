@@ -86,8 +86,7 @@ class Game:
         self.mundo.draw(self.jugador)
         
         for enemigo in self.mundo.enemigos:
-            if enemigo.habilitado:
-                enemigo.dibujar_enemigo(self.mundo, self.jugador)
+            enemigo.dibujar_enemigo(self.mundo, self.jugador)
             #arma
         self.jugador.draw(self.mundo)
 
@@ -99,8 +98,7 @@ class Game:
             self.mundo.draw_sky()
 
         for enemigo in self.mundo.enemigos:
-            if enemigo.habilitado:
-                self.ui.draw_health_bar(enemigo)
+            self.ui.draw_health_bar(enemigo)
         self.ui.draw_health_bar_player(self.jugador)
 
         pygame.display.flip()

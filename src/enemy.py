@@ -12,9 +12,9 @@ class EnemyState:
 
 class Enemy(Tank):
 
-    def __init__(self, vida, velocidad, x, y, resizex, resizey, tank_color):
+    def __init__(self, vida, velocidad, x, y, resizex, resizey, tank_level):
         
-        super().__init__(vida, velocidad, x, y, resizex, resizey, collision_layer=CollisionLayer.ENEMY, tank_color=tank_color)
+        super().__init__(vida, velocidad, x, y, resizex, resizey, collision_layer=CollisionLayer.ENEMY, tank_level=tank_level)
 
         self.barra_vida = settings.escalar_y_cargar_animacion(f"../res/UI/vida_enemigos.png", 48, 7, 5, resizey=0.3)
 
@@ -39,8 +39,6 @@ class Enemy(Tank):
             self.habilitado = False
 
         distancia = self.distancia_jugador(jugador)
-
-
 
         if distancia < self.attack_range:
             self.state = EnemyState.ATTACKING
@@ -96,5 +94,5 @@ class Enemy(Tank):
 class Enemy_Brown(Enemy):
 
     def __init__(self, x, y):
-        super().__init__(3, 2, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, tank_color="_brown")
+        super().__init__(3, 2, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, tank_level="_brown")
 

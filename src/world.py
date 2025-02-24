@@ -250,6 +250,20 @@ class World:
                 and self.camara_y - 80 <= elemento.rect_element.y < self.camara_y + self.alto_pantalla + 80
         )
 
+    def update(self):
+        """Actualiza el mundo y los elementos."""
+        for enemigo in self.enemigos:
+            enemigo.update(self.player)
+
+        for elemento in self.elementos_actualizables:
+            elemento.update(self.player)
+
+        for lista in [self.enemigos, self.elementos_actualizables, self.elementos_por_capa[2]]:
+            for elemento in lista.copy():
+                if not elemento.habilitado:
+                    elemento.animacion_elimninar()
+                    lista.remove(elemento)
+
     def draw(self, jugador):
         """Dibuja todas las capas en orden, desde la más baja hasta la más alta."""
         for capa in sorted(self.capas.keys()):  # Dibuja en orden numérico
@@ -269,13 +283,5 @@ class World:
             if self.elemento_en_pantalla(elemento):
                 elemento.dibujar(self)
 
-    def update(self):
-        """Actualiza el mundo y los elementos."""
-        for enemigo in self.enemigos:
-            if enemigo.habilitado:
-                enemigo.update(self.player)
 
-        for elemento in self.elementos_actualizables:
-            if elemento.habilitado:
-                elemento.update(self.player)
 
