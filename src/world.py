@@ -38,7 +38,6 @@ class World:
                         # Si la fila no es un par, puedes decidir omitirla o lanzar una excepción
                         print(f"Fila ignorada (no es un par): {row}")
             return pairs
-        #self.diccionario_botones=read_csv_to_pairs(f"../res/mapas/MBoton_{self.mundo_number}_)
 
         # Buscar archivos de mapa según el nuevo formato "Mapa_{mundo}_{capa}.csv"
         archivos_mapa = self.buscar_archivos_mapa(f"../res/mapas/Mapa_{self.mundo_number}_")
@@ -72,8 +71,11 @@ class World:
         # Diccionario de enemigos por capa
         self.enemigos = []
 
+        self.elementos_actualizables = []
+
         # Variables de transición
         self.en_transicion = False
+        self.enfocando_objeto = False
         self.tiempo_inicio = 0
         self.destino_camara_x, self.destino_camara_y = 0,0
 
@@ -150,12 +152,14 @@ class World:
                 if valor == 0:
                     self.camara_x = x // (self.ancho_pantalla / settings.TILE_SIZE) * self.ancho_pantalla
                     self.camara_y = y // (self.alto_pantalla / settings.TILE_SIZE) * self.alto_pantalla
-                    self.player.establecer_posicion(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
+                    self.player.establecer_posicion(2 * settings.TILE_SIZE, 68 * settings.TILE_SIZE)
                     lista_elementos.append(self.player)
                 elif 5000 <= valor <= 5099 and self.mundo_number == "1":  # Rango de valores reservados para botones
                     pos = valor - 5000
                     puertas_a_activar = self.puertas.get(pos)
-                    lista_elementos.append(Boton(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[2142], puertas_a_activar, self))
+                    boton = Boton(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[2142], puertas_a_activar, self)
+                    self.elementos_actualizables.append(boton)
+                    lista_elementos.append(boton)
                 elif valor == 836 and self.mundo_number == "1" \
                         or valor == 1425 and self.mundo_number == "2":
                     lista_elementos.append(Trampa(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor]))
@@ -202,7 +206,7 @@ class World:
 
     def cambiar_pantalla(self, direccion):
 
-        if not self.en_transicion:
+        if not self.en_transicion and not self.enfocando_objeto:
             # Si no hay transición en curso, iniciar una
             self.tiempo_inicio = pygame.time.get_ticks()  # Guarda el tiempo actual
             if direccion == "derecha" and self.camara_x + self.ancho_pantalla < self.num_columnas * self.ancho_pantalla:
@@ -269,4 +273,7 @@ class World:
         """Actualiza el mundo y los elementos."""
         for enemigo in self.enemigos:
             enemigo.update(self.player)
+
+        for elemento in self.elementos_actualizables:
+            elemento.update()
 
