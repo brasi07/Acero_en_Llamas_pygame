@@ -4,6 +4,7 @@ from bullet import Bala
 from bullet import BalaRebote
 import spritesheet
 import settings
+from mina import Mina
 
 class Weapon:
     def __init__(self, tank):
@@ -72,6 +73,9 @@ class Weapon:
         for bala in self.balas:
             bala.draw(mundo)
 
+    def dibujar_minas(self,mundo):
+        pass
+
     def dibujar_arma(self, mundo):
         if self.imagen_accesorio: #dibujar arma secundaria si necesario
             self.rect_accesorio = self.imagen_accesorio.get_rect(top=self.tank.rect_element.bottom)
@@ -79,7 +83,7 @@ class Weapon:
 
         mundo.pantalla.blit(self.imagen_canon, (self.tank.rect_element.centerx - self.rect_canon.width // 2 - mundo.camara_x, self.tank.rect_element.centery - self.rect_canon.height // 2 - mundo.camara_y))
 
-    def activar_secundaria(self, tank):
+    def activar_secundaria(self, tank, mundo):
         pass
 
     def update_secundaria(self, tank, mundo):
@@ -99,7 +103,7 @@ class Dash(Weapon):
         self.dx = 0
         self.dy = 0
 
-    def activar_secundaria(self, tank):
+    def activar_secundaria(self, tank, mundo):
         """Activa el Dash con desplazamiento en función del tiempo."""
         if not self.activo:
             self.activo = True
@@ -150,7 +154,7 @@ class Escopeta(Weapon):
         self.frame_actual = 0
         self.ultimo_cambio_frame = 0
 
-    def activar_secundaria(self, tank):
+    def activar_secundaria(self, tank, mundo):
         self.tiempo_inicio = pygame.time.get_ticks()
         bala_central = Bala(self.get_cannon_tip(), self.angulo_cannon, self.tank.colision_layer_balas)
         bala_izquierda = Bala(self.get_cannon_tip(), self.angulo_cannon - 15, self.tank.colision_layer_balas)
@@ -190,7 +194,7 @@ class Rebote(Weapon):
         self.frame_actual = 0
         self.ultimo_cambio_frame = 0
 
-    def activar_secundaria(self, tank):
+    def activar_secundaria(self, tank, mundo):
         self.tiempo_inicio = pygame.time.get_ticks()
         bala_rebote = BalaRebote(self.get_cannon_tip(), self.angulo_cannon, self.tank.colision_layer_balas)
         self.balas.append(bala_rebote)
@@ -214,9 +218,32 @@ class Rebote(Weapon):
                 self.imagen_canon_base = self.animacion[self.frame_actual]
                 self.imagen_canon = self.imagen_canon_base
 
+class Arma_Minas(Weapon):
+    def __init__(self, tank):
+        super().__init__(tank)
+        self.tiempo_inicio = pygame.time.get_ticks()
+        #self.imagenes_accesorio_base = self.tank.generar_sprites(settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, "jugador", "armas/mina") 
+        self.activo = False
+        self.minas = []
 
-        
-        
-        
-      
+    def activar_secundaria(self, tank, mundo):
+        self.actvio = True
+        self.tiempo_inicio = pygame.time.get_ticks()
+        nova_mina = Mina(self.tank.rect_element.x, self.tank.rect_element.y)
+        mundo.elementos_por_capa[2].append(nova_mina)
+        self.minas.append(nova_mina)
     
+    def update_secundaria(self, tank, mundo):
+        tiempo_actual = pygame.time.get_ticks()
+        tiempo_transcurrido = tiempo_actual - self.tiempo_inicio  # Milisegundos desde el inicio del Dash
+
+        for mina in self.minas:
+            if (tiempo_actual - mina.tiempo_creacion) > mina.duracion:
+                mina.activar(mundo)
+                self.minas.remove(mina)
+    
+
+    def dibujar_minas(self, mundo):
+        for mina in self.minas:
+            mina.dibujar(mundo)
+

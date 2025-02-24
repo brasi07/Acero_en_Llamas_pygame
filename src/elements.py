@@ -8,6 +8,7 @@ class Elemento:
         self.y = y
         self.collision_layer = collision_layer  # Asigna la capa de colisión
         self.imagen = imagen
+        self.habilitado = True
 
         # Si hay imagen, ajustamos el rectángulo y la máscara
         if self.imagen:
@@ -19,10 +20,11 @@ class Elemento:
 
     def dibujar(self, mundo):
         """Dibuja el elemento en la pantalla."""
-        if self.imagen:
-            mundo.pantalla.blit(self.imagen, (self.rect_element.x - mundo.camara_x, self.rect_element.y - mundo.camara_y))
-        else:
-            pygame.draw.rect(mundo.pantalla, (255, 0, 0), self.rect_element)
+        if self.habilitado:
+            if self.imagen:
+                mundo.pantalla.blit(self.imagen, (self.rect_element.x - mundo.camara_x, self.rect_element.y - mundo.camara_y))
+            else:
+                pygame.draw.rect(mundo.pantalla, (255, 0, 0), self.rect_element)
 
     def check_collision(self, other_element):
         """Verifica colisión con otro elemento basado en la tabla de colisiones."""
@@ -72,4 +74,3 @@ class Trampa(Elemento):
 class Decoracion(Elemento):
     def __init__(self, x, y, imagen):
         super().__init__(x, y, imagen, CollisionLayer.NONE)
-

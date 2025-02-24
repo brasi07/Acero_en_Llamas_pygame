@@ -12,7 +12,7 @@ class Player(Tank):
         super().__init__(4, 3, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, collision_layer=CollisionLayer.PLAYER, tank_type="jugador")
 
         # Equipamos armas
-        self.armas = [Weapon(self), Dash(self), Escopeta(self), Rebote(self)]  # Lista de armas
+        self.armas = [Weapon(self), Dash(self), Escopeta(self), Rebote(self), Arma_Minas(self)]  # Lista de armas
         self.armas_pos = 0  # Índice de arma secundaria equipada
         self.colision_layer_balas = CollisionLayer.BULLET_PLAYER
         self.barra_vida = settings.escalar_y_cargar_animacion(f"../res/UI/vida_jugador.png", 48, 7, 5, resizex=5,resizey=0.5)
@@ -22,7 +22,7 @@ class Player(Tank):
         self.mover(mundo)
         self.arma.update_secundaria(self, mundo)
         self.arma.update(mundo=mundo)
-        self.gestionar_armas()
+        self.gestionar_armas(mundo)
         self.verificar_fuera_pantalla(mundo)
 
     def mover(self, mundo):
@@ -50,14 +50,14 @@ class Player(Tank):
         elif self.rect_element.top < mundo.camara_y - 50:
             mundo.cambiar_pantalla("arriba")
 
-    def gestionar_armas(self):
+    def gestionar_armas(self, mundo):
         if pygame.mouse.get_pressed()[0]:
             if pygame.time.get_ticks() - self.tiempo_ultimo_disparo >= 1000:
                 self.arma.activar()
                 self.tiempo_ultimo_disparo = pygame.time.get_ticks()
 
         if pygame.mouse.get_pressed()[2]:
-            self.usar_arma_especial()
+            self.usar_arma_especial(mundo)
 
     def cambiar_arma_secundaria(self):
         # Cambia a la siguiente arma en la lista (ciclo circular)
