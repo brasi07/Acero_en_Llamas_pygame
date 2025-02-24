@@ -122,7 +122,7 @@ class BalaRebote(Bala):
             return False
 
         # Comprobar si los rectángulos colisionan y devuelve el element colisionado
-        return (self.rect_element.colliderect(other_element.rect_element), other_element)
+        return self.rect_element.colliderect(other_element.rect_element), other_element
     
     def update(self, mundo, ancho_pantalla, alto_pantalla):
         """Actualiza la posición de la bala y verifica colisiones."""
