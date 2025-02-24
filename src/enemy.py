@@ -28,6 +28,8 @@ class Enemy(Tank):
 
         self.arma = Weapon(self)
         self.colision_layer_balas = CollisionLayer.BULLET_ENEMY
+
+        self.path = []
    
     def update(self, jugador):
 
@@ -65,6 +67,8 @@ class Enemy(Tank):
             # Animación de ataque o colisión
             self.arma.update(jugador=jugador)
             pass
+
+    # def movimiento(self,):
 
     def calcular_direccion_canon(self, mundo, jugador):
         # Obtener la posición del ratón en relación con la cámara

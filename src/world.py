@@ -83,6 +83,10 @@ class World:
         for capa, tiles in self.capas.items():
             self.generar_elementos(tiles, self.elementos_por_capa[capa], self.sprites_por_capa[capa], self.enemigos)
 
+        self.mapas_binarios = self.generar_mapas_binarios()
+        
+        print(self.mapas_binarios[5])
+
     def buscar_archivos_mapa(self, prefijo):
         """Busca archivos que coincidan con el patrón 'Mapa_{mundo}_{capa}.csv'."""
         carpeta = "../res/mapas"
@@ -181,6 +185,35 @@ class World:
                     lista_enemigos.append(brown_enemy)
                 elif valor != -1 and valor in sprites:
                     lista_elementos.append(Muro(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor]))
+
+
+    def generar_mapas_binarios(self):
+        """Genera mapas binarios donde haya 1s donde haya Muro/MuroBajo/Puerta y 0s en el resto. -> A*"""
+        mapa_binario = [[0 for _ in range(self.num_columnas)] for _ in range(self.num_filas)]
+
+    
+        for elemento in self.elementos_por_capa[2]:
+            if isinstance(elemento, (Muro, MuroBajo, Puerta)):
+                tile_x = elemento.x // settings.TILE_SIZE
+                tile_y = elemento.y // settings.TILE_SIZE
+                mapa_binario[tile_y][tile_x] = 1
+
+        submatrices = {}
+        tiles_por_pantalla_x = self.ancho_pantalla // settings.TILE_SIZE
+        tiles_por_pantalla_y = self.alto_pantalla // settings.TILE_SIZE
+
+        pantalla_id = 0
+        for i in range(3):
+            for j in range(4):
+                submatriz = []
+                for y in range(tiles_por_pantalla_y):
+                    fila = mapa_binario[j * tiles_por_pantalla_y + y][i * tiles_por_pantalla_x:(i + 1) * tiles_por_pantalla_x]
+                    submatriz.append(fila)
+                submatrices[pantalla_id] = submatriz
+                pantalla_id += 1
+
+        return submatrices
+    
 
     def cambiar_pantalla(self, direccion):
 
