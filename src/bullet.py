@@ -3,6 +3,7 @@ import math
 import time
 
 import settings
+from interactuable import Interactuable
 from settings import CollisionLayer, COLLISION_RULES
 from elements import Elemento
 
@@ -93,6 +94,8 @@ class BalaRebote(Bala):
         self.rebote_max = 2
 
     def iniciar_colision(self, elemento):
+        if isinstance(elemento, Interactuable):
+            elemento.activar(self)
         if self.rebote_count >= self.rebote_max:
             """Activa la animación de colisión y detiene el movimiento."""
             self.colisionando = True
