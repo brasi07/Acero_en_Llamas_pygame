@@ -29,7 +29,7 @@ class Elemento:
     def check_collision(self, other_element):
         """Verifica colisión con otro elemento basado en la tabla de colisiones."""
         # Si las capas no pueden colisionar, retorna False
-        if other_element.collision_layer not in COLLISION_RULES.get(self.collision_layer, set()):
+        if not other_element.habilitado or other_element.collision_layer not in COLLISION_RULES.get(self.collision_layer, set()):
             return False
 
         # Verificar colisión por máscara si ambos tienen imagen

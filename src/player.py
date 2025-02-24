@@ -66,7 +66,8 @@ class Player(Tank):
         self.arma.cambio_de_arma()
 
     def draw(self, mundo):
-        self.dibujar(mundo)
+
+        self.dibujar(mundo) #Dibujar base tanque
         self.arma.dibujar_arma(mundo)
 
     def calcular_direccion_canon(self, mundo, jugador):
