@@ -26,8 +26,8 @@ class Game:
             self.handle_events()
             if self.en_juego:
                 self.update()
-            self.draw()
-            self.clock.tick(settings.FPS)
+                self.draw()
+                self.clock.tick(settings.FPS)
 
         pygame.quit()
 
@@ -44,6 +44,12 @@ class Game:
                 if evento.key == pygame.K_ESCAPE:  # Detecta cuando se presiona ESC
                     #self.ejecutando = False  # Termina el juego
                     self.en_juego = not self.en_juego
+                    if self.en_juego == False:
+                        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+                        self.pause_menu()
+                    else:
+                        self.set_cursor()
+                    pygame.display.flip()
                 elif evento.key == pygame.K_F11:
                     self.pantalla = pygame.display.set_mode((settings.ANCHO, settings.ALTO))
                 elif evento.key == pygame.K_e:  # Presionar "E" para activar botones
@@ -62,6 +68,21 @@ class Game:
                     elif self.mundo.mundo_number == "3":
                         self.mundo = World(self.pantalla, "1", self.jugador)
 
+
+    def pause_menu(self):
+
+        # Opciones del menú
+        menu_items = ["Back to Game", "Options", "Quit"]
+        selected_item = 0
+
+        # Fuente
+        font = pygame.font.Font(None, 74)
+
+        for index, item in enumerate(menu_items):
+            color = settings.WHITE if index == selected_item else (150, 150, 150)
+            text = font.render(item, True, color)
+            rect = text.get_rect(center=(settings.ANCHO/2, (settings.ALTO/2 - 100 + index * 100)))
+            self.mundo.pantalla.blit(text, rect)
 
     def update(self):
         self.jugador.update(self.mundo)
