@@ -46,12 +46,6 @@ class Game:
                     self.en_juego = not self.en_juego
                 elif evento.key == pygame.K_F11:
                     self.pantalla = pygame.display.set_mode((settings.ANCHO, settings.ALTO))
-                elif evento.key == pygame.K_e:  # Presionar "E" para activar botones
-                    for capa in self.mundo.elementos_por_capa.values():
-                        for elemento in capa:
-                            if isinstance(elemento, Boton) and self.jugador.rect_element.colliderect(
-                                    elemento.rect_element):
-                                elemento.activar()
                 if evento.key == pygame.K_g: #cambiar arma secundaria con la tecla G (temporario mientras no se pueden encontrar las armas en el juego)
                     self.jugador.cambiar_arma_secundaria()
                 if evento.key == pygame.K_m:

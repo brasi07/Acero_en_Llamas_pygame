@@ -11,9 +11,10 @@ class Interactuable(Elemento):
         super().__init__(x, y, imagen, layer)
 
     @abc.abstractmethod
-    def activar(self):
+    def activar(self, objeto):
         """Método que se ejecutará cuando se active el objeto."""
         raise NotImplementedError("Debe implementarse en la subclase")
+
 
 
 class Boton(Interactuable):
@@ -50,9 +51,11 @@ class Boton(Interactuable):
                 self.mundo.enfocando_objeto = False
                 self.camara_temporal_activa = False
 
-    def activar(self):
+    def activar(self, objeto):
         """Mueve la cámara y programa la activación de objetos después de 1 segundo."""
-        if not self.camara_temporal_activa:
+        if not self.camara_temporal_activa and self.check_collision(objeto):
+            if self.objetos_activados:
+                return
             self.mundo.enfocando_objeto = True
 
             self.camara_x_original = self.mundo.camara_x
@@ -67,22 +70,20 @@ class Boton(Interactuable):
 
             self.camara_temporal_activa = True
 
-class Puerta(Interactuable):
-    def __init__(self, x, y, sprite_cerrado, sprite_abierto):
-        super().__init__(x,y,sprite_cerrado,CollisionLayer.WALL)
-        self.x = x
-        self.y = y
-        self.abierta = False  # Estado inicial: cerrada
-        self.sprite_abierto = sprite_abierto
-        self.sprite_cerrado = sprite_cerrado
+class Trampa(Interactuable):
+    def __init__(self, x, y, imagen):
+        super().__init__(x, y, imagen, CollisionLayer.INTERACTUABLE)
+        self.explotada=False
 
-    def activar(self):
-        self.abierta = not self.abierta  # Cambia el estado
-        if self.abierta:
-            self.collision_layer = CollisionLayer.NONE
-            self.imagen=self.sprite_abierto
-        else:
-            self.collision_layer = CollisionLayer.WALL
-            self.imagen=self.sprite_cerrado
+    def activar(self, objeto):
+        # Suponiendo que el mundo tiene una referencia al jugador: mundo.jugador
+        if not self.explotada and self.check_collision(objeto):
+            self.explotar()
+
+    def explotar(self):
+        self.explotada = True
+        print("¡Explosión!")
+        # Aquí puedes agregar la logica de la explosion
+
 
 

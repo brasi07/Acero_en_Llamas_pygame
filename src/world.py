@@ -1,8 +1,9 @@
 import math
 import pygame
 from player import Player
-from interactuable import Boton, Puerta
-from elements import Muro, Decoracion, Trampa, MuroBajo
+from interactuable import Boton, Trampa
+from activable import Puerta
+from elements import Muro, Decoracion, MuroBajo
 from enemy import *
 import settings
 import csv
