@@ -17,7 +17,7 @@ class Game:
 
         self.jugador = Player(0, 0)
         self.mundo = World(self.pantalla, "1", self.jugador)
-        self.ui = Ui(self.pantalla, self.jugador)
+        self.ui = Ui(self.mundo)
 
     def run(self):
         self.set_cursor()
@@ -70,18 +70,18 @@ class Game:
         for enemigo in self.mundo.enemigos:
             enemigo.dibujar_enemigo(self.mundo, self.jugador)
             #arma
-            
-    
         self.jugador.draw(self.mundo)
 
         # for enemigo in self.mundo.enemigos:
             #balas
-
         self.jugador.arma.dibujar_balas(self.mundo)
 
         if self.mundo.hasSky:
             self.mundo.draw_sky()
 
-        self.ui.draw_ui()
+        for enemigo in self.mundo.enemigos:
+            self.ui.draw_health_bar(enemigo)
+        self.ui.draw_health_bar(self.jugador)
+
         pygame.display.flip()
 

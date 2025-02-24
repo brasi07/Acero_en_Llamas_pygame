@@ -33,12 +33,6 @@ class Weapon:
         imagen = pygame.image.load(ruta)
         return pygame.transform.scale(imagen, (settings.TILE_SIZE * settings.RESIZE_PLAYER, settings.TILE_SIZE * settings.RESIZE_PLAYER))
 
-    @staticmethod
-    def escalar_y_cargar_animacion(ruta, numberSprites):
-        sprite_sheet = spritesheet.SpriteSheet(ruta)
-        animacion = sprite_sheet.load_strip((0, 0, 128, 128), numberSprites, settings.ELIMINAR_FONDO)
-        return [pygame.transform.scale(frame, (settings.RESIZE_PLAYER * settings.TILE_SIZE, settings.RESIZE_PLAYER * settings.TILE_SIZE)) for frame in animacion]
-
     def get_cannon_tip(self):
         """Calcula la punta del cañón después de la rotación"""
         angle_rad = np.radians(self.angulo_cannon)  # Convertir ángulo a radianes
@@ -149,7 +143,7 @@ class Escopeta(Weapon):
         super().__init__(tank)
         self.nombre_sprite = "turret_01_mk4"
         self.tiempo_inicio = None #Guarda el tiempo de activacivación
-        self.animacion = self.escalar_y_cargar_animacion(f"../res/entidades/jugador/armas/{self.nombre_sprite}.png", 8)
+        self.animacion = settings.escalar_y_cargar_animacion(f"../res/entidades/jugador/armas/{self.nombre_sprite}.png", 128, 128, 8)
         self.imagen_canon_base = self.animacion[0]
         self.activo = False
 
@@ -189,7 +183,7 @@ class Rebote(Weapon):
     def __init__(self, tank):
         super().__init__(tank)
         self.tiempo_inicio = None #Guarda el tiempo de activacivación
-        self.animacion = self.escalar_y_cargar_animacion("../res/entidades/jugador/armas/turret_02_mk1.png", 8)
+        self.animacion = settings.escalar_y_cargar_animacion("../res/entidades/jugador/armas/turret_02_mk1.png", 128, 128, 8)
         self.imagen_canon_base = self.animacion[0]
         self.activo = False
 

@@ -22,8 +22,9 @@ class Tank(Elemento):
 
         # Generamos sprites para el tanque
         self.sprites = self.generar_sprites(resizex, resizey, tank_type, "bodies/body_tracks", tank_color)
-
         super().__init__(x, y, self.sprites["abajo"], collision_layer)
+
+        self.barra_vida = settings.escalar_y_cargar_animacion(f"../res/UI/vida_{tank_type}.png", 48, 7, 5, resizey=0.3)
 
         self.arma = Weapon(self)
 

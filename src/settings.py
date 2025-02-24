@@ -1,5 +1,9 @@
 from enum import Enum
 
+import pygame
+
+import spritesheet
+
 FPS = 60
 ANCHO, ALTO = 1024, 576
 
@@ -22,6 +26,12 @@ ROJO = (255, 0, 0)
 VERDE = (0, 255, 0)
 AMARILLO = (255, 255, 0)
 ELIMINAR_FONDO = (248, 0, 255)
+
+
+def escalar_y_cargar_animacion(ruta, sizex, sizey, numberSprites, resizex= RESIZE_PLAYER, resizey= RESIZE_PLAYER):
+    sprite_sheet = spritesheet.SpriteSheet(ruta)
+    animacion = sprite_sheet.load_strip((0, 0, sizex, sizey), numberSprites, ELIMINAR_FONDO)
+    return [pygame.transform.scale(frame, (resizex * TILE_SIZE, resizey * TILE_SIZE)) for frame in animacion]
 
 class CollisionLayer(Enum):
     PLAYER = 1
