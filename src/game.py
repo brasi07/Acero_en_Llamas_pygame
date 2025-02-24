@@ -1,7 +1,7 @@
 import math
 import pygame
 import settings
-from elements import Boton
+from interactuable import Boton
 from ui import Ui
 from world import World
 from player import Player
@@ -84,4 +84,5 @@ class Game:
         self.ui.draw_health_bar(self.jugador)
 
         pygame.display.flip()
+
 

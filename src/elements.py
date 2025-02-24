@@ -45,13 +45,6 @@ class Elemento:
         imagen = pygame.image.load(ruta)
         return pygame.transform.scale(imagen, (resizex * settings.TILE_SIZE, resizey * settings.TILE_SIZE))
 
-class Boton(Elemento):
-    def __init__(self, x, y, imagen):
-        super().__init__(x, y, imagen, CollisionLayer.NONE)
-
-class Puerta(Elemento):
-    def __init__(self, x, y, imagen):
-        super().__init__(x, y, imagen, CollisionLayer.WALL)
 
 class Muro(Elemento):
     def __init__(self, x, y, imagen):
@@ -63,7 +56,18 @@ class MuroBajo(Elemento):
 
 class Trampa(Elemento):
     def __init__(self, x, y, imagen):
-        super().__init__(x, y, imagen, CollisionLayer.NONE)
+        super().__init__(x, y, imagen, CollisionLayer.INTERACTUABLE)
+        self.explotada=False
+
+    def update(self, jugador):
+        # Suponiendo que el mundo tiene una referencia al jugador: mundo.jugador
+        if not self.explotada and self.check_collision(jugador):
+            self.explotar()
+
+    def explotar(self):
+        self.explotada = True
+        print("¡Explosión!")
+        # Aquí puedes agregar la logica de la explosion
 
 class Decoracion(Elemento):
     def __init__(self, x, y, imagen):

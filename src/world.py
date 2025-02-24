@@ -1,7 +1,8 @@
 import math
 import pygame
 from player import Player
-from elements import Muro, Decoracion, Boton, Trampa, MuroBajo, Puerta
+from interactuable import Boton, Puerta
+from elements import Muro, Decoracion, Trampa, MuroBajo
 from enemy import *
 import settings
 import csv
@@ -16,6 +17,28 @@ class World:
         self.hasSky = hasSky
 
         self.ancho_pantalla, self.alto_pantalla = pantalla.get_size()
+
+        def read_csv_to_pairs(file_path):
+            """
+            Lee un archivo CSV en el que cada fila contiene un par de valores y devuelve una lista de pares (tuplas).
+
+            Parámetros:
+                file_path (str): Ruta al archivo CSV.
+
+            Retorna:
+                list: Lista de tuplas, donde cada tupla contiene dos valores del CSV.
+            """
+            pairs = []
+            with open(file_path, newline='', encoding='utf-8') as csvfile:
+                csvreader = csv.reader(csvfile, delimiter=',')
+                for row in csvreader:
+                    if len(row) == 2:  # Verifica que la fila tenga dos elementos
+                        pairs.append((row[0], row[1]))
+                    else:
+                        # Si la fila no es un par, puedes decidir omitirla o lanzar una excepción
+                        print(f"Fila ignorada (no es un par): {row}")
+            return pairs
+        #self.diccionario_botones=read_csv_to_pairs(f"../res/mapas/MBoton_{self.mundo_number}_)
 
         # Buscar archivos de mapa según el nuevo formato "Mapa_{mundo}_{capa}.csv"
         archivos_mapa = self.buscar_archivos_mapa(f"../res/mapas/Mapa_{self.mundo_number}_")
@@ -100,6 +123,22 @@ class World:
                 sprites[int(id_sprite)] = pygame.image.load(os.path.join(carpeta, archivo))
         return sprites
 
+    def get_pair_position(pairs, target_pair):
+        """
+        Dado un array de pares y un par objetivo, devuelve la posición (índice) del par en el array.
+
+        Parámetros:
+            pairs (list): Lista de pares (tuplas o listas) en la que buscar.
+            target_pair (tuple o list): El par que se desea localizar.
+
+        Retorna:
+            int: El índice del par en la lista, o -1 si no se encuentra.
+        """
+        for index, pair in enumerate(pairs):
+            if pair == target_pair:
+                return index
+        return -1
+
     def generar_elementos(self, mapa_tiles, lista_elementos, sprites, lista_enemigos):
         """Crea los elementos del mapa ajustándolos al tamaño de la pantalla."""
 
@@ -109,8 +148,9 @@ class World:
                 valor = int(valor)  # Asegurarse de que el valor es un número
 
                 if 5100 <= valor <= 5199:  # Rango de valores reservados para puertas
-                    puerta = Puerta(x * settings.TILE_SIZE, y * settings.TILE_SIZE, settings.TILE_SIZE, sprites.get(5100))
-                    self.puertas[valor].append(puerta)  # Guardar la puerta con su ID único
+                    puerta = Puerta(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites.get(5100),sprites.get(67))
+                    #pos=get_pair_position(self.diccionario_botones ,(x,y))
+                    self.puertas[valor].append(puerta)  # Guardar la puerta con su ID único, debería ser (pos-1)/2+5099
                     lista_elementos.append(puerta)
 
         for y, fila in enumerate(mapa_tiles):
@@ -123,8 +163,9 @@ class World:
                     self.player.establecer_posicion(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
                     lista_elementos.append(self.player)
                 elif 5000 <= valor <= 5099 and self.mundo_number == "1":  # Rango de valores reservados para botones
+                    #pos = get_pair_position(self.diccionario_botones, (x, y))
                     puerta_id = valor + 100  # Ejemplo: Botón 5000 activa puerta 5100
-                    puertas_a_activar = self.puertas.get(puerta_id)
+                    puertas_a_activar = self.puertas.get(puerta_id)# En lugar de valor id deberia ser pos/2+5099
                     lista_elementos.append(Boton(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor], puertas_a_activar))
                 elif valor == 836 and self.mundo_number == "1" \
                         or valor == 1425 and self.mundo_number == "2":

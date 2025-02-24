@@ -41,7 +41,8 @@ class CollisionLayer(Enum):
     BULLET_ANY = 5
     WALL = 6
     LOW_WALL = 7
-    NONE = 8  # Para elementos sin colisión
+    INTERACTUABLE=8
+    NONE = 9  # Para elementos sin colisión
 
 COLLISION_RULES = {
     CollisionLayer.PLAYER: {CollisionLayer.ENEMY, CollisionLayer.BULLET_ENEMY, CollisionLayer.BULLET_ANY, CollisionLayer.WALL, CollisionLayer.LOW_WALL},
@@ -51,5 +52,6 @@ COLLISION_RULES = {
     CollisionLayer.BULLET_ANY: {CollisionLayer.PLAYER, CollisionLayer.ENEMY, CollisionLayer.WALL},
     CollisionLayer.WALL: set(),
     CollisionLayer.LOW_WALL: set(),
-    CollisionLayer.NONE: set()  # No colisiona con nada
+    CollisionLayer.NONE: set(),  # No colisiona con nada
+    CollisionLayer.INTERACTUABLE: {CollisionLayer.PLAYER}
 }

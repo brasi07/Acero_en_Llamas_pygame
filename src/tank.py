@@ -1,6 +1,7 @@
 import numpy as np
 import pygame
-
+from elements import Trampa
+from interactuable import Boton
 import settings
 from bullet import Bala
 from elements import Elemento
@@ -65,9 +66,21 @@ class Tank(Elemento):
         self.rect_element.x += dx
         self.rect_element.y += dy
 
-        if any(self.check_collision(e) for e in mundo.elementos_por_capa[2]):
+        colision = False
+        for e in mundo.elementos_por_capa[2]:
+            if self.check_collision(e):
+                colision = True
+
+            if isinstance(e, Trampa):
+                    e.update(self)
+            #Por si queremos mirar el boton aquí
+            #if isinstance(e, Boton):
+            #        e.update(self)
+
+        if colision:
             self.rect_element.x -= dx
             self.rect_element.y -= dy
+
 
     def determinar_direccion(self, dx, dy):
         direcciones = {
