@@ -81,7 +81,7 @@ class Game:
 
         for enemigo in self.mundo.enemigos:
             self.ui.draw_health_bar(enemigo)
-        self.ui.draw_health_bar(self.jugador)
+        self.ui.draw_health_bar_player(self.jugador)
 
         pygame.display.flip()
 

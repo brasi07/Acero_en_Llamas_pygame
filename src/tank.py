@@ -1,13 +1,11 @@
-import numpy as np
 import pygame
-from elements import Trampa
-from interactuable import Boton
-import settings
+
 from bullet import Bala
+from elements import Trampa
+import settings
 from elements import Elemento
 from settings import CollisionLayer
 from weapon import Dash, Weapon
-import spritesheet
 
 
 class Tank(Elemento):
@@ -25,7 +23,6 @@ class Tank(Elemento):
         self.sprites = self.generar_sprites(resizex, resizey, tank_type, "bodies/body_tracks", tank_color)
         super().__init__(x, y, self.sprites["abajo"], collision_layer)
 
-        self.barra_vida = settings.escalar_y_cargar_animacion(f"../res/UI/vida_{tank_type}.png", 48, 7, 5, resizey=0.3)
 
         self.arma = Weapon(self)
 
@@ -70,6 +67,12 @@ class Tank(Elemento):
         for e in mundo.elementos_por_capa[2]:
             if self.check_collision(e):
                 colision = True
+                if hasattr(e, "colisionando"):
+                    self.vida -= 1  # Resta vida al tanque
+
+                if isinstance(e, Bala):  # Verifica correctamente si es una bala
+                    self.vida -= 1  # Resta vida al tanque
+
 
             if isinstance(e, Trampa):
                     e.update(self)
@@ -107,6 +110,9 @@ class Tank(Elemento):
         if tiempo_actual - self.ultimo_uso_secundaria >= settings.COOLDOWN:
             self.arma.activar_secundaria(self)
             self.ultimo_uso_secundaria = tiempo_actual  # Reinicia el cooldown
+
+    def recibir_dano(self, dano):
+        self.vida -= dano
             
 
 

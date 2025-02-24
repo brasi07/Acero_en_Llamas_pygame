@@ -127,22 +127,6 @@ class World:
                 sprites[int(id_sprite)] = pygame.image.load(os.path.join(carpeta, archivo))
         return sprites
 
-    def get_pair_position(pairs, target_pair):
-        """
-        Dado un array de pares y un par objetivo, devuelve la posición (índice) del par en el array.
-
-        Parámetros:
-            pairs (list): Lista de pares (tuplas o listas) en la que buscar.
-            target_pair (tuple o list): El par que se desea localizar.
-
-        Retorna:
-            int: El índice del par en la lista, o -1 si no se encuentra.
-        """
-        for index, pair in enumerate(pairs):
-            if pair == target_pair:
-                return index
-        return -1
-
     def generar_elementos(self, mapa_tiles, lista_elementos, sprites, lista_enemigos):
         """Crea los elementos del mapa ajustándolos al tamaño de la pantalla."""
 
@@ -152,9 +136,11 @@ class World:
                 valor = int(valor)  # Asegurarse de que el valor es un número
 
                 if 5100 <= valor <= 5199:  # Rango de valores reservados para puertas
-                    puerta = Puerta(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites.get(5100),sprites.get(67))
-                    #pos=get_pair_position(self.diccionario_botones ,(x,y))
-                    self.puertas[valor].append(puerta)  # Guardar la puerta con su ID único, debería ser (pos-1)/2+5099
+                    puerta = Puerta(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[1315], sprites[580])
+                    pos = valor - 5100
+                    if pos not in self.puertas:
+                        self.puertas[pos] = []
+                    self.puertas[pos].append(puerta)
                     lista_elementos.append(puerta)
 
         for y, fila in enumerate(mapa_tiles):
@@ -167,10 +153,9 @@ class World:
                     self.player.establecer_posicion(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
                     lista_elementos.append(self.player)
                 elif 5000 <= valor <= 5099 and self.mundo_number == "1":  # Rango de valores reservados para botones
-                    #pos = get_pair_position(self.diccionario_botones, (x, y))
-                    puerta_id = valor + 100  # Ejemplo: Botón 5000 activa puerta 5100
-                    puertas_a_activar = self.puertas.get(puerta_id)# En lugar de valor id deberia ser pos/2+5099
-                    lista_elementos.append(Boton(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor], puertas_a_activar))
+                    pos = valor - 5000
+                    puertas_a_activar = self.puertas.get(pos)
+                    lista_elementos.append(Boton(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[2142], puertas_a_activar, self))
                 elif valor == 836 and self.mundo_number == "1" \
                         or valor == 1425 and self.mundo_number == "2":
                     lista_elementos.append(Trampa(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor]))

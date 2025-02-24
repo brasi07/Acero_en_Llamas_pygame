@@ -1,10 +1,10 @@
 import pygame
 import math
 import time
+
 import settings
 from settings import CollisionLayer, COLLISION_RULES
 from elements import Elemento
-
 
 
 class Bala(Elemento):
@@ -42,6 +42,10 @@ class Bala(Elemento):
         # Verificar colisiones con los elementos del mundo
         for elemento in mundo.elementos_por_capa.get(2, []):  # Evita KeyError si la capa no existe
             if self.check_collision(elemento):
+
+                if hasattr(elemento, "vida"):
+                    elemento.recibir_dano(1)
+
                 self.iniciar_colision()
                 return False  # No eliminar aún, esperar animación
 
@@ -129,6 +133,10 @@ class BalaRebote(Bala):
         # Verificar colisiones con los elementos del mundo
         for elemento in mundo.elementos_por_capa.get(2, []):  # Evita KeyError si la capa no existe
             if self.check_collision(elemento) == (True, elemento):
+                if hasattr(elemento, "vida"):
+                    elemento.recibir_dano(1)
+                    self.rebote_count = self.rebote_max
+
                 self.iniciar_colision(elemento)
                 return False  # No eliminar aún, esperar animación
 

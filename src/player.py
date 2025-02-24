@@ -15,6 +15,8 @@ class Player(Tank):
         self.armas = [Weapon(self), Dash(self), Escopeta(self), Rebote(self)]  # Lista de armas
         self.armas_pos = 0  # Índice de arma secundaria equipada
         self.colision_layer_balas = CollisionLayer.BULLET_PLAYER
+        self.barra_vida = settings.escalar_y_cargar_animacion(f"../res/UI/vida_jugador.png", 48, 7, 5, resizex=5,resizey=0.5)
+
 
     def update(self, mundo):
         self.mover(mundo)

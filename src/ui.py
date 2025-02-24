@@ -29,4 +29,11 @@ class Ui:
         vida_actual = max(tank.vida, 0)
         self.mundo.pantalla.blit(tank.barra_vida[vida_actual], (x, y))
 
+    def draw_health_bar_player(self, jugador):
+        x = 20
+        y = 20
+
+        # Asegurar que la vida no sea negativa
+        vida_actual = max(jugador.vida, 0)
+        self.mundo.pantalla.blit(jugador.barra_vida[vida_actual], (x, y))
 
