@@ -7,6 +7,10 @@ import spritesheet
 FPS = 60
 ANCHO, ALTO = 1024, 576
 
+# Colores
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+
 RESIZE_PLAYER = 2.5
 RESIZE_CANNON = 2.0
 

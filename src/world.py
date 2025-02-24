@@ -1,14 +1,13 @@
-import math
-import pygame
-from player import Player
-from interactuable import Boton, Trampa
-from activable import Puerta
-from elements import Muro, Decoracion, MuroBajo
-from enemy import *
 import settings
 import csv
 import os
 import re  # Para extraer números del nombre del archivo
+
+from activable import Puerta
+from interactuable import Boton, Trampa
+from elements import Muro, Decoracion, MuroBajo
+from enemy import *
+
 
 class World:
     def __init__(self, pantalla, mundo_number="1", player=None, hasSky=False):
@@ -88,7 +87,7 @@ class World:
 
         self.mapas_binarios = self.generar_mapas_binarios()
         
-        print(self.mapas_binarios[5])
+        #print(self.mapas_binarios[5])
 
     def buscar_archivos_mapa(self, prefijo):
         """Busca archivos que coincidan con el patrón 'Mapa_{mundo}_{capa}.csv'."""
@@ -273,8 +272,10 @@ class World:
     def update(self):
         """Actualiza el mundo y los elementos."""
         for enemigo in self.enemigos:
-            enemigo.update(self.player)
+            if enemigo.habilitado:
+                enemigo.update(self.player)
 
         for elemento in self.elementos_actualizables:
-            elemento.update()
+            if elemento.habilitado:
+                elemento.update(self.player)
 

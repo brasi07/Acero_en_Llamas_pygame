@@ -4,6 +4,7 @@ from bullet import Bala
 from interactuable import Interactuable
 import settings
 from elements import Elemento
+from interactuable import Boton, Trampa
 from settings import CollisionLayer
 from weapon import Dash, Weapon
 
