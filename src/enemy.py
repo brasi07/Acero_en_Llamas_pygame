@@ -35,7 +35,12 @@ class Enemy(Tank):
    
     def update(self, jugador):
 
+        if self.vida == 0:
+            self.habilitado = False
+
         distancia = self.distancia_jugador(jugador)
+
+
 
         if distancia < self.attack_range:
             self.state = EnemyState.ATTACKING

@@ -1,9 +1,10 @@
 import pygame
 
 from bullet import Bala
-from elements import Trampa
+from interactuable import Interactuable
 import settings
 from elements import Elemento
+from interactuable import Boton, Trampa
 from settings import CollisionLayer
 from weapon import Dash, Weapon
 
@@ -68,8 +69,8 @@ class Tank(Elemento):
             if self.check_collision(e):
                 colision = True
 
-            if isinstance(e, Trampa):
-                    e.update(self)
+            if isinstance(e, Interactuable):
+                    e.activar(self)
             #Por si queremos mirar el boton aquí
             #if isinstance(e, Boton):
             #        e.update(self)

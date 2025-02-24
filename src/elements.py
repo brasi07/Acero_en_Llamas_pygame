@@ -29,7 +29,7 @@ class Elemento:
     def check_collision(self, other_element):
         """Verifica colisión con otro elemento basado en la tabla de colisiones."""
         # Si las capas no pueden colisionar, retorna False
-        if other_element.collision_layer not in COLLISION_RULES.get(self.collision_layer, set()):
+        if not other_element.habilitado or other_element.collision_layer not in COLLISION_RULES.get(self.collision_layer, set()):
             return False
 
         # Verificar colisión por máscara si ambos tienen imagen
@@ -56,20 +56,7 @@ class MuroBajo(Elemento):
     def __init__(self, x, y, imagen):
         super().__init__(x, y, imagen, CollisionLayer.LOW_WALL)
 
-class Trampa(Elemento):
-    def __init__(self, x, y, imagen):
-        super().__init__(x, y, imagen, CollisionLayer.INTERACTUABLE)
-        self.explotada=False
 
-    def update(self, jugador):
-        # Suponiendo que el mundo tiene una referencia al jugador: mundo.jugador
-        if not self.explotada and self.check_collision(jugador):
-            self.explotar()
-
-    def explotar(self):
-        self.explotada = True
-        print("¡Explosión!")
-        # Aquí puedes agregar la logica de la explosion
 
 class Decoracion(Elemento):
     def __init__(self, x, y, imagen):

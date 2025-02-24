@@ -52,12 +52,6 @@ class Game:
                     pygame.display.flip()
                 elif evento.key == pygame.K_F11:
                     self.pantalla = pygame.display.set_mode((settings.ANCHO, settings.ALTO))
-                elif evento.key == pygame.K_e:  # Presionar "E" para activar botones
-                    for capa in self.mundo.elementos_por_capa.values():
-                        for elemento in capa:
-                            if isinstance(elemento, Boton) and self.jugador.rect_element.colliderect(
-                                    elemento.rect_element):
-                                elemento.activar()
                 if evento.key == pygame.K_g: #cambiar arma secundaria con la tecla G (temporario mientras no se pueden encontrar las armas en el juego)
                     self.jugador.cambiar_arma_secundaria()
                 if evento.key == pygame.K_m:
@@ -92,7 +86,8 @@ class Game:
         self.mundo.draw(self.jugador)
         
         for enemigo in self.mundo.enemigos:
-            enemigo.dibujar_enemigo(self.mundo, self.jugador)
+            if enemigo.habilitado:
+                enemigo.dibujar_enemigo(self.mundo, self.jugador)
             #arma
         self.jugador.draw(self.mundo)
 
@@ -104,7 +99,8 @@ class Game:
             self.mundo.draw_sky()
 
         for enemigo in self.mundo.enemigos:
-            self.ui.draw_health_bar(enemigo)
+            if enemigo.habilitado:
+                self.ui.draw_health_bar(enemigo)
         self.ui.draw_health_bar_player(self.jugador)
 
         pygame.display.flip()
