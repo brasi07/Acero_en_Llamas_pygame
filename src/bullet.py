@@ -42,10 +42,7 @@ class Bala(Elemento):
         # Verificar colisiones con los elementos del mundo
         for elemento in mundo.elementos_por_capa.get(2, []):  # Evita KeyError si la capa no existe
             if self.check_collision(elemento):
-
-                if hasattr(elemento, "vida"):
-                    elemento.recibir_dano(1)
-
+                self.realizar_dano(elemento)
                 self.iniciar_colision()
                 return False  # No eliminar aún, esperar animación
 
@@ -60,6 +57,12 @@ class Bala(Elemento):
         self.colisionando = True
         self.tiempo_colision = time.time()
         self.rect_element = self.sprites_colision[0].get_rect(center=self.rect_element.center)  # Centrar explosión
+
+    def realizar_dano(self, elemento, dano=1):
+        if hasattr(elemento, "vida"):
+            elemento.recibir_dano(dano)
+            return True
+        return False
 
     def actualizar_colision(self):
         """Maneja la animación de colisión y decide si eliminar la bala."""
@@ -133,8 +136,8 @@ class BalaRebote(Bala):
         # Verificar colisiones con los elementos del mundo
         for elemento in mundo.elementos_por_capa.get(2, []):  # Evita KeyError si la capa no existe
             if self.check_collision(elemento) == (True, elemento):
-                if hasattr(elemento, "vida"):
-                    elemento.recibir_dano(1)
+
+                if self.realizar_dano(elemento):
                     self.rebote_count = self.rebote_max
 
                 self.iniciar_colision(elemento)

@@ -67,12 +67,6 @@ class Tank(Elemento):
         for e in mundo.elementos_por_capa[2]:
             if self.check_collision(e):
                 colision = True
-                if hasattr(e, "colisionando"):
-                    self.vida -= 1  # Resta vida al tanque
-
-                if isinstance(e, Bala):  # Verifica correctamente si es una bala
-                    self.vida -= 1  # Resta vida al tanque
-
 
             if isinstance(e, Trampa):
                     e.update(self)
