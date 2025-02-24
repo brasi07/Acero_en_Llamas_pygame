@@ -67,10 +67,6 @@ class Boton(Interactuable):
 
             self.camara_temporal_activa = True
 
-
-
-
-
 class Puerta(Interactuable):
     def __init__(self, x, y, sprite_cerrado, sprite_abierto):
         super().__init__(x,y,sprite_cerrado,CollisionLayer.WALL)
