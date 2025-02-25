@@ -14,6 +14,13 @@ class Game:
         self.clock = pygame.time.Clock()
         self.ejecutando = True
         self.en_juego = True
+        self.selected_item = 0
+
+        #opciones menu pausa
+        self.menu_items = ["Back to Game", "Options", "Quit"]
+
+        # Fuente
+        self.font = pygame.font.Font(None, 74)
 
 
         self.jugador = Player(0, 0)
@@ -42,41 +49,62 @@ class Game:
                 self.ejecutando = False
             if evento.type == pygame.KEYDOWN:
                 if evento.key == pygame.K_ESCAPE:  # Detecta cuando se presiona ESC
-                    #self.ejecutando = False  # Termina el juego
-                    self.en_juego = not self.en_juego
-                    if self.en_juego == False:
-                        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-                        self.pause_menu()
-                    else:
-                        self.set_cursor()
-                    pygame.display.flip()
+                    self.toggle_pause()
                 elif evento.key == pygame.K_F11:
                     self.pantalla = pygame.display.set_mode((settings.ANCHO, settings.ALTO))
-                if evento.key == pygame.K_g: #cambiar arma secundaria con la tecla G (temporario mientras no se pueden encontrar las armas en el juego)
-                    self.jugador.cambiar_arma_secundaria()
-                if evento.key == pygame.K_m:
-                    if self.mundo.mundo_number == "1":
-                        self.mundo = World(self.pantalla, "2", self.jugador, True)
-                    elif self.mundo.mundo_number == "2":
-                        self.mundo = World(self.pantalla, "1", self.jugador)
-                    elif self.mundo.mundo_number == "3":
-                        self.mundo = World(self.pantalla, "1", self.jugador)
+                else:
+                    if self.en_juego == True:
+                        if evento.key == pygame.K_g: #cambiar arma secundaria con la tecla G (temporario mientras no se pueden encontrar las armas en el juego)
+                            self.jugador.cambiar_arma_secundaria()
+                        elif evento.key == pygame.K_m:
+                            if self.mundo.mundo_number == "1":
+                                self.mundo = World(self.pantalla, "2", self.jugador, True)
+                            elif self.mundo.mundo_number == "2":
+                                self.mundo = World(self.pantalla, "1", self.jugador)
+                            elif self.mundo.mundo_number == "3":
+                                self.mundo = World(self.pantalla, "1", self.jugador)
+                    else:
+                        if evento.key == pygame.K_w:
+                            self.selected_item -= 1
+                            if self.selected_item < 0: self.selected_item = 2
+                            self.update_selected_option()
+                            pygame.display.flip()
+                        elif evento.key == pygame.K_s:
+                            self.selected_item += 1
+                            if self.selected_item > 2: self.selected_item = 0
+                            self.update_selected_option()
+                            pygame.display.flip()
+                        elif evento.key == pygame.K_RETURN:
+                            self.do_the_thing()
 
+
+    def toggle_pause(self):
+        self.en_juego = not self.en_juego
+        if self.en_juego == False:
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+            self.pause_menu()
+        else:
+            self.set_cursor()
+        pygame.display.flip()
 
     def pause_menu(self):
 
-        # Opciones del menú
-        menu_items = ["Back to Game", "Options", "Quit"]
-        selected_item = 0
+        self.selected_item = 0
 
-        # Fuente
-        font = pygame.font.Font(None, 74)
+        self.update_selected_option()
 
-        for index, item in enumerate(menu_items):
-            color = settings.WHITE if index == selected_item else (150, 150, 150)
-            text = font.render(item, True, color)
+    def update_selected_option(self):
+        for index, item in enumerate(self.menu_items):
+            color = settings.GREEN if index == self.selected_item else (150, 150, 150)
+            text = self.font.render(item, True, color)
             rect = text.get_rect(center=(settings.ANCHO/2, (settings.ALTO/2 - 100 + index * 100)))
             self.mundo.pantalla.blit(text, rect)
+
+    def do_the_thing(self):
+        if(self.selected_item == 0):
+            self.toggle_pause()
+        if(self.selected_item == 2):
+            self.ejecutando = False  # Termina el juego
 
     def update(self):
         self.jugador.update(self.mundo)
