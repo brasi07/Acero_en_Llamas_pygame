@@ -28,7 +28,7 @@ class Game:
         self.ui = Ui(self.mundo)
 
     def run(self):
-        self.set_cursor()
+        self.ui.set_cursor()
         while self.ejecutando:
             self.handle_events()
             if self.en_juego:
@@ -37,11 +37,6 @@ class Game:
                 self.clock.tick(settings.FPS)
 
         pygame.quit()
-
-    def set_cursor(self):
-        cursor_image = pygame.image.load("../res/UI/mirilla.png")
-        cursor = pygame.cursors.Cursor((cursor_image.get_width() // 2, cursor_image.get_height() // 2), cursor_image)
-        pygame.mouse.set_cursor(cursor)
 
     def handle_events(self):
         for evento in pygame.event.get():
@@ -80,11 +75,11 @@ class Game:
 
     def toggle_pause(self):
         self.en_juego = not self.en_juego
-        if self.en_juego == False:
+        if not self.en_juego:
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
             self.pause_menu()
         else:
-            self.set_cursor()
+            self.ui.set_cursor()
         pygame.display.flip()
 
     def pause_menu(self):
