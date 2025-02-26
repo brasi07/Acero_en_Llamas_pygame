@@ -28,7 +28,6 @@ class Game:
         self.ui = Ui(self.mundo)
 
     def run(self):
-        self.ui.set_cursor()
         while self.ejecutando:
             self.handle_events()
             if self.en_juego:
@@ -71,7 +70,6 @@ class Game:
                             pygame.display.flip()
                         elif evento.key == pygame.K_RETURN:
                             self.do_the_thing()
-
 
     def toggle_pause(self):
         self.en_juego = not self.en_juego

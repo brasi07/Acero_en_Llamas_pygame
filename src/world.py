@@ -260,7 +260,7 @@ class World:
 
         for lista in [self.enemigos, self.elementos_actualizables, self.elementos_por_capa[2]]:
             for elemento in lista.copy():
-                if not elemento.habilitado:
+                if elemento.eliminar:
                     elemento.animacion_elimninar()
                     lista.remove(elemento)
 

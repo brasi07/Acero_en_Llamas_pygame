@@ -73,15 +73,15 @@ class Weapon:
         for bala in self.balas:
             bala.draw(mundo)
 
-    def dibujar_minas(self,mundo):
-        pass
-
     def dibujar_arma(self, mundo):
         if self.imagen_accesorio: #dibujar arma secundaria si necesario
             self.rect_accesorio = self.imagen_accesorio.get_rect(top=self.tank.rect_element.bottom)
             mundo.pantalla.blit(self.imagen_accesorio, (self.tank.rect_element.centerx - self.rect_accesorio.width // 2 - mundo.camara_x, self.tank.rect_element.centery - self.tank.rect_element.height // 2 - mundo.camara_y))
 
         mundo.pantalla.blit(self.imagen_canon, (self.tank.rect_element.centerx - self.rect_canon.width // 2 - mundo.camara_x, self.tank.rect_element.centery - self.rect_canon.height // 2 - mundo.camara_y))
+
+    def dibujar_minas(self,mundo):
+        pass
 
     def activar_secundaria(self, tank, mundo):
         pass

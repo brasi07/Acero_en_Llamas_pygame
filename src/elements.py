@@ -8,7 +8,7 @@ class Elemento:
         self.y = y
         self.collision_layer = collision_layer  # Asigna la capa de colisión
         self.imagen = imagen
-        self.habilitado = True
+        self.eliminar = False
 
         # Si hay imagen, ajustamos el rectángulo y la máscara
         if self.imagen:
@@ -20,11 +20,10 @@ class Elemento:
 
     def dibujar(self, mundo):
         """Dibuja el elemento en la pantalla."""
-        if self.habilitado:
-            if self.imagen:
-                mundo.pantalla.blit(self.imagen, (self.rect_element.x - mundo.camara_x, self.rect_element.y - mundo.camara_y))
-            else:
-                pygame.draw.rect(mundo.pantalla, (255, 0, 0), self.rect_element)
+        if self.imagen:
+            mundo.pantalla.blit(self.imagen, (self.rect_element.x - mundo.camara_x, self.rect_element.y - mundo.camara_y))
+        else:
+            pygame.draw.rect(mundo.pantalla, (255, 0, 0), self.rect_element)
 
     def animacion_elimninar(self):
         pass
@@ -52,8 +51,6 @@ class Muro(Elemento):
 class MuroBajo(Elemento):
     def __init__(self, x, y, imagen):
         super().__init__(x, y, imagen, CollisionLayer.LOW_WALL)
-
-
 
 class Decoracion(Elemento):
     def __init__(self, x, y, imagen):
