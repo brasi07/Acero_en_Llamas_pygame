@@ -48,7 +48,7 @@ class Boton(Interactuable):
             # ⚡ Activar los objetos después de 1 segundo
             if not self.objetos_activados and tiempo_actual - self.tiempo_objetos >= 1000:
                 for objeto in self.objetos_a_activar:
-                    objeto.interactuar()
+                    objeto.activar()
                 self.objetos_activados = True
 
             # ⏳ Restaurar la cámara después de 2 segundos

@@ -16,9 +16,12 @@ class Player(Tank):
         self.armas_pos = 0  # Índice de arma secundaria equipada
         self.colision_layer_balas = CollisionLayer.BULLET_PLAYER
         self.barra_vida = settings.escalar_y_cargar_animacion(f"../res/UI/vida_jugador.png", 48, 7, 5, resizex=5,resizey=0.5)
-
+        self.muerto = False
 
     def update(self, mundo):
+        if self.vida <= 0:
+            self.muerto = True
+            self.vida = 4
         self.mover(mundo)
         self.arma.update_secundaria(self, mundo)
         self.arma.update(mundo=mundo)

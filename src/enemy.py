@@ -35,7 +35,7 @@ class Enemy(Tank):
    
     def update(self, jugador):
 
-        if self.vida == 0:
+        if self.vida <= 0:
             self.eliminar = True
 
         distancia = self.distancia_jugador(jugador)

@@ -15,6 +15,7 @@ class Game:
         self.ejecutando = True
         self.en_juego = True
         self.selected_item = 0
+        self.mundo_actual = "1"
 
         #opciones menu pausa
         self.menu_items = ["Back to Game", "Options", "Quit"]
@@ -22,9 +23,8 @@ class Game:
         # Fuente
         self.font = pygame.font.Font(None, 74)
 
-
         self.jugador = Player(0, 0)
-        self.mundo = World(self.pantalla, "1", self.jugador)
+        self.mundo = World(self.pantalla, self.mundo_actual, self.jugador)
         self.ui = Ui(self.mundo)
 
     def run(self):
@@ -94,13 +94,16 @@ class Game:
             self.mundo.pantalla.blit(text, rect)
 
     def do_the_thing(self):
-        if(self.selected_item == 0):
+        if self.selected_item == 0:
             self.toggle_pause()
-        if(self.selected_item == 2):
+        if self.selected_item == 2:
             self.ejecutando = False  # Termina el juego
 
     def update(self):
         self.jugador.update(self.mundo)
+        if self.jugador.muerto:
+            self.jugador.muerto = False
+            self.mundo = World(self.pantalla, self.mundo_actual, self.jugador)
         self.mundo.update()
 
     def draw(self):
@@ -120,6 +123,7 @@ class Game:
 
         for enemigo in self.mundo.enemigos:
             self.ui.draw_health_bar(enemigo)
+
         self.ui.draw_health_bar_player(self.jugador)
 
         pygame.display.flip()
