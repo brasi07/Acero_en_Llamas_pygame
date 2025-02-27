@@ -231,7 +231,9 @@ class Arma_Minas(Weapon):
         self.tiempo_inicio = pygame.time.get_ticks()
         nova_mina = Mina(self.tank.rect_element.x, self.tank.rect_element.y)
         mundo.elementos_por_capa[2].append(nova_mina)
+        mundo.elementos_actualizables.append(nova_mina)
         self.minas.append(nova_mina)
+
     
     def update_secundaria(self, tank, mundo):
         tiempo_actual = pygame.time.get_ticks()
@@ -239,11 +241,10 @@ class Arma_Minas(Weapon):
 
         for mina in self.minas:
             if (tiempo_actual - mina.tiempo_creacion) > mina.duracion:
-                mina.interactuar(mundo)
+                mina.interactuar()
                 self.minas.remove(mina)
     
 
     def dibujar_minas(self, mundo):
         for mina in self.minas:
             mina.dibujar(mundo)
-

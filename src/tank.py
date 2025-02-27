@@ -53,8 +53,7 @@ class Tank(Elemento):
         for e in mundo.elementos_por_capa[2]:
             if self.check_collision(e):
                 colision = True
-
-            if isinstance(e, Interactuable):
+                if isinstance(e, Interactuable):
                     e.interactuar(self)
 
 

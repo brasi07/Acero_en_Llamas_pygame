@@ -8,15 +8,23 @@ class Mina(Interactuable):
     def __init__(self, x, y):
         self.imagen = settings.escalar_y_cargar("../res/entidades/jugador/armas/dynamite.png", 1, 1)
         self.tiempo_creacion = pygame.time.get_ticks()
-        #self.animacion_explosion = settings.escalar_y_cargar_animacion()
+        self.frame_actual = -1
+        self.ultimo_cambio_frame = 0
+        self.activo = False
+        self.animacion = settings.escalar_y_cargar_animacion("../res/efectos/explosiones4A.png", 32, 32, 6, resizex=1, resizey=1)
         self.duracion = 5000 #tiempo en ms que la mina queda en el suelo
         super().__init__(x, y, self.imagen, CollisionLayer.BULLET_PLAYER)
 
     def update(self, jugador):
-        return super().update(jugador)
+        if self.activo:
+            tiempo_actual = pygame.time.get_ticks()  # Obtener el tiempo actual
+            if tiempo_actual - self.ultimo_cambio_frame >= settings.TIME_FRAME:
+                    self.ultimo_cambio_frame = tiempo_actual  # Actualizar el tiempo del último cambio
+                    if self.frame_actual < (len(self.animacion) - 1):
+                        self.frame_actual += 1
+                    else:
+                        self.habilitado = False              
+                    self.imagen = self.animacion[self.frame_actual]
     
-    def interactuar(self, mundo):
-        self.habilitado = False
-        #animación de explotar
-        pass
-
+    def interactuar(self):
+         self.activo = True
