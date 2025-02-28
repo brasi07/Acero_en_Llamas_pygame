@@ -16,7 +16,7 @@ class Enemy(Tank):
         
         super().__init__(vida, velocidad, x, y, resizex, resizey, collision_layer=CollisionLayer.ENEMY, tank_level=tank_level)
 
-        self.barra_vida = settings.escalar_y_cargar_animacion(f"../res/UI/vida_enemigos.png", 48, 7, 5, resizey=0.3)
+        self.barra_vida = ResourceManager.escalar_y_cargar_animacion(f"vida_enemigos.png", 48, 7, 5, resizey=0.3)
 
         # Inicializamos en patrulla
         self.state = EnemyState.PATROLLING

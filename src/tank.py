@@ -1,12 +1,11 @@
 import pygame
 
-from bullet import Bala
 from interactuable import Interactuable
 import settings
 from elements import Elemento
-from interactuable import Boton, Trampa
+from resourcesmanager import ResourceManager
 from settings import CollisionLayer
-from weapon import Dash, Weapon
+from weapon import Weapon
 
 
 class Tank(Elemento):
@@ -21,8 +20,12 @@ class Tank(Elemento):
         self.tank_level = tank_level
 
         ruta = f"../res/entidades/{tank_type}/bodies/body_tracks{tank_level}"
+
+
+
         # Generamos sprites para el tanque
-        self.sprites = settings.generar_sprites(resizex, resizey, ruta)
+        #self.sprites = settings.generar_sprites(resizex, resizey, ruta)
+        self.sprites = ResourceManager.generar_sprites(resizex, resizey, f"body_tracks{tank_level}")
         super().__init__(x, y, self.sprites["abajo"], collision_layer)
 
         self.arma = Weapon(self)

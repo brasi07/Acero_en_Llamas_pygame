@@ -1,5 +1,4 @@
 import pygame
-import settings
 from settings import CollisionLayer, COLLISION_RULES
 
 class Elemento:
