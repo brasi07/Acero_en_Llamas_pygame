@@ -27,5 +27,5 @@ class Mina(Interactuable):
                         self.eliminar = True
                     self.imagen = self.animacion[self.frame_actual]
     
-    def interactuar(self):
+    def interactuar(self, objeto):
          self.activo = True

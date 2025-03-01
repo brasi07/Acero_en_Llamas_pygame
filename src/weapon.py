@@ -31,11 +31,6 @@ class Weapon:
         sprite_weapon = weapon_sprites[numberweapon]
         return sprite_weapon
 
-    @staticmethod
-    def escalar_y_cargar_imagen(ruta):
-        imagen = pygame.image.load(ruta)
-        return pygame.transform.scale(imagen, (settings.TILE_SIZE * settings.RESIZE_PLAYER, settings.TILE_SIZE * settings.RESIZE_PLAYER))
-
     def get_cannon_tip(self):
         """Calcula la punta del cañón después de la rotación"""
         angle_rad = np.radians(self.angulo_cannon)  # Convertir ángulo a radianes

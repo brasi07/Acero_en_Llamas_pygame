@@ -24,7 +24,6 @@ class Tank(Elemento):
 
 
         # Generamos sprites para el tanque
-        #self.sprites = settings.generar_sprites(resizex, resizey, ruta)
         self.sprites = ResourceManager.load_sprites(resizex, resizey, f"body_tracks{tank_level}")
         super().__init__(x, y, self.sprites["abajo"], collision_layer)
 
