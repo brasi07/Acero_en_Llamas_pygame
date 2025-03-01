@@ -95,7 +95,7 @@ class Dash(Weapon):
     def __init__(self, tank):
         super().__init__(tank)
         self.nombre_sprite = "dash"
-        self.imagenes_accesorio_base = ResourceManager.generar_sprites(settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, "dash")
+        self.imagenes_accesorio_base = ResourceManager.load_sprites(settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, "dash")
 
         self.duracion_ms = 200  # Duración total del Dash en milisegundos
         self.tiempo_inicio = None
@@ -149,7 +149,7 @@ class Escopeta(Weapon):
         super().__init__(tank)
         self.nombre_sprite = "turret_01_mk4"
         self.tiempo_inicio = None #Guarda el tiempo de activacivación
-        self.animacion = ResourceManager.escalar_y_cargar_animacion(f"{self.nombre_sprite}.png", 128, 128, 8)
+        self.animacion = ResourceManager.load_animation(f"{self.nombre_sprite}.png", 128, 128, 8)
         self.imagen_canon_base = self.animacion[0]
         self.activo = False
 
@@ -189,7 +189,7 @@ class Rebote(Weapon):
     def __init__(self, tank):
         super().__init__(tank)
         self.tiempo_inicio = None #Guarda el tiempo de activacivación
-        self.animacion = ResourceManager.escalar_y_cargar_animacion("turret_02_mk1.png", 128, 128, 8)
+        self.animacion = ResourceManager.load_animation("turret_02_mk1.png", 128, 128, 8)
         self.imagen_canon_base = self.animacion[0]
         self.activo = False
 
