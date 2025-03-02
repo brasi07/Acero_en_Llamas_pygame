@@ -1,6 +1,4 @@
-import settings
 import csv
-import os
 import re  # Para extraer números del nombre del archivo
 
 from activable import Puerta
@@ -86,8 +84,6 @@ class World:
             self.generar_elementos(tiles, self.elementos_por_capa[capa], self.sprites_por_capa[capa], self.enemigos)
 
         self.mapas_binarios = self.generar_mapas_binarios()
-        
-        #print(self.mapas_binarios[5])
 
     def extraer_numero_capa(self, archivo):
         """Extrae el número de capa desde el nombre del archivo 'Mapa_X_Y.csv'."""
@@ -97,11 +93,12 @@ class World:
     def generar_elementos(self, mapa_tiles, lista_elementos, sprites, lista_enemigos):
         """Crea los elementos del mapa ajustándolos al tamaño de la pantalla."""
 
-        # Primer pase: Almacenar puertas
         for y, fila in enumerate(mapa_tiles):
             for x, valor in enumerate(fila):
+
                 valor = int(valor)  # Asegurarse de que el valor es un número
 
+                # Primer pase: Almacenar puertas
                 if 5100 <= valor <= 5199:  # Rango de valores reservados para puertas
                     puerta = Puerta(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[1315], sprites[580])
                     pos = valor - 5100
@@ -109,12 +106,7 @@ class World:
                         self.puertas[pos] = []
                     self.puertas[pos].append(puerta)
                     lista_elementos.append(puerta)
-
-        for y, fila in enumerate(mapa_tiles):
-            for x, valor in enumerate(fila):
-
-                valor = int(valor)  # Asegurarse de que el valor es un número
-                if valor == 0:
+                elif valor == 0:
                     self.camara_x = x // (self.ancho_pantalla / settings.TILE_SIZE) * self.ancho_pantalla
                     self.camara_y = y // (self.alto_pantalla / settings.TILE_SIZE) * self.alto_pantalla
                     self.player.establecer_posicion(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
@@ -213,20 +205,22 @@ class World:
 
     def actualizar_transicion(self):
         """Actualiza la transición de la cámara."""
-        if self.en_transicion:
-            tiempo_transcurrido = pygame.time.get_ticks() - self.tiempo_inicio
-            duracion_transicion = 1000
+        if not self.en_transicion:
+            return
 
-            if tiempo_transcurrido < duracion_transicion:
-                # Interpolación lineal
-                t = tiempo_transcurrido / duracion_transicion
-                self.camara_x = self.camara_x + (self.destino_camara_x - self.camara_x) * t
-                self.camara_y = self.camara_y + (self.destino_camara_y - self.camara_y) * t
-            else:
-                # Una vez que se ha completado la transición
-                self.camara_x = self.destino_camara_x
-                self.camara_y = self.destino_camara_y
-                self.en_transicion = False
+        tiempo_transcurrido = pygame.time.get_ticks() - self.tiempo_inicio
+        duracion_transicion = 1000
+
+        if tiempo_transcurrido < duracion_transicion:
+            # Interpolación lineal
+            t = tiempo_transcurrido / duracion_transicion
+            self.camara_x = self.camara_x + (self.destino_camara_x - self.camara_x) * t
+            self.camara_y = self.camara_y + (self.destino_camara_y - self.camara_y) * t
+        else:
+            # Una vez que se ha completado la transición
+            self.camara_x = self.destino_camara_x
+            self.camara_y = self.destino_camara_y
+            self.en_transicion = False
 
     def elemento_en_pantalla(self, elemento):
         """Verifica si el elemento está dentro del área visible."""

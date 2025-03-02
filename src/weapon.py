@@ -11,7 +11,7 @@ from resourcesmanager import ResourceManager
 class Weapon:
     def __init__(self, tank):
         self.tank = tank
-        self.imagen_canon_base = self.cargar_canon(0, tank.tank_type,"armas/weapons", tank.tank_level)
+        self.imagen_canon_base = ResourceManager.cargar_canon(0, "weapons", tank.tank_level)
         self.imagenes_accesorio_base = None
 
         self.imagen_canon = self.imagen_canon_base
@@ -22,14 +22,6 @@ class Weapon:
 
         self.angulo_cannon = 0
         self.balas = []
-
-    @staticmethod
-    def cargar_canon(numberweapon, tank_type, sprite_type, tank_color):
-        weapon_sprite_sheet = spritesheet.SpriteSheet(f"../res/entidades/{tank_type}/{sprite_type}{tank_color}.png")
-        weapon_strip = weapon_sprite_sheet.load_strip((0, 0, 96, 96), 16, settings.ELIMINAR_FONDO)
-        weapon_sprites = [pygame.transform.scale(frame, (settings.RESIZE_CANNON * settings.TILE_SIZE, settings.RESIZE_CANNON * settings.TILE_SIZE)) for frame in weapon_strip]
-        sprite_weapon = weapon_sprites[numberweapon]
-        return sprite_weapon
 
     def get_cannon_tip(self):
         """Calcula la punta del cañón después de la rotación"""

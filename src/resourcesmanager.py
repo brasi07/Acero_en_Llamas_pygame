@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 
 import spritesheet
-from settings import RESIZE_PLAYER, ELIMINAR_FONDO, TILE_SIZE
+from settings import RESIZE_PLAYER, ELIMINAR_FONDO, TILE_SIZE, RESIZE_CANNON
 
 import pygame
 
@@ -58,6 +58,23 @@ class ResourceManager(object):
             cls.resources[nombre] = conjunto_sprites
 
             return conjunto_sprites
+
+    @classmethod
+    def cargar_canon(cls, numberweapon, sprite_type, tank_color):
+
+        if f"{sprite_type}{tank_color}" in cls.resources:
+            return cls.resources[f"{sprite_type}{tank_color}"]
+
+        weapon_sprite_sheet = spritesheet.SpriteSheet(ResourceManager.locate_resource(f"{sprite_type}{tank_color}.png"))
+        weapon_strip = weapon_sprite_sheet.load_strip((0, 0, 96, 96), 16, ELIMINAR_FONDO)
+        weapon_sprites = [pygame.transform.scale(frame, (
+        RESIZE_CANNON * TILE_SIZE, RESIZE_CANNON * TILE_SIZE)) for frame in
+                          weapon_strip]
+        sprite_weapon = weapon_sprites[numberweapon]
+
+        cls.resources[f"{sprite_type}{tank_color}"] = sprite_weapon
+
+        return cls.resources[f"{sprite_type}{tank_color}"]
 
     @classmethod
     def load_files_from_folder(cls, carpeta):

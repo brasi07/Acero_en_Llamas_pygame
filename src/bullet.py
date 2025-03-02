@@ -10,7 +10,6 @@ from elements import Elemento
 
 class Bala(Elemento):
     # Cargar sprites de colisión una sola vez (variable estática)
-    #pygame.transform.scale(pygame.image.load(f"../res/disparos/expl{i}.png"), (20, 20)
     sprites_colision = [ResourceManager.load_and_scale_image(f"expl{i}.png", 20 / TILE_SIZE, 20 / TILE_SIZE)
                         for i in range(1, 11)]
 

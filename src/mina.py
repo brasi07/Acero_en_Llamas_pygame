@@ -1,7 +1,7 @@
 import pygame
 from interactuable import Interactuable
 from resourcesmanager import ResourceManager
-from settings import COLLISION_RULES, CollisionLayer
+from settings import CollisionLayer
 import settings
 
 class Mina(Interactuable):
