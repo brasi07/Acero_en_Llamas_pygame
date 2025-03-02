@@ -1,6 +1,4 @@
 import math
-import pygame
-import settings
 from settings import CollisionLayer, COLLISION_RULES
 from tank import Tank
 from weapon import *

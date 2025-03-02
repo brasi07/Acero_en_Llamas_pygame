@@ -40,7 +40,7 @@ class World:
             return pairs
 
         # Buscar archivos de mapa según el nuevo formato "Mapa_{mundo}_{capa}.csv"
-        archivos_mapa = self.buscar_archivos_mapa(f"../res/mapas/Mapa_{self.mundo_number}_")
+        archivos_mapa = ResourceManager.buscar_archivos_mapa(self.mundo_number)
 
         # Diccionario para almacenar las capas
         self.capas = {}
@@ -48,7 +48,7 @@ class World:
         # Cargar los mapas desde los archivos CSV
         for archivo in archivos_mapa:
             capa_numero = self.extraer_numero_capa(archivo)  # Obtener número de capa desde el nombre
-            self.capas[capa_numero] = self.cargar_mapa_desde_csv(archivo)
+            self.capas[capa_numero] = ResourceManager.load_map_from_csv(archivo)
 
         # Obtener dimensiones del mapa en tiles
         self.num_filas = len(self.capas[1]) if 1 in self.capas else 0
@@ -59,8 +59,8 @@ class World:
 
         # Cargar dinámicamente los sprites según la capa
         for capa in self.capas.keys():
-            carpeta_elementos = f"../res/elementos/elementos_{self.mundo_number}_{capa}"
-            self.sprites_por_capa[capa] = self.cargar_sprites(carpeta_elementos)
+            carpeta_elementos = ResourceManager.locate_resource(f"elementos_{self.mundo_number}_{capa}")
+            self.sprites_por_capa[capa] = ResourceManager.load_files_from_folder(carpeta_elementos)
 
         # Crear la cámara
         self.camara_x, self.camara_y = self.ancho_pantalla, self.alto_pantalla
@@ -89,45 +89,10 @@ class World:
         
         #print(self.mapas_binarios[5])
 
-    def buscar_archivos_mapa(self, prefijo):
-        """Busca archivos que coincidan con el patrón 'Mapa_{mundo}_{capa}.csv'."""
-        carpeta = "../res/mapas"
-        archivos = []
-        if os.path.exists(carpeta):
-            for archivo in os.listdir(carpeta):
-                if archivo.startswith(f"Mapa_{self.mundo_number}_") and archivo.endswith(".csv"):
-                    archivos.append(os.path.join(carpeta, archivo))
-        return archivos
-
     def extraer_numero_capa(self, archivo):
         """Extrae el número de capa desde el nombre del archivo 'Mapa_X_Y.csv'."""
         match = re.search(r'Mapa_\d+_(\d+)\.csv', archivo)
         return int(match.group(1)) if match else 1  # Si no encuentra número, asume capa 1
-
-    def cargar_mapa_desde_csv(self, archivo):
-        """Carga el mapa desde un archivo CSV y lo convierte en una lista de listas."""
-        mapa = []
-        try:
-            with open(archivo, newline='') as csvfile:
-                lector = csv.reader(csvfile)
-                for fila in lector:
-                    mapa.append([int(valor) for valor in fila])
-        except FileNotFoundError:
-            print(f"Error: No se encontró el archivo {archivo}")
-        return mapa
-
-    def cargar_sprites(self, carpeta):
-        """Carga todas las imágenes de la carpeta y las asocia por su ID."""
-        sprites = {}
-        if not os.path.exists(carpeta):
-            print(f"Advertencia: La carpeta {carpeta} no existe.")
-            return sprites  # Retorna un diccionario vacío si la carpeta no existe
-
-        for archivo in os.listdir(carpeta):
-            if archivo.endswith(".png"):
-                id_sprite = archivo.split(".")[0]  # Obtiene el nombre sin la extensión
-                sprites[int(id_sprite)] = pygame.image.load(os.path.join(carpeta, archivo))
-        return sprites
 
     def generar_elementos(self, mapa_tiles, lista_elementos, sprites, lista_enemigos):
         """Crea los elementos del mapa ajustándolos al tamaño de la pantalla."""
@@ -202,9 +167,8 @@ class World:
                 pantalla_id += 1
 
         return submatrices
-    
 
-    def cambiar_pantalla(self, direccion):
+    """def cambiar_pantalla(self, direccion):
 
         if not self.en_transicion and not self.enfocando_objeto:
             # Si no hay transición en curso, iniciar una
@@ -224,7 +188,28 @@ class World:
             elif direccion == "arriba" and self.camara_y > 0:
                 self.destino_camara_x = self.camara_x
                 self.destino_camara_y = self.camara_y - self.alto_pantalla
-                self.en_transicion = True
+                self.en_transicion = True"""
+
+
+    def cambiar_pantalla(self, direccion):
+
+        dir_cam = {
+            "derecha": (1, 0),
+            "izquierda": (-1, 0),
+            "abajo": (0, 1),
+            "arriba": (0, -1)
+        }
+
+        if not self.en_transicion and not self.enfocando_objeto:
+            # Si no hay transición en curso, iniciar una
+            self.tiempo_inicio = pygame.time.get_ticks()  # Guarda el tiempo actual
+
+            trans_x, trans_y = dir_cam[direccion]
+
+            self.destino_camara_x = self.camara_x + trans_x*self.ancho_pantalla
+            self.destino_camara_y = self.camara_y + trans_y*self.alto_pantalla
+
+            self.en_transicion = True
 
     def actualizar_transicion(self):
         """Actualiza la transición de la cámara."""

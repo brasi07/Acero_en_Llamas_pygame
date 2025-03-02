@@ -1,6 +1,5 @@
 import pygame
 
-import settings
 from resourcesmanager import ResourceManager
 
 
@@ -9,7 +8,7 @@ class Ui:
         """Inicializa la UI con la pantalla y el tanque del jugador."""
         self.mundo = mundo
         self.font = pygame.font.Font(None, 36)  # Fuente para los textos
-        self.cursor_image = ResourceManager.load_image("mirilla.png", 0.75, 0.75)  # Cursor personalizado
+        self.cursor_image = ResourceManager.load_and_scale_image("mirilla.png", 0.75, 0.75)  # Cursor personalizado
         self.set_cursor()
 
 

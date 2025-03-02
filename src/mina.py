@@ -7,7 +7,7 @@ import settings
 class Mina(Interactuable):
 
     def __init__(self, x, y):
-        self.imagen = ResourceManager.load_image("dynamite.png", 1, 1)
+        self.imagen = ResourceManager.load_and_scale_image("dynamite.png", 1, 1)
         self.tiempo_creacion = pygame.time.get_ticks()
         self.frame_actual = -1
         self.ultimo_cambio_frame = 0

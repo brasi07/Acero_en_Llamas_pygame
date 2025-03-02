@@ -1,3 +1,5 @@
+import csv
+import os
 from pathlib import Path
 
 import spritesheet
@@ -10,15 +12,15 @@ class ResourceManager(object):
     resources = {}
 
     @classmethod
-    def locate_file(cls, name):
+    def locate_resource(cls, name):
         carpeta_recursos = Path(__file__).parent.parent / 'res'
-        image_path = list(carpeta_recursos.rglob(name))
+        resource = list(carpeta_recursos.rglob(name))
 
-        if image_path:
-            cls.resources[name] = image_path[0]
+        if resource:
+            cls.resources[name] = resource[0]
             return cls.resources[name]
 
-        raise FileNotFoundError(f"No se encontró el archivo {name} en {carpeta_recursos}")
+        raise FileNotFoundError(f"No se encontró {name} en {carpeta_recursos}")
 
 
     @classmethod
@@ -27,7 +29,7 @@ class ResourceManager(object):
         if name in cls.resources:
             return cls.resources[name]
         else:
-            ruta = cls.locate_file(name)
+            ruta = cls.locate_resource(name)
             sprite_sheet = spritesheet.SpriteSheet(ruta)
             animacion = sprite_sheet.load_strip((0, 0, sizex, sizey), number_sprites, ELIMINAR_FONDO)
             cls.resources[name] =  [pygame.transform.scale(frame, (resizex * TILE_SIZE, resizey * TILE_SIZE)) for frame in animacion]
@@ -40,8 +42,8 @@ class ResourceManager(object):
         if nombre in cls.resources:
             return cls.resources[nombre]
         else:
-            sprite_base = cls.load_image(nombre + ".png", resizex, resizey)
-            sprite_base_45 = cls.load_image(nombre + "_45.png", resizex, resizey)
+            sprite_base = cls.load_and_scale_image(nombre + ".png", resizex, resizey)
+            sprite_base_45 = cls.load_and_scale_image(nombre + "_45.png", resizex, resizey)
             conjunto_sprites = {
                 "arriba": sprite_base,
                 "derecha": pygame.transform.rotate(sprite_base, -90),
@@ -57,15 +59,69 @@ class ResourceManager(object):
 
             return conjunto_sprites
 
+    @classmethod
+    def load_files_from_folder(cls, carpeta):
+
+        if carpeta in cls.resources:
+            return cls.resources[carpeta]
+
+        sprites = {}
+
+        for archivo in os.listdir(carpeta):
+            if archivo.endswith(".png"):
+                id_sprite = archivo.split(".")[0]  # Obtiene el nombre sin la extensión
+                sprites[int(id_sprite)] = pygame.image.load(os.path.join(carpeta, archivo))
+
+        cls.resources[carpeta] = sprites
+
+        return sprites
 
     @classmethod
-    def load_image(cls, name, resizex, resizey):
+    def load_map_from_csv(cls, archivo):
+        """Carga el mapa desde un archivo CSV y lo convierte en una lista de listas."""
+
+        if archivo in cls.resources:
+            return cls.resources[archivo]
+
+        mapa = []
+        with open(archivo, newline='') as csvfile:
+            lector = csv.reader(csvfile)
+            for fila in lector:
+                mapa.append([int(valor) for valor in fila])
+
+        cls.resources[archivo] = mapa
+
+        return mapa
+
+    @classmethod
+    def buscar_archivos_mapa(cls, mundo_number):
+        """Busca archivos que coincidan con el patrón 'Mapa_{mundo}_{capa}.csv'."""
+
+        carpeta = cls.locate_resource("mapas")
+        archivos = []
+
+        for archivo in os.listdir(carpeta):
+            if archivo.startswith(f"Mapa_{mundo_number}_") and archivo.endswith(".csv"):
+                archivos.append(os.path.join(carpeta, archivo))
+
+        return archivos
+
+
+    @classmethod
+    def load_and_scale_image(cls, name, resizex, resizey):
+
+        imagen = cls.load_image(name)
+        imagen_escalada = pygame.transform.scale(imagen, (resizex * TILE_SIZE, resizey * TILE_SIZE))
+
+        return imagen_escalada
+
+    @classmethod
+    def load_image(cls, name):
 
         if name in cls.resources:
             return cls.resources[name]
         else:
-            image = cls.locate_file(name)
+            image = cls.locate_resource(name)
             imagen = pygame.image.load(str(image))
-            imagen_escalada = pygame.transform.scale(imagen, (resizex * TILE_SIZE, resizey * TILE_SIZE))
-            cls.resources[name] = imagen_escalada
-            return imagen_escalada
+            cls.resources[name] = imagen
+            return imagen
