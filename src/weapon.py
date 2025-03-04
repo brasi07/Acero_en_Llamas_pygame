@@ -40,9 +40,9 @@ class Weapon:
         nueva_bala = Bala(cannon_tip, self.angulo_cannon, self.tank.colision_layer_balas)
         self.balas.append(nueva_bala)
 
-    def update(self, mundo=None, jugador=None):
+    def update(self, mundo, tank=None):
         # Calcular la dirección del cañón
-        dirx, diry = self.tank.calcular_direccion_canon(mundo, jugador)
+        dirx, diry = self.tank.calcular_direccion_canon(mundo, tank)
         
         # Calcular el ángulo del cañón
         self.angulo_cannon = np.degrees(np.arctan2(diry, dirx))  # Guardar el ángulo para disparos

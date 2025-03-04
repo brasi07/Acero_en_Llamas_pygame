@@ -110,12 +110,13 @@ class Game:
         self.mundo.draw(self.jugador)
         
         for enemigo in self.mundo.enemigos:
-            enemigo.dibujar_enemigo(self.mundo, self.jugador)
-            #arma
+            enemigo.dibujar_enemigo(self.mundo)
+
         self.jugador.draw(self.mundo)
 
-        # for enemigo in self.mundo.enemigos:
-            #balas
+        for enemigo in self.mundo.enemigos:
+            enemigo.arma.dibujar_balas(self.mundo)
+
         self.jugador.arma.dibujar_balas(self.mundo)
 
         if self.mundo.hasSky:

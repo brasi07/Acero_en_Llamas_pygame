@@ -84,6 +84,7 @@ class World:
             self.generar_elementos(tiles, self.elementos_por_capa[capa], self.sprites_por_capa[capa], self.enemigos)
 
         self.mapas_binarios = self.generar_mapas_binarios()
+        print(self.mapas_binarios[2][3])
 
     def extraer_numero_capa(self, archivo):
         """Extrae el número de capa desde el nombre del archivo 'Mapa_X_Y.csv'."""
