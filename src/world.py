@@ -84,7 +84,6 @@ class World:
             self.generar_elementos(tiles, self.elementos_por_capa[capa], self.sprites_por_capa[capa], self.enemigos)
 
         self.mapas_binarios = self.generar_mapas_binarios()
-        print(self.mapas_binarios[2][3])
 
     def extraer_numero_capa(self, archivo):
         """Extrae el número de capa desde el nombre del archivo 'Mapa_X_Y.csv'."""
@@ -121,7 +120,7 @@ class World:
                 elif valor == 836 and self.mundo_number == "1" \
                         or valor == 1425 and self.mundo_number == "2":
                     lista_elementos.append(Trampa(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor]))
-                elif valor == 1168 and self.mundo_number == "1":
+                elif valor in (1168, 1155, 1283, 1220, 1282, 1157, 1346, 1092, 1347) and self.mundo_number == "1":
                     lista_elementos.append(MuroBajo(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor]))
                 elif valor in (514, 515, 516, 517, 578, 579, 580, 581, 876, 878, 768, 2436, 2437, 2438, 2500, 2502, 2564, 2565, 2566) and self.mundo_number == "1" \
                         or valor in (1, 512, 513, 576, 577, 1360, 1361, 1362, 1424, 1426, 1488, 1489, 1490, 1486, 1550, 1614, 1678) and self.mundo_number == "2":
