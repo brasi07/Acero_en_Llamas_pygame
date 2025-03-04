@@ -1,6 +1,7 @@
 import csv
 import re  # Para extraer números del nombre del archivo
 
+import settings
 from activable import Puerta
 from interactuable import Boton, Trampa
 from elements import Muro, Decoracion, MuroBajo
@@ -260,8 +261,8 @@ class World:
     def elemento_en_pantalla(self, elemento):
         """Verifica si el elemento está dentro del área visible."""
         return (
-                self.camara_x - 32 <= elemento.rect_element.x < self.camara_x + self.ancho_pantalla + 32
-                and self.camara_y - 32 <= elemento.rect_element.y < self.camara_y + self.alto_pantalla + 32
+                self.camara_x - settings.TILE_SIZE <= elemento.rect_element.x < self.camara_x + self.ancho_pantalla + settings.TILE_SIZE
+                and self.camara_y - settings.TILE_SIZE <= elemento.rect_element.y < self.camara_y + self.alto_pantalla + settings.TILE_SIZE
         )
 
     def update(self):
