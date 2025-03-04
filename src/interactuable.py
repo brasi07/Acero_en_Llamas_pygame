@@ -32,33 +32,30 @@ class Boton(Interactuable):
         self.camara_x_original = self.mundo.camara_x
         self.camara_y_original = self.mundo.camara_y
 
-        self.objeto_colisionando = False  # 🚀 Nueva bandera para controlar la colisión previa
+        self.objeto_colisionando = False
 
     def interactuar(self, objeto):
         """Solo activa el botón si el jugador NO estaba colisionando en el frame anterior."""
         if not self.camara_temporal_activa and self.check_collision(objeto) and not self.objeto_colisionando:
             self.presionar_boton()
-            self.objeto_colisionando = True  # 🚀 Marca que el jugador está colisionando
+            self.objeto_colisionando = True
 
     def update(self, jugador):
         """Controla el tiempo de activación de la cámara y los objetos y gestiona la colisión."""
         if self.camara_temporal_activa:
             tiempo_actual = pygame.time.get_ticks()
 
-            # ⚡ Activar los objetos después de 1 segundo
             if not self.objetos_activados and tiempo_actual - self.tiempo_objetos >= 1000:
                 for objeto in self.objetos_a_activar:
                     objeto.activar()
                 self.objetos_activados = True
 
-            # ⏳ Restaurar la cámara después de 2 segundos
             if tiempo_actual - self.tiempo_activacion >= 2000:
                 self.mundo.camara_x = self.camara_x_original
                 self.mundo.camara_y = self.camara_y_original
                 self.mundo.enfocando_objeto = False
                 self.camara_temporal_activa = False
 
-        # 🚀 Si el jugador deja de colisionar, permite volver a presionar el botón
         if not self.check_collision(jugador):
             self.objeto_colisionando = False
 

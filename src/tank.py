@@ -20,7 +20,7 @@ class Tank(Elemento):
         self.tank_level = tank_level
 
         # Generamos sprites para el tanque
-        self.sprites = ResourceManager.load_sprites(resizex, resizey, f"body_tracks{tank_level}")
+        self.sprites = ResourceManager.load_sprites(resizex, resizey, f"body{tank_level}")
         super().__init__(x, y, self.sprites["abajo"], collision_layer)
 
         self.arma = Weapon(self)
@@ -49,11 +49,12 @@ class Tank(Elemento):
 
         colision = False
         for e in mundo.elementos_por_capa[2]:
-            if self.check_collision(e):
-                colision = True
-
             if isinstance(e, Interactuable):
                 e.interactuar(self)
+
+            if self.check_collision(e):
+                colision = True
+                break
 
         if colision:
             self.rect_element.x -= dx
