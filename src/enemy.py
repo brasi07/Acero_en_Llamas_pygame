@@ -2,6 +2,7 @@ import math
 from settings import CollisionLayer, COLLISION_RULES
 from tank import Tank
 from weapon import *
+from astar import *
 
 class EnemyState:
     PATROLLING = "patrolling"
@@ -29,9 +30,16 @@ class Enemy(Tank):
         self.arma = Weapon(self)
         self.colision_layer_balas = CollisionLayer.BULLET_ENEMY
 
+        self.indice_mundo_x = (self.rect_element.x // settings.TILE_SIZE) // 32
+        self.indice_mundo_y = (self.rect_element.y // settings.TILE_SIZE) // 18
+
         self.path = []
    
-    def update(self, jugador):
+    def update(self, jugador, mundo):
+        tile_size = settings.TILE_SIZE
+
+        # Obtenemos el mapa binario en el que estamos
+        pantalla_binaria = mundo.mapas_binarios[self.indice_mundo_x][self.indice_mundo_y]
 
         if self.vida <= 0:
             self.eliminar = True
@@ -44,6 +52,7 @@ class Enemy(Tank):
             self.state = EnemyState.CHASING
         else:
             self.state = EnemyState.PATROLLING
+
         
         if self.state == EnemyState.PATROLLING:
             # Movimiento en una ruta fija
@@ -53,18 +62,32 @@ class Enemy(Tank):
                 self.patrol_direction *= -1
 
         elif self.state == EnemyState.CHASING:
-            # Movimiento hacia el jugador
             self.arma.update(jugador=jugador)
+            # Movimiento hacia el jugador
+            start = ((self.rect_element.centerx // tile_size) % 32, (self.rect_element.centery // tile_size) % 18)
+            goal = ((jugador.rect_element.centerx // tile_size) % 32, (jugador.rect_element.centery // tile_size) % 18)
 
-            if self.rect_element.x < jugador.rect_element.x:
-                self.rect_element.x += jugador.velocidad
-            elif self.rect_element.x > jugador.rect_element.x:
-                self.rect_element.x -= self.velocidad
+            if not self.path or self.path[-1] != goal:  # Solo recalcular si el jugador cambió de celda
+                self.path = astar(pantalla_binaria, start, goal)
 
-            if self.rect_element.y < jugador.rect_element.y:
-                self.rect_element.y += self.velocidad
-            elif self.rect_element.y > jugador.rect_element.y:
-                self.rect_element.y -= self.velocidad
+            if self.path:
+                next_step = self.path[0]
+                target_x = (self.indice_mundo_x * 32 + next_step[0]) * tile_size
+                target_y = (self.indice_mundo_y * 18 + next_step[1]) * tile_size
+
+                diff_x = target_x - self.rect_element.centerx
+                diff_y = target_y - self.rect_element.centery
+
+                if abs(diff_x) > 0 and abs(diff_y) > 0:
+                    factor = 0.707  # Ajuste para diagonales (1/√2)
+                else:
+                    factor = 1
+
+                self.rect_element.x += self.velocidad * factor if diff_x > 0 else -self.velocidad * factor if diff_x < 0 else 0
+                self.rect_element.y += self.velocidad * factor if diff_y > 0 else -self.velocidad * factor if diff_y < 0 else 0
+
+                if ((self.rect_element.centerx // tile_size) % 32, (self.rect_element.centery // tile_size) % 18) == (next_step[0], next_step[1]):
+                    self.path.pop(0)
 
         elif self.state == EnemyState.ATTACKING:
             # Animación de ataque o colisión

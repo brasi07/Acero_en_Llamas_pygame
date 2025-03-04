@@ -134,31 +134,42 @@ class World:
 
 
     def generar_mapas_binarios(self):
-        """Genera mapas binarios donde haya 1s donde haya Muro/MuroBajo/Puerta y 0s en el resto. -> A*"""
+        """Genera mapas binarios donde haya 1s donde haya Muro/MuroBajo/Puerta y 0s en el resto, inflando obstáculos."""
         mapa_binario = [[0 for _ in range(self.num_columnas)] for _ in range(self.num_filas)]
 
-    
+        # Marcar obstáculos en la matriz
         for elemento in self.elementos_por_capa[2]:
             if isinstance(elemento, (Muro, MuroBajo, Puerta)):
                 tile_x = elemento.x // settings.TILE_SIZE
                 tile_y = elemento.y // settings.TILE_SIZE
                 mapa_binario[tile_y][tile_x] = 1
 
-        submatrices = {}
+        # Inflar obstáculos (doblando el grosor)
+        inflado = [[valor for valor in fila] for fila in mapa_binario]  # Copia para modificar sin afectar la original
+        for y in range(self.num_filas):
+            for x in range(self.num_columnas):
+                if mapa_binario[y][x] == 1:
+                    # Inflar en un radio de 1 celda
+                    for dy in range(-1, 2):
+                        for dx in range(-1, 2):
+                            ny, nx = y + dy, x + dx
+                            if 0 <= ny < self.num_filas and 0 <= nx < self.num_columnas:
+                                inflado[ny][nx] = 1
+
+        # Crear submatrices para cada grid de pantalla
         tiles_por_pantalla_x = self.ancho_pantalla // settings.TILE_SIZE
         tiles_por_pantalla_y = self.alto_pantalla // settings.TILE_SIZE
+        matriz_mapas = [[None for _ in range(4)] for _ in range(3)]
 
-        pantalla_id = 0
         for i in range(3):
             for j in range(4):
                 submatriz = []
                 for y in range(tiles_por_pantalla_y):
-                    fila = mapa_binario[j * tiles_por_pantalla_y + y][i * tiles_por_pantalla_x:(i + 1) * tiles_por_pantalla_x]
+                    fila = inflado[j * tiles_por_pantalla_y + y][i * tiles_por_pantalla_x:(i + 1) * tiles_por_pantalla_x]
                     submatriz.append(fila)
-                submatrices[pantalla_id] = submatriz
-                pantalla_id += 1
+                matriz_mapas[i][j] = submatriz
 
-        return submatrices
+        return matriz_mapas
 
     """def cambiar_pantalla(self, direccion):
 
@@ -232,7 +243,7 @@ class World:
     def update(self):
         """Actualiza el mundo y los elementos."""
         for enemigo in self.enemigos:
-            enemigo.update(self.player)
+            enemigo.update(self.player, self)
 
         for elemento in self.elementos_actualizables:
             elemento.update(self.player)
