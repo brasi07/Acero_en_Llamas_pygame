@@ -1,6 +1,7 @@
 import abc
 import pygame
 
+import settings
 from elements import Elemento
 from settings import CollisionLayer
 
@@ -66,7 +67,7 @@ class Boton(Interactuable):
         self.camara_x_original = self.mundo.camara_x
         self.camara_y_original = self.mundo.camara_y
 
-        self.mundo.camara_x = self.objetos_a_activar[0].x - self.mundo.ancho_pantalla // 2
+        self.mundo.camara_x = self.objetos_a_activar[0].x + settings.TILE_SIZE - self.mundo.ancho_pantalla // 2
         self.mundo.camara_y = self.objetos_a_activar[0].y - self.mundo.alto_pantalla // 2
 
         self.tiempo_activacion = pygame.time.get_ticks()

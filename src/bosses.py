@@ -9,16 +9,16 @@ from weapon import Weapon
 
 
 class Mecha(Enemy):
-    def __init__(self, x, y, resizex, resizey):
-        super().__init__(20, 2.5, x, y, resizex, resizey, tank_level="_boss1")
+    def __init__(self, x, y):
+        super().__init__(20, 2.5, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, tank_level="_boss1")
 
 class MegaCannon(Enemy):
-    def __init__(self, x, y, resizex, resizey):
-        super().__init__(20, 0, x, y, resizex, resizey, tank_level="_boss2")
+    def __init__(self, x, y):
+        super().__init__(20, 0, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, tank_level="_boss2")
         self.muerto = False
         self.arma = WeaponMegaCannon
 
-    def update(self, mundo):
+    def update(self, jugador, mundo):
         if self.vida <= 0:
             self.muerto = True
             self.vida = 20
@@ -71,6 +71,6 @@ class WeaponMegaCannon(Weapon):
 
 
 class WarTrain(Tank):
-    def __init__(self, x, y, resizex, resizey):
-        super().__init__(20, 2.5, x, y, resizex, resizey)
+    def __init__(self, x, y):
+        super().__init__(20, 2.5, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER)
 

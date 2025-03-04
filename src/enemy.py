@@ -125,8 +125,23 @@ class Enemy(Tank):
         return math.hypot(jugador.rect_element.x - self.rect_element.x, jugador.rect_element.y - self.rect_element.y)
 
 
-class Enemy_Brown(Enemy):
+class EnemyBrown(Enemy):
 
     def __init__(self, x, y):
         super().__init__(3, 2, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, tank_level="_brown")
+
+class EnemyGreen(Enemy):
+
+    def __init__(self, x, y):
+        super().__init__(3, 2, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, tank_level="_green")
+
+class EnemyPurple(Enemy):
+
+    def __init__(self, x, y):
+        super().__init__(3, 2, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, tank_level="_purple")
+
+class EnemyRed(Enemy):
+
+    def __init__(self, x, y):
+        super().__init__(3, 2, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, tank_level="_red")
 

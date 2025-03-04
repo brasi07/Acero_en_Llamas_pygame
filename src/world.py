@@ -3,9 +3,11 @@ import re  # Para extraer números del nombre del archivo
 
 import settings
 from activable import Puerta
-from interactuable import Boton, Trampa
+from bosses import Mecha, MegaCannon, WarTrain
+from interactuable import Boton, Trampa, Interactuable
 from elements import Muro, Decoracion, MuroBajo
 from enemy import *
+from player import Player
 
 
 class World:
@@ -66,11 +68,8 @@ class World:
 
         # Diccionario de elementos_1_2 para cada capa
         self.elementos_por_capa = {capa: [] for capa in self.capas.keys()}
-
-        # Diccionario de enemigos por capa
-        self.enemigos = []
-
         self.elementos_actualizables = []
+        self.enemigos = []
 
         # Variables de transición
         self.en_transicion = False
@@ -82,7 +81,7 @@ class World:
 
         # Generar los elementos_1_2 de cada capa
         for capa, tiles in self.capas.items():
-            self.generar_elementos(tiles, self.elementos_por_capa[capa], self.sprites_por_capa[capa], self.enemigos)
+            self.generar_elementos(tiles, self.elementos_por_capa[capa], self.sprites_por_capa[capa], self.enemigos, self.elementos_actualizables)
 
         self.mapas_binarios = self.generar_mapas_binarios()
 
@@ -91,72 +90,62 @@ class World:
         match = re.search(r'Mapa_\d+_(\d+)\.csv', archivo)
         return int(match.group(1)) if match else 1  # Si no encuentra número, asume capa 1
 
-    def generar_elementos(self, mapa_tiles, lista_elementos, sprites, lista_enemigos):
+    def generar_elementos(self, mapa_tiles, lista_elementos, sprites, lista_enemigos, lista_actualizables):
         """Crea los elementos del mapa ajustándolos al tamaño de la pantalla."""
 
         for y, fila in enumerate(mapa_tiles):
             for x, valor in enumerate(fila):
 
                 valor = int(valor)  # Asegurarse de que el valor es un número
+                elemento = None
 
                 # Primer pase: Almacenar puertas
                 if 5100 <= valor <= 5199:  # Rango de valores reservados para puertas
-                    puerta = Puerta(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[1315], sprites[580])
+                    elemento = Puerta(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[1315], sprites[580])
                     pos = valor - 5100
                     if pos not in self.puertas:
                         self.puertas[pos] = []
-                    self.puertas[pos].append(puerta)
-                    lista_elementos.append(puerta)
+                    self.puertas[pos].append(elemento)
                 elif valor == 0:
                     self.camara_x = x // (self.ancho_pantalla / settings.TILE_SIZE) * self.ancho_pantalla
                     self.camara_y = y // (self.alto_pantalla / settings.TILE_SIZE) * self.alto_pantalla
                     self.player.establecer_posicion(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
-                    lista_elementos.append(self.player)
+                    elemento = self.player
+                elif valor == 7000:
+                    elemento = EnemyBrown(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
+                elif valor == 7001:
+                    elemento = EnemyGreen(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
+                elif valor == 7002:
+                    elemento = EnemyPurple(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
+                elif valor == 7003:
+                    elemento = EnemyRed(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
+                elif valor == 7004:
+                    elemento = Mecha(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
+                elif valor == 7005:
+                    elemento = MegaCannon(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
+                elif valor == 7006:
+                    elemento = WarTrain(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
                 elif 5000 <= valor <= 5099 and self.mundo_number == "1":  # Rango de valores reservados para botones
                     pos = valor - 5000
                     puertas_a_activar = self.puertas.get(pos)
-                    boton = Boton(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[2142], puertas_a_activar, self)
-                    self.elementos_actualizables.append(boton)
-                    lista_elementos.append(boton)
-                elif valor == 836 and self.mundo_number == "1" \
-                        or valor == 1425 and self.mundo_number == "2":
-                    lista_elementos.append(Trampa(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor]))
+                    elemento = Boton(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[2142], puertas_a_activar, self)
+                elif valor == 836 and self.mundo_number == "1" or valor == 1425 and self.mundo_number == "2":
+                    elemento = Trampa(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor])
                 elif valor in (1168, 1155, 1283, 1220, 1282, 1157, 1346, 1092, 1347) and self.mundo_number == "1":
-                    lista_elementos.append(MuroBajo(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor]))
+                    elemento = MuroBajo(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor])
                 elif valor in (514, 515, 516, 517, 578, 579, 580, 581, 876, 878, 768, 2436, 2437, 2438, 2500, 2502, 2564, 2565, 2566) and self.mundo_number == "1" \
                         or valor in (1, 512, 513, 576, 577, 1360, 1361, 1362, 1424, 1426, 1488, 1489, 1490, 1486, 1550, 1614, 1678) and self.mundo_number == "2":
-                    lista_elementos.append(Decoracion(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor]))
-                elif valor == 7000:
-                    brown_enemy = Enemy_Brown(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
-                    lista_elementos.append(brown_enemy)
-                    lista_enemigos.append(brown_enemy)
-                elif valor == 7001:
-                    brown_enemy = Enemy_Brown(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
-                    lista_elementos.append(brown_enemy)
-                    lista_enemigos.append(brown_enemy)
-                elif valor == 7002:
-                    brown_enemy = Enemy_Brown(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
-                    lista_elementos.append(brown_enemy)
-                    lista_enemigos.append(brown_enemy)
-                elif valor == 7003:
-                    brown_enemy = Enemy_Brown(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
-                    lista_elementos.append(brown_enemy)
-                    lista_enemigos.append(brown_enemy)
-                elif valor == 7004:
-                    brown_enemy = Enemy_Brown(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
-                    lista_elementos.append(brown_enemy)
-                    lista_enemigos.append(brown_enemy)
-                elif valor == 7005:
-                    brown_enemy = Enemy_Brown(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
-                    lista_elementos.append(brown_enemy)
-                    lista_enemigos.append(brown_enemy)
-                elif valor == 7006:
-                    brown_enemy = Enemy_Brown(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
-                    lista_elementos.append(brown_enemy)
-                    lista_enemigos.append(brown_enemy)
+                    elemento = Decoracion(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor])
                 elif valor != -1 and valor in sprites:
-                    lista_elementos.append(Muro(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor]))
+                    elemento = Muro(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor])
 
+                if elemento:
+                    lista_elementos.append(elemento)
+
+                    if isinstance(elemento, Enemy):
+                        lista_enemigos.append(elemento)
+                    elif hasattr(elemento, "update") and not isinstance(elemento, Player):
+                        lista_actualizables.append(elemento)
 
     def generar_mapas_binarios(self):
         """Genera mapas binarios donde haya 1s donde haya Muro/MuroBajo/Puerta y 0s en el resto, inflando obstáculos."""
@@ -267,8 +256,8 @@ class World:
 
     def update(self):
         """Actualiza el mundo y los elementos."""
-        for enemigo in self.enemigos:
-            enemigo.update(self.player, self)
+        for elemento in self.enemigos:
+            elemento.update(self.player, self)
 
         for elemento in self.elementos_actualizables:
             elemento.update(self.player)
