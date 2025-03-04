@@ -260,8 +260,8 @@ class World:
     def elemento_en_pantalla(self, elemento):
         """Verifica si el elemento está dentro del área visible."""
         return (
-                self.camara_x - 80 <= elemento.rect_element.x < self.camara_x + self.ancho_pantalla + 80
-                and self.camara_y - 80 <= elemento.rect_element.y < self.camara_y + self.alto_pantalla + 80
+                self.camara_x - 32 <= elemento.rect_element.x < self.camara_x + self.ancho_pantalla + 32
+                and self.camara_y - 32 <= elemento.rect_element.y < self.camara_y + self.alto_pantalla + 32
         )
 
     def update(self):
