@@ -40,6 +40,10 @@ class Bala(Elemento):
         self.y += self.vel_y
         self.rect_element.topleft = (self.x, self.y)
 
+        # Verificar si la bala sale de la pantalla
+        if self.fuera_de_pantalla(mundo, ancho_pantalla, alto_pantalla):
+            return True  # Eliminar la bala
+
         # Verificar colisiones con los elementos del mundo
         for elemento in mundo.elementos_por_capa.get(2, []):  # Evita KeyError si la capa no existe
             if self.check_collision(elemento):
@@ -47,9 +51,7 @@ class Bala(Elemento):
                 self.iniciar_colision()
                 return False  # No eliminar aún, esperar animación
 
-        # Verificar si la bala sale de la pantalla
-        if self.fuera_de_pantalla(mundo, ancho_pantalla, alto_pantalla):
-            return True  # Eliminar la bala
+
 
         return False
 

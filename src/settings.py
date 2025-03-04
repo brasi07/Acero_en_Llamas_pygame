@@ -6,11 +6,11 @@ import spritesheet
 
 FPS = 60
 ANCHO, ALTO = 1024, 576
+HABITACION_ANCHO = 32     # Ancho de cada habitación en el minimapa
+HABITACION_ALTO = 18      # Alto de cada habitación en el minimapa
+ESPACIADO = 5            # Espacio entre habitaciones en el minimapa
+MINIMAPA_POS = (ANCHO - HABITACION_ANCHO * 3 - ESPACIADO * 2 - 50, 50)  # Posición en pantalla (esquina superior derecha)
 
-# Colores
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-GREEN = (0, 255, 0)
 
 RESIZE_PLAYER = 2.5
 RESIZE_CANNON = 2.0
@@ -21,12 +21,30 @@ TIME_FRAME = 30
 COOLDOWN = 2000
 
 NEGRO = (0, 0, 0)
+NEGRO_TRANSLUCIDO = (0, 0, 0, 180)
 BLANCO = (255, 255, 255)
 GRIS_OSCURO = (30, 30, 30)
 ROJO = (255, 0, 0)
+ROJO_TRANSLUCIDO = (255, 0, 0, 180)
 VERDE = (0, 255, 0)
 AMARILLO = (255, 255, 0)
 ELIMINAR_FONDO = (248, 0, 255)
+
+# Conexiones entre habitaciones (pares de coordenadas en la matriz)
+CONEXIONES = [
+    ((0, 0), (0, 1), NEGRO_TRANSLUCIDO),  # Habitación (0,0) conecta con (0,1)
+    ((0, 1), (0, 2), NEGRO_TRANSLUCIDO),
+    ((0, 0), (1, 0), NEGRO_TRANSLUCIDO),
+    ((1, 0), (2, 0), NEGRO_TRANSLUCIDO),
+    ((2, 0), (3, 0), NEGRO_TRANSLUCIDO),
+    ((0, 1), (0, 2), NEGRO_TRANSLUCIDO),
+    ((0, 1), (1, 1), NEGRO_TRANSLUCIDO),
+    ((1, 1), (2, 1), ROJO_TRANSLUCIDO),
+    ((1, 1), (1, 2), NEGRO_TRANSLUCIDO),
+    ((1, 2), (2, 2), NEGRO_TRANSLUCIDO),
+    ((2, 2), (3, 2), NEGRO_TRANSLUCIDO),
+    ((3, 2), (3, 1), NEGRO_TRANSLUCIDO),
+]
 
 class CollisionLayer(Enum):
     PLAYER = 1

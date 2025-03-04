@@ -88,7 +88,7 @@ class Game:
 
     def update_selected_option(self):
         for index, item in enumerate(self.menu_items):
-            color = settings.GREEN if index == self.selected_item else (150, 150, 150)
+            color = settings.VERDE if index == self.selected_item else (150, 150, 150)
             text = self.font.render(item, True, color)
             rect = text.get_rect(center=(settings.ANCHO/2, (settings.ALTO/2 - 100 + index * 100)))
             self.mundo.pantalla.blit(text, rect)
@@ -126,6 +126,7 @@ class Game:
             self.ui.draw_health_bar(enemigo)
 
         self.ui.draw_health_bar_player(self.jugador)
+        self.ui.dibujar_minimapa()
 
         pygame.display.flip()
 
