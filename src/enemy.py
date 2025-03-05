@@ -10,7 +10,7 @@ class EnemyState:
     ATTACKING = "attacking"
 
 class Enemy(Tank):
-
+    # TODO: Pasar el daño del enemigo para ajustar los distintos niveles
     def __init__(self, vida, velocidad, x, y, resizex, resizey, tank_level, modo_patrulla):
         
         super().__init__(vida, velocidad, x, y, resizex, resizey, collision_layer=CollisionLayer.ENEMY, tank_level=tank_level)
@@ -29,7 +29,8 @@ class Enemy(Tank):
         self.patrol_phase = 0  # Fase de patrulla
 
         self.chase_range = 300  # Distancia para empezar a perseguir
-        self.attack_range = 250 # Distancia para atacar
+        self.jugador_visto = False
+        self.attack_range = 280 # Distancia para atacar
 
         self.arma = Weapon(self)
         self.colision_layer_balas = CollisionLayer.BULLET_ENEMY
@@ -52,40 +53,43 @@ class Enemy(Tank):
             return "circular"
    
     def update(self, jugador, mundo):
-        
         tile_size = settings.TILE_SIZE
-        # Si el jugador esta en la misma pantalla que los enemigos los ponemos a funcionar
-        if self.en_la_misma_pantalla(jugador):
-            # Obtenemos el mapa binario en el que estamos
-            pantalla_binaria = mundo.mapas_binarios[self.indice_mundo_x][self.indice_mundo_y]
 
+        # Activar la lógica solo si el jugador está en la misma pantalla
+        if self.en_la_misma_pantalla(jugador):
+
+            # Obtenemos el mapa binario (grid) actual
+            pantalla_binaria = mundo.mapas_binarios[self.indice_mundo_x][self.indice_mundo_y]
+            start = ((self.rect_element.centerx // tile_size) % 32, (self.rect_element.centery // tile_size) % 18)
+            goal = ((jugador.rect_element.centerx // tile_size) % 32, (jugador.rect_element.centery // tile_size) % 18)
+
+            # Si ya no tiene vida, se marca para eliminar
             if self.vida <= 0:
                 self.eliminar = True
 
+            self.arma.update(mundo, tank=jugador)
+
             distancia = self.distancia_jugador(jugador)
 
-            if distancia < self.attack_range:
+            # Si el jugador está dentro del rango de persecución, entramos en CHASING;
+            # si se aleja demasiado, volvemos a patrullar (con un pequeño retardo para evitar bugs)
+            if distancia < self.attack_range and raycasting(pantalla_binaria, start, goal):
                 self.state = EnemyState.ATTACKING
-            elif distancia < self.chase_range:
+            elif distancia < self.chase_range or self.jugador_visto:
                 self.state = EnemyState.CHASING
                 self.ultimo_cambio_estado = pygame.time.get_ticks()
-            else:
-                # Hacemos que para que el cambio al estado de patrulla no sea instantáneo para evitar bugs
-                if pygame.time.get_ticks() - self.ultimo_cambio_estado > 3000:
-                    self.state = EnemyState.PATROLLING
-                    self.ultimo_cambio_estado = pygame.time.get_ticks()
+                self.jugador_visto = True
 
-            
             if self.state == EnemyState.PATROLLING:
+                # Patrulla según el modo de patrulla definido
                 if self.modo_patrulla == "circular":
-                    # Patrulla en un cuadrado (simula un círculo en píxeles)
                     if self.patrol_phase == 0:  # Derecha
                         dx, dy = self.velocidad, 0
                         if self.rect_element.x >= self.start_x + self.patrol_movement:
                             self.patrol_phase = 1
                     elif self.patrol_phase == 1:  # Abajo
                         dx, dy = 0, self.velocidad
-                        if self.rect_element.y >= self.y + self.patrol_movement:
+                        if self.rect_element.y >= self.start_y + self.patrol_movement:
                             self.patrol_phase = 2
                     elif self.patrol_phase == 2:  # Izquierda
                         dx, dy = -self.velocidad, 0
@@ -93,14 +97,14 @@ class Enemy(Tank):
                             self.patrol_phase = 3
                     elif self.patrol_phase == 3:  # Arriba
                         dx, dy = 0, -self.velocidad
-                        if self.rect_element.y <= self.y:
+                        if self.rect_element.y <= self.start_y:
                             self.patrol_phase = 0
 
                 elif self.modo_patrulla == "horizontal":
                     dx, dy = self.velocidad * self.patrol_direction, 0
+                    # Si choca o se sale del rango de patrulla, invierte la dirección
                     if self.actualizar_posicion(dx, dy, mundo):
                         self.patrol_direction *= -1
-                    # No sabemos por que funciona, pero funciona
                     if abs(self.rect_element.x - self.start_x) > self.patrol_movement:
                         self.patrol_direction *= -1
 
@@ -112,41 +116,44 @@ class Enemy(Tank):
                         self.patrol_direction *= -1
 
             elif self.state == EnemyState.CHASING:
-                self.arma.update(mundo, jugador)
-                # Movimiento hacia el jugador
-                start = ((self.rect_element.centerx // tile_size) % 32, (self.rect_element.centery // tile_size) % 18)
-                goal = ((jugador.rect_element.centerx // tile_size) % 32, (jugador.rect_element.centery // tile_size) % 18)
+                
+                # Verifica primero la línea de visión: si la tiene, pasa a ATTACKING inmediatamente.
+                if raycasting(pantalla_binaria, start, goal) and distancia < self.attack_range:
+                    self.state = EnemyState.ATTACKING
+                else:
+                    # Si no hay visión, se calcula el camino y se mueve hacia el jugador.
+                    if not self.path or self.path[-1] != goal:  # Recalcular si el jugador cambió de celda
+                        self.path = astar(pantalla_binaria, start, goal)
 
-                if not self.path or self.path[-1] != goal:  # Solo recalcular si el jugador cambió de celda
-                    self.path = astar(pantalla_binaria, start, goal)
+                    if self.path:
+                        next_step = self.path[0]
+                        target_x = (self.indice_mundo_x * 32 + next_step[0]) * tile_size
+                        target_y = (self.indice_mundo_y * 18 + next_step[1]) * tile_size
 
-                if self.path:
-                    next_step = self.path[0]
-                    target_x = (self.indice_mundo_x * 32 + next_step[0]) * tile_size
-                    target_y = (self.indice_mundo_y * 18 + next_step[1]) * tile_size
+                        diff_x = target_x - self.rect_element.centerx
+                        diff_y = target_y - self.rect_element.centery
 
-                    diff_x = target_x - self.rect_element.centerx
-                    diff_y = target_y - self.rect_element.centery
+                        factor = 0.707 if abs(diff_x) > 0 and abs(diff_y) > 0 else 1
 
-                    if abs(diff_x) > 0 and abs(diff_y) > 0:
-                        factor = 0.707  # Ajuste para diagonales (1/√2)
-                    else:
-                        factor = 1
+                        dx = self.velocidad * factor if diff_x > 0 else -self.velocidad * factor if diff_x < 0 else 0
+                        dy = self.velocidad * factor if diff_y > 0 else -self.velocidad * factor if diff_y < 0 else 0
 
-                    dx = self.velocidad * factor if diff_x > 0 else -self.velocidad * factor if diff_x < 0 else 0
-                    dy = self.velocidad * factor if diff_y > 0 else -self.velocidad * factor if diff_y < 0 else 0
+                        self.actualizar_posicion(dx, dy, mundo)
 
-                    self.actualizar_posicion(dx, dy, mundo)
-
-                    if ((self.rect_element.centerx // tile_size) % 32, (self.rect_element.centery // tile_size) % 18) == (next_step[0], next_step[1]):
-                        self.path.pop(0)
+                        # Cuando se alcanza la celda del path, se elimina ese paso.
+                        if ((self.rect_element.centerx // tile_size) % 32, (self.rect_element.centery // tile_size) % 18) == (next_step[0], next_step[1]):
+                            self.path.pop(0)
 
             elif self.state == EnemyState.ATTACKING:
-                # Animación de ataque o colisión
-                self.arma.update(mundo, tank=jugador)
-                if pygame.time.get_ticks() - self.tiempo_ultimo_disparo >= 3000:
-                    self.arma.activar()
-                    self.tiempo_ultimo_disparo = pygame.time.get_ticks()
+                # En ATTACKING, si se pierde la visión, volver a CHASING y recalcular el camino
+                if not raycasting(pantalla_binaria, start, goal):
+                    self.state = EnemyState.CHASING
+                    self.path = astar(pantalla_binaria, start, goal)
+                else:
+                    # print("Atacando")
+                    if pygame.time.get_ticks() - self.tiempo_ultimo_disparo >= 3000:
+                        self.arma.activar()
+                        self.tiempo_ultimo_disparo = pygame.time.get_ticks()
             
 
     def calcular_direccion_canon(self, mundo, jugador):
@@ -159,6 +166,7 @@ class Enemy(Tank):
     def patrullar(self):
         self.state = EnemyState.PATROLLING
         self.establecer_posicion(self.start_x, self.start_y)
+        self.jugador_visto = False
 
     def en_la_misma_pantalla(self, jugador):
         return (jugador.rect_element.x // settings.TILE_SIZE // 32 == self.indice_mundo_x) and (jugador.rect_element.y // settings.TILE_SIZE // 18 == self.indice_mundo_y)
@@ -180,15 +188,15 @@ class EnemyBrown(Enemy):
 class EnemyGreen(Enemy):
 
     def __init__(self, x, y, modo_patrulla):
-        super().__init__(3, 2, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, tank_level="_green")
+        super().__init__(5, 2, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, tank_level="_green")
 
 class EnemyPurple(Enemy):
 
     def __init__(self, x, y, modo_patrulla):
-        super().__init__(3, 2, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, tank_level="_purple")
+        super().__init__(8, 2, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, tank_level="_purple")
 
 class EnemyRed(Enemy):
 
     def __init__(self, x, y, modo_patrulla):
-        super().__init__(3, 2, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, tank_level="_red")
+        super().__init__(12, 2, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, tank_level="_red")
 

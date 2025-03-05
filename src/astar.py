@@ -50,9 +50,16 @@ def astar(grid, start, goal):
                 if grid[current[1]][current[0] + dx] == 1 or grid[current[1] + dy][current[0]] == 1:
                     continue  # Bloqueo en la esquina
 
-            # Costo del movimiento
-            tentative_g_score = g_score[current] + (1.414 if abs(dx) + abs(dy) == 2 else 1)
-
+            # Costo base del movimiento
+            move_cost = 1.414 if abs(dx) + abs(dy) == 2 else 1
+            
+            # Usamos la función de raycasting para ver si hay línea de visión
+            if not raycasting(grid, neighbor, goal):
+                extra_cost = 100  # Penalización por falta de visión
+            else:
+                extra_cost = 0
+            
+            tentative_g_score = g_score[current] + move_cost + extra_cost
             if neighbor not in g_score or tentative_g_score < g_score[neighbor]:
                 came_from[neighbor] = current
                 g_score[neighbor] = tentative_g_score
@@ -60,3 +67,37 @@ def astar(grid, start, goal):
                 heapq.heappush(open_set, (f_score[neighbor], neighbor))
 
     return []  # Si no encuentra camino, devuelve lista vacía
+
+
+
+def raycasting(pantalla_binaria, origen, destino):
+        """
+        Chequea si hay línea de visión entre 'origen' y 'destino'.
+        Primero verifica que el destino esté en la misma pantalla; luego,
+        utiliza el algoritmo de Bresenham para detectar obstáculos.
+        """
+        x0 = origen[0]
+        y0 = origen[1]
+        x1 = destino[0]
+        y1 = destino[1]
+
+        dx = abs(x1 - x0)
+        dy = abs(y1 - y0)
+        sx = 1 if x0 < x1 else -1
+        sy = 1 if y0 < y1 else -1
+        err = dx - dy
+
+        x, y = x0, y0
+        while True:
+            if (x,y) != (x1, y1) and pantalla_binaria[y][x] == 1:
+                return False
+            if x == x1 and y == y1:
+                break
+            e2 = 2 * err
+            if e2 > -dy:
+                err -= dy
+                x += sx
+            if e2 < dx:
+                err += dx
+                y += sy
+        return True
