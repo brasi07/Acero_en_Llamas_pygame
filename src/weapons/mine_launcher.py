@@ -11,7 +11,7 @@ class MineLauncher(Weapon):
         self.minas = []
 
     def activar_secundaria(self, tank, mundo):
-        self.actvio = True
+        self.activo = True
         self.tiempo_inicio = pygame.time.get_ticks()
         nova_mina = Mine(self.tank.rect_element.x, self.tank.rect_element.y)
         mundo.elementos_por_capa[2].append(nova_mina)
@@ -24,7 +24,7 @@ class MineLauncher(Weapon):
 
         for mina in self.minas:
             if (tiempo_actual - mina.tiempo_creacion) > mina.duracion:
-                mina.interactuar()
+                mina.interactuar(None)
                 self.minas.remove(mina)
 
     def dibujar_minas(self, mundo):

@@ -32,7 +32,6 @@ class Enemy(Tank):
         self.patrol_phase = 0  # Fase de patrulla
 
         self.chase_range = 300  # Distancia para empezar a perseguir
-        self.jugador_visto = False
         self.attack_range = 280 # Distancia para atacar
 
         self.arma = Weapon(self)
@@ -76,12 +75,9 @@ class Enemy(Tank):
 
             # Si el jugador está dentro del rango de persecución, entramos en CHASING;
             # si se aleja demasiado, volvemos a patrullar (con un pequeño retardo para evitar bugs)
-            if distancia < self.attack_range and raycasting(pantalla_binaria, start, goal):
-                self.state = EnemyState.ATTACKING
-            elif distancia < self.chase_range or self.jugador_visto:
+            if distancia < self.chase_range and self.state == EnemyState.PATROLLING:
                 self.state = EnemyState.CHASING
                 self.ultimo_cambio_estado = pygame.time.get_ticks()
-                self.jugador_visto = True
 
             if self.state == EnemyState.PATROLLING:
                 # Patrulla según el modo de patrulla definido
@@ -119,9 +115,8 @@ class Enemy(Tank):
                         self.patrol_direction *= -1
 
             elif self.state == EnemyState.CHASING:
-                
                 # Verifica primero la línea de visión: si la tiene, pasa a ATTACKING inmediatamente.
-                if raycasting(pantalla_binaria, start, goal) and distancia < self.attack_range:
+                if raycasting(pantalla_binaria, start, goal):
                     self.state = EnemyState.ATTACKING
                 else:
                     # Si no hay visión, se calcula el camino y se mueve hacia el jugador.
@@ -153,7 +148,6 @@ class Enemy(Tank):
                     self.state = EnemyState.CHASING
                     self.path = astar(pantalla_binaria, start, goal)
                 else:
-                    # print("Atacando")
                     if pygame.time.get_ticks() - self.tiempo_ultimo_disparo >= 3000:
                         self.arma.activar()
                         self.tiempo_ultimo_disparo = pygame.time.get_ticks()
@@ -169,7 +163,6 @@ class Enemy(Tank):
     def patrullar(self):
         self.state = EnemyState.PATROLLING
         self.establecer_posicion(self.start_x, self.start_y)
-        self.jugador_visto = False
 
     def en_la_misma_pantalla(self, jugador):
         return (jugador.rect_element.x // TILE_SIZE // 32 == self.indice_mundo_x) and (jugador.rect_element.y // TILE_SIZE // 18 == self.indice_mundo_y)
