@@ -107,7 +107,7 @@ class Game:
         self.mundo.update()
 
     def draw(self):
-        self.mundo.draw(self.jugador)
+        self.mundo.draw()
         
         for enemigo in self.mundo.enemigos:
             enemigo.dibujar_enemigo(self.mundo)

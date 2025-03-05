@@ -101,7 +101,7 @@ class World:
 
                 # Primer pase: Almacenar puertas
                 if 5100 <= valor <= 5199:  # Rango de valores reservados para puertas
-                    elemento = Puerta(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[1315], sprites[580])
+                    elemento = Puerta(x, y, sprites[1315], sprites[580])
                     pos = valor - 5100
                     if pos not in self.puertas:
                         self.puertas[pos] = []
@@ -111,34 +111,34 @@ class World:
                     self.camara_y = y // (self.alto_pantalla / settings.TILE_SIZE) * self.alto_pantalla
                     self.player.establecer_posicion(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
                     elemento = self.player
-                elif valor == 7000:
-                    elemento = EnemyBrown(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
-                elif valor == 7001:
-                    elemento = EnemyGreen(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
-                elif valor == 7002:
-                    elemento = EnemyPurple(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
-                elif valor == 7003:
-                    elemento = EnemyRed(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
-                elif valor == 7004:
-                    elemento = Mecha(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
-                elif valor == 7005:
-                    elemento = MegaCannon(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
-                elif valor == 7006:
-                    elemento = WarTrain(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
+                elif 7000 <= valor <= 7009:
+                    elemento = EnemyBrown(x, y, valor % 10)
+                elif 7010 <= valor <= 7019:
+                    elemento = EnemyGreen(x, y, valor % 10)
+                elif 7020 <= valor <= 7029:
+                    elemento = EnemyPurple(x, y, valor % 10)
+                elif 7030 <= valor <= 7039:
+                    elemento = EnemyRed(x, y, valor % 10)
+                elif 7040 <= valor <= 7049:
+                    elemento = Mecha(x, y, valor % 10)
+                elif 7050 <= valor <= 7059:
+                    elemento = MegaCannon(x, y, valor % 10)
+                elif 7060 <= valor <= 7069:
+                    elemento = WarTrain(x, y, valor % 10)
                 elif 5000 <= valor <= 5099 and self.mundo_number == "1":  # Rango de valores reservados para botones
                     pos = valor - 5000
                     puertas_a_activar = self.puertas.get(pos)
-                    elemento = Boton(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[2142], puertas_a_activar, self)
+                    elemento = Boton(x, y, sprites[2142], puertas_a_activar, self)
                 elif valor == 836 and self.mundo_number == "1" or valor == 1425 and self.mundo_number == "2":
-                    elemento = Trampa(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor])
+                    elemento = Trampa(x, y, sprites[valor])
                 elif valor in (1168, 1155, 1283, 1220, 1282, 1157, 1346, 1092, 1347) and self.mundo_number == "1" \
                         or valor in (16, 18, 20, 85, 86, 336, 338, 340, 466, 405, 406, 469, 470) and self.mundo_number == "2":
-                    elemento = MuroBajo(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor])
+                    elemento = MuroBajo(x, y, sprites[valor])
                 elif valor in (514, 515, 516, 517, 578, 579, 580, 581, 876, 878, 768, 2436, 2437, 2438, 2500, 2502, 2564, 2565, 2566) and self.mundo_number == "1" \
                         or valor in (1, 512, 513, 576, 577, 1360, 1361, 1362, 1424, 1426, 1488, 1489, 1490, 1486, 1550, 1614, 1678) and self.mundo_number == "2":
-                    elemento = Decoracion(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor])
+                    elemento = Decoracion(x, y, sprites[valor])
                 elif valor != -1 and valor in sprites:
-                    elemento = Muro(x * settings.TILE_SIZE, y * settings.TILE_SIZE, sprites[valor])
+                    elemento = Muro(x, y, sprites[valor])
 
                 if elemento:
                     lista_elementos.append(elemento)
@@ -218,6 +218,10 @@ class World:
             "arriba": (0, -1)
         }
 
+        for enemigo in self.enemigos:
+            if enemigo.en_la_misma_pantalla(self.player):
+                enemigo.patrullar()
+
         if not self.en_transicion and not self.enfocando_objeto:
             # Si no hay transición en curso, iniciar una
             self.tiempo_inicio = pygame.time.get_ticks()  # Guarda el tiempo actual
@@ -269,7 +273,7 @@ class World:
                     elemento.animacion_elimninar()
                     lista.remove(elemento)
 
-    def draw(self, jugador):
+    def draw(self):
         """Dibuja todas las capas en orden, desde la más baja hasta la más alta."""
         for capa in sorted(self.capas.keys()):  # Dibuja en orden numérico
             if self.hasSky and max(self.capas.keys()) == capa:

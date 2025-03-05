@@ -3,13 +3,13 @@ import pygame
 
 import settings
 from elements import Elemento
-from settings import CollisionLayer
+from settings import CollisionLayer, TILE_SIZE
 
 
 class Interactuable(Elemento):
 
     def __init__(self, x, y, imagen,layer):
-        super().__init__(x, y, imagen, layer)
+        super().__init__(x * TILE_SIZE, y * TILE_SIZE, imagen, layer)
 
     @abc.abstractmethod
     def interactuar(self, objeto):

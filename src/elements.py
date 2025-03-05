@@ -1,5 +1,5 @@
 import pygame
-from settings import CollisionLayer, COLLISION_RULES
+from settings import CollisionLayer, COLLISION_RULES, TILE_SIZE
 
 class Elemento:
     def __init__(self, x, y, imagen=None, collision_layer=CollisionLayer.NONE):
@@ -11,10 +11,10 @@ class Elemento:
 
         # Si hay imagen, ajustamos el rectángulo y la máscara
         if self.imagen:
-            self.rect_element = self.imagen.get_rect(topleft=(x, y))
+            self.rect_element = self.imagen.get_rect(topleft=(self.x, self.y))
             self.mask = pygame.mask.from_surface(self.imagen)
         else:
-            self.rect_element = pygame.Rect(x, y, 0, 0)
+            self.rect_element = pygame.Rect(self.x, self.y, 0, 0)
             self.mask = None
 
     def dibujar(self, mundo):
@@ -45,12 +45,12 @@ class Elemento:
 
 class Muro(Elemento):
     def __init__(self, x, y, imagen):
-        super().__init__(x, y, imagen, CollisionLayer.WALL)
+        super().__init__(x * TILE_SIZE, y * TILE_SIZE, imagen, CollisionLayer.WALL)
 
 class MuroBajo(Elemento):
     def __init__(self, x, y, imagen):
-        super().__init__(x, y, imagen, CollisionLayer.LOW_WALL)
+        super().__init__(x * TILE_SIZE, y * TILE_SIZE, imagen, CollisionLayer.LOW_WALL)
 
 class Decoracion(Elemento):
     def __init__(self, x, y, imagen):
-        super().__init__(x, y, imagen, CollisionLayer.NONE)
+        super().__init__(x * TILE_SIZE, y * TILE_SIZE, imagen, CollisionLayer.NONE)

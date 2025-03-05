@@ -4,7 +4,7 @@ from interactuable import Interactuable
 import settings
 from elements import Elemento
 from resourcesmanager import ResourceManager
-from settings import CollisionLayer
+from settings import CollisionLayer, TILE_SIZE
 from weapon import Weapon
 
 
@@ -21,7 +21,7 @@ class Tank(Elemento):
 
         # Generamos sprites para el tanque
         self.sprites = ResourceManager.load_sprites(resizex, resizey, f"body{tank_level}")
-        super().__init__(x, y, self.sprites["abajo"], collision_layer)
+        super().__init__(x * TILE_SIZE, y * TILE_SIZE, self.sprites["abajo"], collision_layer)
 
         self.arma = Weapon(self)
 
@@ -35,13 +35,15 @@ class Tank(Elemento):
         self.rect_element.y = y
 
     def actualizar_posicion(self, movimiento_x, movimiento_y, mundo):
-        self.verificar_colision(movimiento_x, 0, mundo)
-        self.verificar_colision(0, movimiento_y, mundo)
+        colision1 = self.verificar_colision(movimiento_x, 0, mundo)
+        colision2 = self.verificar_colision(0, movimiento_y, mundo)
 
         direccion = self.determinar_direccion(movimiento_x, movimiento_y)
         if direccion:
             self.direccion = direccion
             self.imagen = self.sprites[direccion]
+        
+        return colision1 or colision2
 
     def verificar_colision(self, dx, dy, mundo):
         self.rect_element.x += dx

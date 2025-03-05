@@ -1,12 +1,13 @@
 from elements import Elemento
 from settings import CollisionLayer
 import abc
+from settings import TILE_SIZE
 
 
 class Activable(Elemento):
 
     def __init__(self, x, y, imagen,layer):
-        super().__init__(x, y, imagen, layer)
+        super().__init__(x * TILE_SIZE, y * TILE_SIZE, imagen, layer)
 
     @abc.abstractmethod
     def activar(self):

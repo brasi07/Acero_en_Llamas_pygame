@@ -9,11 +9,11 @@ from weapon import Weapon
 
 
 class Mecha(Enemy):
-    def __init__(self, x, y):
+    def __init__(self, x, y, modo_patrulla):
         super().__init__(20, 2.5, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, tank_level="_boss1")
 
 class MegaCannon(Enemy):
-    def __init__(self, x, y):
+    def __init__(self, x, y, modo_patrulla):
         super().__init__(20, 0, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, tank_level="_boss2")
         self.muerto = False
         self.arma = WeaponMegaCannon
@@ -70,7 +70,7 @@ class WeaponMegaCannon(Weapon):
                 self.imagen_canon = self.imagen_canon_base
 
 
-class WarTrain(Tank):
-    def __init__(self, x, y):
+class WarTrain(Enemy):
+    def __init__(self, x, y, modo_patrulla):
         super().__init__(20, 2.5, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER)
 
