@@ -48,6 +48,7 @@ class Tank(Elemento):
         self.rect_element.y += dy
 
         colision = False
+        # Problema: Se recorren todos los elementos, pero debería ser solo los de colisión
         for e in mundo.elementos_por_capa[2]:
             if isinstance(e, Interactuable):
                 e.interactuar(self)
@@ -59,6 +60,7 @@ class Tank(Elemento):
         if colision:
             self.rect_element.x -= dx
             self.rect_element.y -= dy
+        return colision
 
 
     def determinar_direccion(self, dx, dy):

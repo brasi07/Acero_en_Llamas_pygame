@@ -11,7 +11,7 @@ class EnemyState:
 
 class Enemy(Tank):
 
-    def __init__(self, vida, velocidad, x, y, resizex, resizey, tank_level):
+    def __init__(self, vida, velocidad, x, y, resizex, resizey, tank_level, modo_patrulla="horizontal"):
         
         super().__init__(vida, velocidad, x, y, resizex, resizey, collision_layer=CollisionLayer.ENEMY, tank_level=tank_level)
 
@@ -20,9 +20,13 @@ class Enemy(Tank):
         # Inicializamos en patrulla
         self.state = EnemyState.PATROLLING
 
+        self.modo_patrulla = modo_patrulla
         self.patrol_direction = 1  # 1 derecha, -1 izquierda
-        self.start_x = x  # Posición de inicio
-        self.patrol_movement = 300  # Rango de patrulla
+        self.start_x = x
+        self.start_y = y
+        self.patrol_movement = 350  # Rango de patrulla
+
+        self.patrol_phase = 0  # Fase de patrulla
 
         self.chase_range = 300  # Distancia para empezar a perseguir
         self.attack_range = 250 # Distancia para atacar
@@ -54,20 +58,45 @@ class Enemy(Tank):
             self.state = EnemyState.CHASING
             self.ultimo_cambio_estado = pygame.time.get_ticks()
         else:
+            # Hacemos que para que el cambio al estado de patrulla no sea instantáneo para evitar bugs
             if pygame.time.get_ticks() - self.ultimo_cambio_estado > 3000:
                 self.state = EnemyState.PATROLLING
                 self.ultimo_cambio_estado = pygame.time.get_ticks()
 
         
         if self.state == EnemyState.PATROLLING:
-            # TODO: Hacer que patrulle en funcion de tiempo en vez de rango de movimiento
-            # Movimiento en una ruta fija
-            dx = self.velocidad * self.patrol_direction
-            dy = 0
-            self.verificar_colision(dx, dy, mundo)
-            # Cambiar dirección si se alcanza el rango de patrulla
-            if abs(self.rect_element.x - self.start_x) > self.patrol_movement:
-                self.patrol_direction *= -1
+            if self.modo_patrulla == "circle":
+                # Patrulla en un cuadrado (simula un círculo en píxeles)
+                if self.patrol_phase == 0:  # Derecha
+                    dx, dy = self.velocidad, 0
+                    if self.rect_element.x >= self.start_x + self.patrol_movement:
+                        self.patrol_phase = 1
+                elif self.patrol_phase == 1:  # Abajo
+                    dx, dy = 0, self.velocidad
+                    if self.rect_element.y >= self.y + self.patrol_movement:
+                        self.patrol_phase = 2
+                elif self.patrol_phase == 2:  # Izquierda
+                    dx, dy = -self.velocidad, 0
+                    if self.rect_element.x <= self.start_x:
+                        self.patrol_phase = 3
+                elif self.patrol_phase == 3:  # Arriba
+                    dx, dy = 0, -self.velocidad
+                    if self.rect_element.y <= self.y:
+                        self.patrol_phase = 0
+
+            elif self.modo_patrulla == "horizontal":
+                dx, dy = self.velocidad * self.patrol_direction, 0
+                if self.verificar_colision(dx, dy, mundo):
+                    self.patrol_direction *= -1
+                # No sabemos por que funciona, pero funciona
+                if abs(self.rect_element.x - self.start_x) > self.patrol_movement:
+                    self.patrol_direction *= -1
+
+            elif self.modo_patrulla == "vertical":
+                dx, dy = 0, self.velocidad * self.patrol_direction
+                self.actualizar_posicion(dx, dy, mundo)
+                if abs(self.rect_element.y - self.y) > self.patrol_movement:
+                    self.patrol_direction *= -1
 
         elif self.state == EnemyState.CHASING:
             self.arma.update(mundo, jugador)
@@ -94,7 +123,7 @@ class Enemy(Tank):
                 dx = self.velocidad * factor if diff_x > 0 else -self.velocidad * factor if diff_x < 0 else 0
                 dy = self.velocidad * factor if diff_y > 0 else -self.velocidad * factor if diff_y < 0 else 0
 
-                self.verificar_colision(dx, dy, mundo)
+                self.actualizar_posicion(dx, dy, mundo)
 
                 if ((self.rect_element.centerx // tile_size) % 32, (self.rect_element.centery // tile_size) % 18) == (next_step[0], next_step[1]):
                     self.path.pop(0)
@@ -127,8 +156,8 @@ class Enemy(Tank):
 
 class EnemyBrown(Enemy):
 
-    def __init__(self, x, y):
-        super().__init__(3, 2, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, tank_level="_brown")
+    def __init__(self, x, y, modo_patrulla="horizontal"):
+        super().__init__(3, 2, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, tank_level="_brown", modo_patrulla=modo_patrulla)
 
 class EnemyGreen(Enemy):
 
