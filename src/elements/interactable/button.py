@@ -9,8 +9,6 @@ class Button(Interactable):
         self.tiempo_activacion = 0
         self.tiempo_objetos = 0
         self.objetos_activados = False
-        self.x = x
-        self.y = y
         self.sprite = sprite
         self.objetos_a_activar = objetos_a_activar
         self.mundo = mundo

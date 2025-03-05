@@ -4,8 +4,6 @@ from extras.settings import CollisionLayer
 class Door(Activateable):
     def __init__(self, x, y, sprite_cerrado, sprite_abierto):
         super().__init__(x,y,sprite_cerrado,CollisionLayer.WALL)
-        self.x = x
-        self.y = y
         self.abierta = False  # Estado inicial: cerrada
         self.sprite_abierto = sprite_abierto
         self.sprite_cerrado = sprite_cerrado
