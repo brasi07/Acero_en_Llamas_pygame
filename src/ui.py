@@ -7,9 +7,8 @@ from resourcesmanager import ResourceManager
 
 
 class Ui:
-    def __init__(self, mundo):
+    def __init__(self):
         """Inicializa la UI con la pantalla y el tanque del jugador."""
-        self.mundo = mundo
         self.font = pygame.font.Font(None, 36)  # Fuente para los textos
         self.cursor_image = ResourceManager.load_and_scale_image("mirilla.png", 0.75, 0.75)  # Cursor personalizado
         self.set_cursor()
@@ -21,13 +20,22 @@ class Ui:
         cursor = pygame.cursors.Cursor(cursor_size, self.cursor_image)
         pygame.mouse.set_cursor(cursor)
 
-    def dibujar_minimapa(self):
+    def dibujar_minimapa(self, jugador, mundo):
         """Dibuja el minimapa con habitaciones y conexiones."""
         minimapa = pygame.Surface((200, 100), pygame.SRCALPHA)  # Superficie del minimapa
         minimapa.fill((0, 0, 0, 0))  # Fondo completamente transparente
 
+        if mundo.mundo_number == "1":
+            conexiones = settings.CONEXIONES1
+        elif mundo.mundo_number == "2":
+            conexiones = settings.CONEXIONES2
+
+
         # Posiciones de cada habitación en el minimapa
         posiciones = {}
+
+        x_player = jugador.rect_element.centerx // settings.ANCHO
+        y_player = jugador.rect_element.centery // settings.ALTO
 
         # Dibujar habitaciones
         for fila in range(4):
@@ -36,11 +44,15 @@ class Ui:
                 y = fila * (settings.HABITACION_ALTO + settings.ESPACIADO)
 
                 posiciones[(fila, col)] = (x + settings.HABITACION_ANCHO // 2, y + settings.HABITACION_ALTO // 2)
+                if (fila, col) == (y_player, x_player):
+                    color = settings.BLANCO_TRANSLUCIDO
+                else:
+                    color = settings.NEGRO_TRANSLUCIDO
 
-                pygame.draw.rect(minimapa, settings.NEGRO_TRANSLUCIDO, (x, y, settings.HABITACION_ANCHO, settings.HABITACION_ALTO), border_radius=3)
+                pygame.draw.rect(minimapa, color, (x, y, settings.HABITACION_ANCHO, settings.HABITACION_ALTO), border_radius=3)
 
         # Dibujar conexiones con colores variables
-        for ((y1, x1), (y2, x2), color) in settings.CONEXIONES:
+        for ((y1, x1), (y2, x2), color) in conexiones:
             if (y1, x1) in posiciones and (y2, x2) in posiciones:
                 # Obtener coordenadas de los centros de las habitaciones
                 x1_px, y1_px = posiciones[(y1, x1)]
@@ -64,24 +76,24 @@ class Ui:
                 pygame.draw.line(minimapa, color, (x1_px, y1_px), (x2_px, y2_px), 8)
 
         # Dibujar el minimapa en la pantalla
-        self.mundo.pantalla.blit(minimapa, settings.MINIMAPA_POS)
+        mundo.pantalla.blit(minimapa, settings.MINIMAPA_POS)
 
-    def draw_health_bar(self, tank):
+    def draw_health_bar(self, tank, mundo):
         """Dibuja la barra de vida justo debajo del tanque."""
 
         # Posición del tanque
-        x = tank.rect_element.x + tank.rect_element.width // 2 - tank.barra_vida[0].get_width() // 2 - self.mundo.camara_x
-        y = tank.rect_element.y - self.mundo.camara_y
+        x = tank.rect_element.x + tank.rect_element.width // 2 - tank.barra_vida[0].get_width() // 2 - mundo.camara_x
+        y = tank.rect_element.y - mundo.camara_y
 
         # Asegurar que la vida no sea negativa
         vida_actual = max(tank.vida, 0)
-        self.mundo.pantalla.blit(tank.barra_vida[vida_actual], (x, y))
+        mundo.pantalla.blit(tank.barra_vida[vida_actual], (x, y))
 
-    def draw_health_bar_player(self, jugador):
+    def draw_health_bar_player(self, jugador, pantalla):
         x = 20
         y = 20
 
         # Asegurar que la vida no sea negativa
         vida_actual = max(jugador.vida, 0)
-        self.mundo.pantalla.blit(jugador.barra_vida[vida_actual], (x, y))
+        pantalla.blit(jugador.barra_vida[vida_actual], (x, y))
 

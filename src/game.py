@@ -25,7 +25,7 @@ class Game:
 
         self.jugador = Player(0, 0)
         self.mundo = World(self.pantalla, self.mundo_actual, self.jugador)
-        self.ui = Ui(self.mundo)
+        self.ui = Ui()
 
     def run(self):
         while self.ejecutando:
@@ -123,10 +123,10 @@ class Game:
             self.mundo.draw_sky()
 
         for enemigo in self.mundo.enemigos:
-            self.ui.draw_health_bar(enemigo)
+            self.ui.draw_health_bar(enemigo, self.mundo)
 
-        self.ui.draw_health_bar_player(self.jugador)
-        self.ui.dibujar_minimapa()
+        self.ui.draw_health_bar_player(self.jugador, self.pantalla)
+        self.ui.dibujar_minimapa(self.jugador, self.mundo)
 
         pygame.display.flip()
 
