@@ -1,17 +1,18 @@
-from settings import CollisionLayer
-from tank import Tank
-from weapon import *
-
+import pygame
+from extras.resourcesmanager import ResourceManager
+from extras.settings import CollisionLayer, RESIZE_PLAYER
+from tanks.tank import Tank
+from weapons import *
 
 class Player(Tank):
 
     def __init__(self, x, y):
 
         # Llamamos primero al constructor de la clase base (Tank)
-        super().__init__(4, 3, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, collision_layer=CollisionLayer.PLAYER, tank_type="jugador")
+        super().__init__(4, 3, x, y, RESIZE_PLAYER, RESIZE_PLAYER, collision_layer=CollisionLayer.PLAYER, tank_type="jugador")
 
         # Equipamos armas
-        self.armas = [Weapon(self), Dash(self), Escopeta(self), Rebote(self), Arma_Minas(self)]  # Lista de armas
+        self.armas = [Weapon(self), Dash(self), Shotgun(self), ReboungGun(self), MineLauncher(self)]  # Lista de armas
         self.armas_pos = 0  # Índice de arma secundaria equipada
         self.colision_layer_balas = CollisionLayer.BULLET_PLAYER
         self.barra_vida = ResourceManager.load_animation(f"vida_jugador.png", 48, 7, 5, resizex=5, resizey=0.5)

@@ -1,9 +1,5 @@
 from enum import Enum
 
-import pygame
-
-import spritesheet
-
 FPS = 60
 ANCHO, ALTO = 1024, 576
 HABITACION_ANCHO = 32     # Ancho de cada habitación en el minimapa

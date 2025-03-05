@@ -1,8 +1,11 @@
-import math
-from settings import CollisionLayer, COLLISION_RULES
-from tank import Tank
-from weapon import *
-from astar import *
+import pygame
+
+from extras.resourcesmanager import ResourceManager
+from extras.settings import CollisionLayer, TILE_SIZE
+from tanks.enemies.astar import *
+from tanks.tank import Tank
+from weapons import Weapon
+
 
 class EnemyState:
     PATROLLING = "patrolling"
@@ -11,7 +14,7 @@ class EnemyState:
 
 class Enemy(Tank):
     # TODO: Pasar el daño del enemigo para ajustar los distintos niveles
-    def __init__(self, vida, velocidad, x, y, resizex, resizey, tank_level, modo_patrulla):
+    def __init__(self, vida, velocidad, x, y, resizex, resizey, tank_level, modo_patrulla=0):
         
         super().__init__(vida, velocidad, x, y, resizex, resizey, collision_layer=CollisionLayer.ENEMY, tank_level=tank_level)
 
@@ -35,8 +38,8 @@ class Enemy(Tank):
         self.arma = Weapon(self)
         self.colision_layer_balas = CollisionLayer.BULLET_ENEMY
 
-        self.indice_mundo_x = (self.rect_element.x // settings.TILE_SIZE) // 32
-        self.indice_mundo_y = (self.rect_element.y // settings.TILE_SIZE) // 18
+        self.indice_mundo_x = (self.rect_element.x // TILE_SIZE) // 32
+        self.indice_mundo_y = (self.rect_element.y // TILE_SIZE) // 18
 
         self.ultimo_cambio_estado = pygame.time.get_ticks()
 
@@ -53,7 +56,7 @@ class Enemy(Tank):
             return "circular"
    
     def update(self, jugador, mundo):
-        tile_size = settings.TILE_SIZE
+        tile_size = TILE_SIZE
 
         # Activar la lógica solo si el jugador está en la misma pantalla
         if self.en_la_misma_pantalla(jugador):
@@ -169,7 +172,7 @@ class Enemy(Tank):
         self.jugador_visto = False
 
     def en_la_misma_pantalla(self, jugador):
-        return (jugador.rect_element.x // settings.TILE_SIZE // 32 == self.indice_mundo_x) and (jugador.rect_element.y // settings.TILE_SIZE // 18 == self.indice_mundo_y)
+        return (jugador.rect_element.x // TILE_SIZE // 32 == self.indice_mundo_x) and (jugador.rect_element.y // TILE_SIZE // 18 == self.indice_mundo_y)
 
        
     def dibujar_enemigo(self, mundo):
@@ -178,25 +181,3 @@ class Enemy(Tank):
 
     def distancia_jugador(self, jugador):
         return math.hypot(jugador.rect_element.x - self.rect_element.x, jugador.rect_element.y - self.rect_element.y)
-
-
-class EnemyBrown(Enemy):
-
-    def __init__(self, x, y, modo_patrulla):
-        super().__init__(3, 2, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, tank_level="_brown", modo_patrulla=modo_patrulla)
-
-class EnemyGreen(Enemy):
-
-    def __init__(self, x, y, modo_patrulla):
-        super().__init__(5, 2, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, tank_level="_green")
-
-class EnemyPurple(Enemy):
-
-    def __init__(self, x, y, modo_patrulla):
-        super().__init__(8, 2, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, tank_level="_purple")
-
-class EnemyRed(Enemy):
-
-    def __init__(self, x, y, modo_patrulla):
-        super().__init__(12, 2, x, y, settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, tank_level="_red")
-

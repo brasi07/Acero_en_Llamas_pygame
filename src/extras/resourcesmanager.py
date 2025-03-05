@@ -2,8 +2,8 @@ import csv
 import os
 from pathlib import Path
 
-import spritesheet
-from settings import RESIZE_PLAYER, ELIMINAR_FONDO, TILE_SIZE, RESIZE_CANNON
+from extras import spritesheet
+from extras.settings import RESIZE_PLAYER, ELIMINAR_FONDO, TILE_SIZE, RESIZE_CANNON
 
 import pygame
 
@@ -13,7 +13,7 @@ class ResourceManager(object):
 
     @classmethod
     def locate_resource(cls, name):
-        carpeta_recursos = Path(__file__).parent.parent / 'res'
+        carpeta_recursos = Path(__file__).parent.parent.parent / 'res'
         resource = list(carpeta_recursos.rglob(name))
 
         if resource:

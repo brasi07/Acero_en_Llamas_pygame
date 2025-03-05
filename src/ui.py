@@ -2,8 +2,8 @@ import math
 
 import pygame
 
-import settings
-from resourcesmanager import ResourceManager
+from extras import settings
+from extras.resourcesmanager import ResourceManager
 
 
 class Ui:

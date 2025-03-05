@@ -1,13 +1,14 @@
 import csv
 import re  # Para extraer números del nombre del archivo
 
-import settings
-from activable import Puerta
-from bosses import Mecha, MegaCannon, WarTrain
-from interactuable import Boton, Trampa, Interactuable
-from elements import Muro, Decoracion, MuroBajo
-from enemy import *
-from player import Player
+import pygame
+
+from extras import settings
+from elements import Wall, LowWall, Decoracion, Button, Door, Trap
+from extras.resourcesmanager import ResourceManager
+from tanks.enemies import EnemyBrown, EnemyGreen, EnemyPurple, EnemyRed, Enemy
+from tanks.enemies.bosses import Mecha, MegaCannon, WarTrain
+from tanks.player import Player
 
 
 class World:
@@ -101,7 +102,7 @@ class World:
 
                 # Primer pase: Almacenar puertas
                 if 5100 <= valor <= 5199:  # Rango de valores reservados para puertas
-                    elemento = Puerta(x, y, sprites[1315], sprites[580])
+                    elemento = Door(x, y, sprites[1315], sprites[580])
                     pos = valor - 5100
                     if pos not in self.puertas:
                         self.puertas[pos] = []
@@ -128,17 +129,17 @@ class World:
                 elif 5000 <= valor <= 5099 and self.mundo_number == "1":  # Rango de valores reservados para botones
                     pos = valor - 5000
                     puertas_a_activar = self.puertas.get(pos)
-                    elemento = Boton(x, y, sprites[2142], puertas_a_activar, self)
+                    elemento = Button(x, y, sprites[2142], puertas_a_activar, self)
                 elif valor == 836 and self.mundo_number == "1" or valor == 1425 and self.mundo_number == "2":
-                    elemento = Trampa(x, y, sprites[valor])
+                    elemento = Trap(x, y, sprites[valor])
                 elif valor in (1168, 1155, 1283, 1220, 1282, 1157, 1346, 1092, 1347) and self.mundo_number == "1" \
                         or valor in (16, 18, 20, 85, 86, 336, 338, 340, 466, 405, 406, 469, 470) and self.mundo_number == "2":
-                    elemento = MuroBajo(x, y, sprites[valor])
+                    elemento = LowWall(x, y, sprites[valor])
                 elif valor in (514, 515, 516, 517, 578, 579, 580, 581, 876, 878, 768, 2436, 2437, 2438, 2500, 2502, 2564, 2565, 2566) and self.mundo_number == "1" \
                         or valor in (1, 512, 513, 576, 577, 1360, 1361, 1362, 1424, 1426, 1488, 1489, 1490, 1486, 1550, 1614, 1678) and self.mundo_number == "2":
                     elemento = Decoracion(x, y, sprites[valor])
                 elif valor != -1 and valor in sprites:
-                    elemento = Muro(x, y, sprites[valor])
+                    elemento = Wall(x, y, sprites[valor])
 
                 if elemento:
                     lista_elementos.append(elemento)
@@ -154,7 +155,7 @@ class World:
 
         # Marcar obstáculos en la matriz
         for elemento in self.elementos_por_capa[2]:
-            if isinstance(elemento, (Muro, MuroBajo, Puerta)):
+            if isinstance(elemento, (Wall, LowWall, Door)):
                 tile_x = elemento.x // settings.TILE_SIZE
                 tile_y = elemento.y // settings.TILE_SIZE
                 mapa_binario[tile_y][tile_x] = 1

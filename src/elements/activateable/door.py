@@ -1,20 +1,7 @@
-from elements import Elemento
-from settings import CollisionLayer
-import abc
-from settings import TILE_SIZE
+from elements.activateable.activateable import Activateable
+from extras.settings import CollisionLayer
 
-
-class Activable(Elemento):
-
-    def __init__(self, x, y, imagen,layer):
-        super().__init__(x * TILE_SIZE, y * TILE_SIZE, imagen, layer)
-
-    @abc.abstractmethod
-    def activar(self):
-        """Método que se ejecutará cuando se active el objeto."""
-        raise NotImplementedError("Debe implementarse en la subclase")
-
-class Puerta(Activable):
+class Door(Activateable):
     def __init__(self, x, y, sprite_cerrado, sprite_abierto):
         super().__init__(x,y,sprite_cerrado,CollisionLayer.WALL)
         self.x = x

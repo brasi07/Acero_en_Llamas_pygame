@@ -1,7 +1,7 @@
 import pygame
-from settings import CollisionLayer, COLLISION_RULES, TILE_SIZE
+from extras.settings import CollisionLayer, COLLISION_RULES
 
-class Elemento:
+class Element:
     def __init__(self, x, y, imagen=None, collision_layer=CollisionLayer.NONE):
         self.x = x
         self.y = y
@@ -42,15 +42,3 @@ class Elemento:
                 return bool(self.mask.overlap(other_element.mask, (offset_x, offset_y)))
             return True  # Si no hay máscaras, pero hay colisión de rectángulos
         return False
-
-class Muro(Elemento):
-    def __init__(self, x, y, imagen):
-        super().__init__(x * TILE_SIZE, y * TILE_SIZE, imagen, CollisionLayer.WALL)
-
-class MuroBajo(Elemento):
-    def __init__(self, x, y, imagen):
-        super().__init__(x * TILE_SIZE, y * TILE_SIZE, imagen, CollisionLayer.LOW_WALL)
-
-class Decoracion(Elemento):
-    def __init__(self, x, y, imagen):
-        super().__init__(x * TILE_SIZE, y * TILE_SIZE, imagen, CollisionLayer.NONE)

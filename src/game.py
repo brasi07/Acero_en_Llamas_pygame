@@ -1,16 +1,14 @@
-import math
 import pygame
-import settings
-from interactuable import Boton
+from extras.settings import ANCHO, ALTO, FPS, VERDE
 from ui import Ui
 from world import World
-from player import Player
+from tanks.player import Player
 
 class Game:
     def __init__(self):
         pygame.init()
         self.tamaño_pantalla = 1
-        self.pantalla = pygame.display.set_mode((settings.ANCHO, settings.ALTO), pygame.FULLSCREEN | pygame.SCALED | pygame.DOUBLEBUF)
+        self.pantalla = pygame.display.set_mode((ANCHO, ALTO), pygame.FULLSCREEN | pygame.SCALED | pygame.DOUBLEBUF)
         self.clock = pygame.time.Clock()
         self.ejecutando = True
         self.en_juego = True
@@ -33,7 +31,7 @@ class Game:
             if self.en_juego:
                 self.update()
                 self.draw()
-                self.clock.tick(settings.FPS)
+                self.clock.tick(FPS)
 
         pygame.quit()
 
@@ -45,7 +43,7 @@ class Game:
                 if evento.key == pygame.K_ESCAPE:  # Detecta cuando se presiona ESC
                     self.toggle_pause()
                 elif evento.key == pygame.K_F11:
-                    self.pantalla = pygame.display.set_mode((settings.ANCHO, settings.ALTO))
+                    self.pantalla = pygame.display.set_mode((ANCHO, ALTO))
                 else:
                     if self.en_juego == True:
                         if evento.key == pygame.K_g: #cambiar arma secundaria con la tecla G (temporario mientras no se pueden encontrar las armas en el juego)
@@ -88,9 +86,9 @@ class Game:
 
     def update_selected_option(self):
         for index, item in enumerate(self.menu_items):
-            color = settings.VERDE if index == self.selected_item else (150, 150, 150)
+            color = VERDE if index == self.selected_item else (150, 150, 150)
             text = self.font.render(item, True, color)
-            rect = text.get_rect(center=(settings.ANCHO/2, (settings.ALTO/2 - 100 + index * 100)))
+            rect = text.get_rect(center=(ANCHO / 2, (ALTO / 2 - 100 + index * 100)))
             self.mundo.pantalla.blit(text, rect)
 
     def do_the_thing(self):

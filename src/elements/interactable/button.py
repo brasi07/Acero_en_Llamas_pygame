@@ -1,23 +1,8 @@
-import abc
 import pygame
+from elements.interactable.interactable import Interactable
+from extras.settings import CollisionLayer, TILE_SIZE
 
-import settings
-from elements import Elemento
-from settings import CollisionLayer, TILE_SIZE
-
-
-class Interactuable(Elemento):
-
-    def __init__(self, x, y, imagen,layer):
-        super().__init__(x * TILE_SIZE, y * TILE_SIZE, imagen, layer)
-
-    @abc.abstractmethod
-    def interactuar(self, objeto):
-        """Método que se ejecutará cuando se active el objeto."""
-        raise NotImplementedError("Debe implementarse en la subclase")
-
-
-class Boton(Interactuable):
+class Button(Interactable):
     def __init__(self, x, y, sprite, objetos_a_activar, mundo):
         super().__init__(x, y, sprite, CollisionLayer.INTERACTUABLE)
         self.camara_temporal_activa = False
@@ -67,7 +52,7 @@ class Boton(Interactuable):
         self.camara_x_original = self.mundo.camara_x
         self.camara_y_original = self.mundo.camara_y
 
-        self.mundo.camara_x = self.objetos_a_activar[0].x + settings.TILE_SIZE - self.mundo.ancho_pantalla // 2
+        self.mundo.camara_x = self.objetos_a_activar[0].x + TILE_SIZE - self.mundo.ancho_pantalla // 2
         self.mundo.camara_y = self.objetos_a_activar[0].y - self.mundo.alto_pantalla // 2
 
         self.tiempo_activacion = pygame.time.get_ticks()
@@ -75,21 +60,3 @@ class Boton(Interactuable):
         self.objetos_activados = False
 
         self.camara_temporal_activa = True
-
-class Trampa(Interactuable):
-    def __init__(self, x, y, imagen):
-        super().__init__(x, y, imagen, CollisionLayer.INTERACTUABLE)
-        self.explotada=False
-
-    def interactuar(self, objeto):
-        # Suponiendo que el mundo tiene una referencia al jugador: mundo.jugador
-        if not self.explotada and self.check_collision(objeto):
-            self.explotar()
-
-    def explotar(self):
-        self.explotada = True
-        print("¡Explosión!")
-        # Aquí puedes agregar la logica de la explosion
-
-
-

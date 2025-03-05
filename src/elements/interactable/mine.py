@@ -1,10 +1,9 @@
 import pygame
-from interactuable import Interactuable
-from resourcesmanager import ResourceManager
-from settings import CollisionLayer
-import settings
+from elements.interactable.interactable import Interactable
+from extras.resourcesmanager import ResourceManager
+from extras.settings import CollisionLayer, TIME_FRAME
 
-class Mina(Interactuable):
+class Mine(Interactable):
 
     def __init__(self, x, y):
         self.imagen = ResourceManager.load_and_scale_image("dynamite.png", 1, 1)
@@ -19,7 +18,7 @@ class Mina(Interactuable):
     def update(self, jugador):
         if self.activo:
             tiempo_actual = pygame.time.get_ticks()  # Obtener el tiempo actual
-            if tiempo_actual - self.ultimo_cambio_frame >= settings.TIME_FRAME:
+            if tiempo_actual - self.ultimo_cambio_frame >= TIME_FRAME:
                     self.ultimo_cambio_frame = tiempo_actual  # Actualizar el tiempo del último cambio
                     if self.frame_actual < (len(self.animacion) - 1):
                         self.frame_actual += 1
