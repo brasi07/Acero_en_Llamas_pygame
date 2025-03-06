@@ -40,118 +40,105 @@ class Enemy(Tank):
         self.indice_mundo_x = (self.rect_element.x // TILE_SIZE) // 32
         self.indice_mundo_y = (self.rect_element.y // TILE_SIZE) // 18
 
-        self.ultimo_cambio_estado = pygame.time.get_ticks()
-
         self.path = []
 
-    def determinar_modo_patrulla(self, modo_patrulla):
-        if modo_patrulla == 0:
-            return "horizontal"
-        elif modo_patrulla == 1:
-            return "circular"
-        elif modo_patrulla == 2:
-            return "vertical"
-        else:
-            return "circular"
-   
+    @staticmethod
+    def determinar_modo_patrulla(modo_patrulla):
+        modos = {
+            0: "horizontal",
+            1: "circular",
+            2: "vertical"
+        }
+        return modos.get(modo_patrulla, "circular")
+
     def update(self, jugador, mundo):
-        tile_size = TILE_SIZE
+        """Actualiza el estado del enemigo dependiendo de la distancia y el estado actual."""
+        if not self.en_la_misma_pantalla(jugador):
+            return
 
-        # Activar la lógica solo si el jugador está en la misma pantalla
-        if self.en_la_misma_pantalla(jugador):
+        pantalla_binaria = mundo.mapas_binarios[self.indice_mundo_x][self.indice_mundo_y]
+        start = ((self.rect_element.centerx // TILE_SIZE) % 32, (self.rect_element.centery // TILE_SIZE) % 18)
+        goal = ((jugador.rect_element.centerx // TILE_SIZE) % 32, (jugador.rect_element.centery // TILE_SIZE) % 18)
 
-            # Obtenemos el mapa binario (grid) actual
-            pantalla_binaria = mundo.mapas_binarios[self.indice_mundo_x][self.indice_mundo_y]
-            start = ((self.rect_element.centerx // tile_size) % 32, (self.rect_element.centery // tile_size) % 18)
-            goal = ((jugador.rect_element.centerx // tile_size) % 32, (jugador.rect_element.centery // tile_size) % 18)
+        if self.vida <= 0:
+            self.eliminar = True
 
-            # Si ya no tiene vida, se marca para eliminar
-            if self.vida <= 0:
-                self.eliminar = True
+        self.arma.update(mundo, tank=jugador)
+        distancia = self.distancia_jugador(jugador)
 
-            self.arma.update(mundo, tank=jugador)
+        if distancia < self.chase_range and self.state == EnemyState.PATROLLING:
+            self.state = EnemyState.CHASING
 
-            distancia = self.distancia_jugador(jugador)
+        if self.state == EnemyState.PATROLLING:
+            self.manejar_patrullaje(mundo)
+        elif self.state == EnemyState.CHASING:
+            self.manejar_persecucion(mundo, pantalla_binaria, start, goal, TILE_SIZE)
+        elif self.state == EnemyState.ATTACKING:
+            self.manejar_ataque(pantalla_binaria, start, goal)
 
-            # Si el jugador está dentro del rango de persecución, entramos en CHASING;
-            # si se aleja demasiado, volvemos a patrullar (con un pequeño retardo para evitar bugs)
-            if distancia < self.chase_range and self.state == EnemyState.PATROLLING:
-                self.state = EnemyState.CHASING
-                self.ultimo_cambio_estado = pygame.time.get_ticks()
+    def manejar_patrullaje(self, mundo):
+        """Controla el movimiento en el estado de patrullaje."""
+        dx, dy = 0, 0
 
-            if self.state == EnemyState.PATROLLING:
-                # Patrulla según el modo de patrulla definido
-                if self.modo_patrulla == "circular":
-                    if self.patrol_phase == 0:  # Derecha
-                        dx, dy = self.velocidad, 0
-                        if self.rect_element.x >= self.start_x + self.patrol_movement:
-                            self.patrol_phase = 1
-                    elif self.patrol_phase == 1:  # Abajo
-                        dx, dy = 0, self.velocidad
-                        if self.rect_element.y >= self.start_y + self.patrol_movement:
-                            self.patrol_phase = 2
-                    elif self.patrol_phase == 2:  # Izquierda
-                        dx, dy = -self.velocidad, 0
-                        if self.rect_element.x <= self.start_x:
-                            self.patrol_phase = 3
-                    elif self.patrol_phase == 3:  # Arriba
-                        dx, dy = 0, -self.velocidad
-                        if self.rect_element.y <= self.start_y:
-                            self.patrol_phase = 0
+        if self.modo_patrulla == "circular":
+            movimientos = [
+                (self.velocidad, 0, self.rect_element.x >= self.start_x + self.patrol_movement, 1),
+                (0, self.velocidad, self.rect_element.y >= self.start_y + self.patrol_movement, 2),
+                (-self.velocidad, 0, self.rect_element.x <= self.start_x, 3),
+                (0, -self.velocidad, self.rect_element.y <= self.start_y, 0)
+            ]
+            dx, dy, cambiar, nueva_fase = movimientos[self.patrol_phase]
+            if cambiar:
+                self.patrol_phase = nueva_fase
 
-                elif self.modo_patrulla == "horizontal":
-                    dx, dy = self.velocidad * self.patrol_direction, 0
-                    # Si choca o se sale del rango de patrulla, invierte la dirección
-                    if self.actualizar_posicion(dx, dy, mundo):
-                        self.patrol_direction *= -1
-                    if abs(self.rect_element.x - self.start_x) > self.patrol_movement:
-                        self.patrol_direction *= -1
+        elif self.modo_patrulla == "horizontal":
+            dx, dy = self.velocidad * self.patrol_direction, 0
+            if self.actualizar_posicion(dx, dy, mundo):
+                self.patrol_direction *= -1
+            if abs(self.rect_element.x - self.start_x) > self.patrol_movement:
+                self.patrol_direction *= -1
 
-                elif self.modo_patrulla == "vertical":
-                    dx, dy = 0, self.velocidad * self.patrol_direction
-                    if self.actualizar_posicion(dx, dy, mundo):
-                        self.patrol_direction *= -1
-                    if abs(self.rect_element.y - self.start_y) > self.patrol_movement:
-                        self.patrol_direction *= -1
+        elif self.modo_patrulla == "vertical":
+            dx, dy = 0, self.velocidad * self.patrol_direction
+            if self.actualizar_posicion(dx, dy, mundo):
+                self.patrol_direction *= -1
+            if abs(self.rect_element.y - self.start_y) > self.patrol_movement:
+                self.patrol_direction *= -1
 
-            elif self.state == EnemyState.CHASING:
-                # Verifica primero la línea de visión: si la tiene, pasa a ATTACKING inmediatamente.
-                if raycasting(pantalla_binaria, start, goal):
-                    self.state = EnemyState.ATTACKING
-                else:
-                    # Si no hay visión, se calcula el camino y se mueve hacia el jugador.
-                    if not self.path or self.path[-1] != goal:  # Recalcular si el jugador cambió de celda
-                        self.path = astar(pantalla_binaria, start, goal)
+    def manejar_persecucion(self, mundo, pantalla_binaria, start, goal, tile_size):
+        """Gestiona el movimiento en el estado de persecución."""
+        if raycasting(pantalla_binaria, start, goal):
+            self.state = EnemyState.ATTACKING
+            return
 
-                    if self.path:
-                        next_step = self.path[0]
-                        target_x = (self.indice_mundo_x * 32 + next_step[0]) * tile_size
-                        target_y = (self.indice_mundo_y * 18 + next_step[1]) * tile_size
+        if not self.path or self.path[-1] != goal:
+            self.path = astar(pantalla_binaria, start, goal)
 
-                        diff_x = target_x - self.rect_element.centerx
-                        diff_y = target_y - self.rect_element.centery
+        if self.path:
+            next_step = self.path[0]
+            target_x = (self.indice_mundo_x * 32 + next_step[0]) * tile_size
+            target_y = (self.indice_mundo_y * 18 + next_step[1]) * tile_size
 
-                        factor = 0.707 if abs(diff_x) > 0 and abs(diff_y) > 0 else 1
+            diff_x, diff_y = target_x - self.rect_element.centerx, target_y - self.rect_element.centery
+            factor = 0.707 if diff_x and diff_y else 1
 
-                        dx = self.velocidad * factor if diff_x > 0 else -self.velocidad * factor if diff_x < 0 else 0
-                        dy = self.velocidad * factor if diff_y > 0 else -self.velocidad * factor if diff_y < 0 else 0
+            dx = self.velocidad * factor if diff_x > 0 else -self.velocidad * factor if diff_x < 0 else 0
+            dy = self.velocidad * factor if diff_y > 0 else -self.velocidad * factor if diff_y < 0 else 0
 
-                        self.actualizar_posicion(dx, dy, mundo)
+            self.actualizar_posicion(dx, dy, mundo)
 
-                        # Cuando se alcanza la celda del path, se elimina ese paso.
-                        if ((self.rect_element.centerx // tile_size) % 32, (self.rect_element.centery // tile_size) % 18) == (next_step[0], next_step[1]):
-                            self.path.pop(0)
+            if ((self.rect_element.centerx // tile_size) % 32, (self.rect_element.centery // tile_size) % 18) == (
+            next_step[0], next_step[1]):
+                self.path.pop(0)
 
-            elif self.state == EnemyState.ATTACKING:
-                # En ATTACKING, si se pierde la visión, volver a CHASING y recalcular el camino
-                if not raycasting(pantalla_binaria, start, goal):
-                    self.state = EnemyState.CHASING
-                    self.path = astar(pantalla_binaria, start, goal)
-                else:
-                    if pygame.time.get_ticks() - self.tiempo_ultimo_disparo >= 3000:
-                        self.arma.activar()
-                        self.tiempo_ultimo_disparo = pygame.time.get_ticks()
-            
+    def manejar_ataque(self, pantalla_binaria, start, goal):
+        """Gestiona la lógica de ataque."""
+        if not raycasting(pantalla_binaria, start, goal):
+            self.state = EnemyState.CHASING
+            self.path = astar(pantalla_binaria, start, goal)
+        elif pygame.time.get_ticks() - self.tiempo_ultimo_disparo >= 3000:
+            self.arma.activar()
+            self.tiempo_ultimo_disparo = pygame.time.get_ticks()
 
     def calcular_direccion_canon(self, mundo, jugador):
         # Obtener la posición del ratón en relación con la cámara
