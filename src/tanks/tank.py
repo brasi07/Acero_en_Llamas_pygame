@@ -10,16 +10,17 @@ class Tank(Element):
 
     def __init__(self, vida, velocidad, x, y, resizex, resizey, collision_layer=CollisionLayer.NONE, tank_type="enemigos", tank_level=""):
 
+        self.tank_type = tank_type
+        self.tank_level = tank_level
+        self.sprites = ResourceManager.load_sprites(resizex, resizey, f"body{tank_level}")
+        super().__init__(x * TILE_SIZE, y * TILE_SIZE, self.sprites["abajo"], collision_layer)
+
         self.vida = vida
+        self.vida_inicial = vida
         self.velocidad = velocidad
         self.velocidad_base = 3
 
-        self.tank_type = tank_type
-        self.tank_level = tank_level
-
-        # Generamos sprites para el tanque
-        self.sprites = ResourceManager.load_sprites(resizex, resizey, f"body{tank_level}")
-        super().__init__(x * TILE_SIZE, y * TILE_SIZE, self.sprites["abajo"], collision_layer)
+        self.barra_vida = ResourceManager.load_and_scale_image("barra_vida_enemigos.png", 2, 0.3)
 
         self.arma = Weapon(self)
 

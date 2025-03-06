@@ -21,7 +21,7 @@ class Player(Tank):
     def update(self, mundo):
         if self.vida <= 0:
             self.muerto = True
-            self.vida = 4
+            self.vida = self.vida_inicial
         self.mover(mundo)
         self.arma.update_secundaria(self, mundo)
         self.arma.update(mundo=mundo)

@@ -187,29 +187,6 @@ class World:
 
         return matriz_mapas
 
-    """def cambiar_pantalla(self, direccion):
-
-        if not self.en_transicion and not self.enfocando_objeto:
-            # Si no hay transición en curso, iniciar una
-            self.tiempo_inicio = pygame.time.get_ticks()  # Guarda el tiempo actual
-            if direccion == "derecha" and self.camara_x + self.ancho_pantalla < self.num_columnas * self.ancho_pantalla:
-                self.destino_camara_x = self.camara_x + self.ancho_pantalla
-                self.destino_camara_y = self.camara_y
-                self.en_transicion = True
-            elif direccion == "izquierda" and self.camara_x > 0:
-                self.destino_camara_x = self.camara_x - self.ancho_pantalla
-                self.destino_camara_y = self.camara_y
-                self.en_transicion = True
-            elif direccion == "abajo" and self.camara_y + self.alto_pantalla < self.num_filas * self.alto_pantalla:
-                self.destino_camara_x = self.camara_x
-                self.destino_camara_y = self.camara_y + self.alto_pantalla
-                self.en_transicion = True
-            elif direccion == "arriba" and self.camara_y > 0:
-                self.destino_camara_x = self.camara_x
-                self.destino_camara_y = self.camara_y - self.alto_pantalla
-                self.en_transicion = True"""
-
-
     def cambiar_pantalla(self, direccion):
 
         dir_cam = {

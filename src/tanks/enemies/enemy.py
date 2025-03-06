@@ -18,7 +18,6 @@ class Enemy(Tank):
         
         super().__init__(vida, velocidad, x, y, resizex, resizey, collision_layer=CollisionLayer.ENEMY, tank_level=tank_level)
 
-        self.barra_vida = ResourceManager.load_animation(f"vida_enemigos.png", 48, 7, 5, resizey=0.3)
 
         # Inicializamos en patrulla
         self.state = EnemyState.PATROLLING
@@ -78,8 +77,6 @@ class Enemy(Tank):
 
     def manejar_patrullaje(self, mundo):
         """Controla el movimiento en el estado de patrullaje."""
-        dx, dy = 0, 0
-
         if self.modo_patrulla == "circular":
             movimientos = [
                 (self.velocidad, 0, self.rect_element.x >= self.start_x + self.patrol_movement, 1),
@@ -127,8 +124,7 @@ class Enemy(Tank):
 
             self.actualizar_posicion(dx, dy, mundo)
 
-            if ((self.rect_element.centerx // tile_size) % 32, (self.rect_element.centery // tile_size) % 18) == (
-            next_step[0], next_step[1]):
+            if ((self.rect_element.centerx // tile_size) % 32, (self.rect_element.centery // tile_size) % 18) == (next_step[0], next_step[1]):
                 self.path.pop(0)
 
     def manejar_ataque(self, pantalla_binaria, start, goal):

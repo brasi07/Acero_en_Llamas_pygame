@@ -4,6 +4,7 @@ import pygame
 
 from extras import settings
 from extras.resourcesmanager import ResourceManager
+from extras.settings import VERDE, ROJO, ROJO_CLARO
 
 
 class Ui:
@@ -79,15 +80,26 @@ class Ui:
         mundo.pantalla.blit(minimapa, settings.MINIMAPA_POS)
 
     def draw_health_bar(self, tank, mundo):
-        """Dibuja la barra de vida justo debajo del tanque."""
+        """Dibuja una barra de vida debajo del tanque con fondo rojo."""
 
-        # Posición del tanque
-        x = tank.rect_element.x + tank.rect_element.width // 2 - tank.barra_vida[0].get_width() // 2 - mundo.camara_x
+        # Posición de la barra de vida
+        barra_ancho = tank.barra_vida.get_width()  # Ancho total de la barra de vida
+        barra_alto = 6  # Altura de la barra de vida
+        x = tank.rect_element.x + tank.rect_element.width // 2 - barra_ancho // 2 - mundo.camara_x
         y = tank.rect_element.y - mundo.camara_y
 
-        # Asegurar que la vida no sea negativa
-        vida_actual = max(tank.vida, 0)
-        mundo.pantalla.blit(tank.barra_vida[vida_actual], (x, y))
+        # Calcular vida actual (porcentaje)
+        vida_porcentaje = max(tank.vida / tank.vida_inicial, 0)  # Evitar valores negativos
+        vida_ancho = int(barra_ancho * vida_porcentaje)  # Ajustar el ancho de la barra verde
+
+        # Dibujar fondo rojo
+        pygame.draw.rect(mundo.pantalla, ROJO, (x, y+2, barra_ancho, barra_alto))
+
+        # Dibujar la vida en verde sobre el fondo rojo
+        pygame.draw.rect(mundo.pantalla, ROJO_CLARO, (x, y+2, vida_ancho, barra_alto))
+
+        mundo.pantalla.blit(tank.barra_vida, (x, y))
+
 
     def draw_health_bar_player(self, jugador, pantalla):
         x = 20
