@@ -65,7 +65,7 @@ class Enemy(Tank):
         self.arma.update(mundo, tank=jugador)
         distancia = self.distancia_jugador(jugador)
 
-        if distancia < self.chase_range and self.state == EnemyState.PATROLLING:
+        if (distancia < self.chase_range or self.vida != self.vida_inicial) and self.state == EnemyState.PATROLLING:
             self.state = EnemyState.CHASING
 
         if self.state == EnemyState.PATROLLING:

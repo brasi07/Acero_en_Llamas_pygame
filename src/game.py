@@ -9,6 +9,8 @@ class Game:
         pygame.init()
         self.tamaño_pantalla = 1
         self.pantalla = pygame.display.set_mode((ANCHO, ALTO), pygame.FULLSCREEN | pygame.SCALED | pygame.DOUBLEBUF)
+        pygame.display.set_caption("ACERO EN LLAMAS, JUICIO FINAL")
+
         self.clock = pygame.time.Clock()
         self.ejecutando = True
         self.en_juego = True
