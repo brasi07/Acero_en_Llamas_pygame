@@ -12,6 +12,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.ejecutando = True
         self.en_juego = True
+        self.mapa_activo = False
         self.selected_item = 0
         self.mundo_actual = "1"
 
@@ -22,7 +23,7 @@ class Game:
         self.font = pygame.font.Font(None, 74)
 
         self.jugador = Player(0, 0)
-        self.mundo = World(self.pantalla, self.mundo_actual, self.jugador)
+        self.mundo = World(self.pantalla, self.mundo_actual, self.jugador, True)
         self.ui = Ui()
 
     def run(self):
@@ -55,6 +56,8 @@ class Game:
                                 self.mundo = World(self.pantalla, "1", self.jugador)
                             elif self.mundo.mundo_number == "3":
                                 self.mundo = World(self.pantalla, "1", self.jugador)
+                        elif evento.key == pygame.K_LSHIFT:
+                            self.mapa_activo = not self.mapa_activo
                     else:
                         if evento.key == pygame.K_w:
                             self.selected_item -= 1
@@ -68,6 +71,7 @@ class Game:
                             pygame.display.flip()
                         elif evento.key == pygame.K_RETURN:
                             self.do_the_thing()
+
 
     def toggle_pause(self):
         self.en_juego = not self.en_juego
@@ -124,7 +128,8 @@ class Game:
             self.ui.draw_health_bar(enemigo, self.mundo)
 
         self.ui.draw_health_bar_player(self.jugador, self.pantalla)
-        self.ui.dibujar_minimapa(self.jugador, self.mundo)
+        if self.mapa_activo:
+            self.ui.dibujar_minimapa(self.jugador, self.mundo)
 
         pygame.display.flip()
 

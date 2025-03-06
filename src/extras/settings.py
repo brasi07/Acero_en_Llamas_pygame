@@ -5,7 +5,7 @@ ANCHO, ALTO = 1024, 576
 HABITACION_ANCHO = 32     # Ancho de cada habitación en el minimapa
 HABITACION_ALTO = 18      # Alto de cada habitación en el minimapa
 ESPACIADO = 4            # Espacio entre habitaciones en el minimapa
-MINIMAPA_POS = (ANCHO - HABITACION_ANCHO * 3 - ESPACIADO * 2 - 50, 50)  # Posición en pantalla (esquina superior derecha)
+MINIMAPA_POS = (50, ALTO - HABITACION_ALTO * 4 - ESPACIADO * 3 - 50)  # Posición en pantalla (esquina superior derecha)
 
 
 RESIZE_PLAYER = 2.5
