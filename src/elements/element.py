@@ -17,12 +17,12 @@ class Element:
             self.rect_element = pygame.Rect(self.x, self.y, 0, 0)
             self.mask = None
 
-    def dibujar(self, mundo):
+    def dibujar(self, pantalla, x, y):
         """Dibuja el elemento en la pantalla."""
         if self.imagen:
-            mundo.pantalla.blit(self.imagen, (self.rect_element.x - mundo.camara_x, self.rect_element.y - mundo.camara_y))
+            pantalla.blit(self.imagen, (self.rect_element.x - x, self.rect_element.y - y))
         else:
-            pygame.draw.rect(mundo.pantalla, (255, 0, 0), self.rect_element)
+            pygame.draw.rect(pantalla, (255, 0, 0), self.rect_element)
 
     def animacion_elimninar(self):
         pass

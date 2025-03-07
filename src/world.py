@@ -6,40 +6,30 @@ import pygame
 from extras import settings
 from elements import Wall, LowWall, Decoracion, Button, Door, Trap
 from extras.resourcesmanager import ResourceManager
+from extras.settings import SKY_WORLDS
+from fase import Escenario
+from menu import PauseMenu
 from tanks.enemies import EnemyBrown, EnemyGreen, EnemyPurple, EnemyRed, Enemy
 from tanks.enemies.bosses import Mecha, MegaCannon, WarTrain
 from tanks.player import Player
 
 
-class World:
-    def __init__(self, pantalla, mundo_number="1", player=None, hasSky=False):
-        self.pantalla = pantalla
+class World(Escenario):
+    def __init__(self, alto_pantalla, ancho_pantalla, director, ui, controller, mundo_number=1, player=None, hasSky=False):
+
+        super().__init__(director)
+
+        self.ui = ui
+        self.control = controller
+
+        self.ui.set_cursor()
+
         self.player = player
         self.mundo_number = mundo_number  # Número del mundo actual
         self.hasSky = hasSky
 
-        self.ancho_pantalla, self.alto_pantalla = pantalla.get_size()
-
-        def read_csv_to_pairs(file_path):
-            """
-            Lee un archivo CSV en el que cada fila contiene un par de valores y devuelve una lista de pares (tuplas).
-
-            Parámetros:
-                file_path (str): Ruta al archivo CSV.
-
-            Retorna:
-                list: Lista de tuplas, donde cada tupla contiene dos valores del CSV.
-            """
-            pairs = []
-            with open(file_path, newline='', encoding='utf-8') as csvfile:
-                csvreader = csv.reader(csvfile, delimiter=',')
-                for row in csvreader:
-                    if len(row) == 2:  # Verifica que la fila tenga dos elementos
-                        pairs.append((row[0], row[1]))
-                    else:
-                        # Si la fila no es un par, puedes decidir omitirla o lanzar una excepción
-                        print(f"Fila ignorada (no es un par): {row}")
-            return pairs
+        self.ancho_pantalla = ancho_pantalla
+        self.alto_pantalla = alto_pantalla
 
         # Buscar archivos de mapa según el nuevo formato "Mapa_{mundo}_{capa}.csv"
         archivos_mapa = ResourceManager.buscar_archivos_mapa(self.mundo_number)
@@ -126,17 +116,17 @@ class World:
                     elemento = MegaCannon(x, y, valor % 10)
                 elif 7060 <= valor <= 7069:
                     elemento = WarTrain(x, y, valor % 10)
-                elif 5000 <= valor <= 5099 and self.mundo_number == "1":  # Rango de valores reservados para botones
+                elif 5000 <= valor <= 5099 and self.mundo_number == 1:  # Rango de valores reservados para botones
                     pos = valor - 5000
                     puertas_a_activar = self.puertas.get(pos)
                     elemento = Button(x, y, sprites[2142], puertas_a_activar, self)
-                elif valor == 836 and self.mundo_number == "1" or valor == 1425 and self.mundo_number == "2":
+                elif valor == 836 and self.mundo_number == 1 or valor == 1425 and self.mundo_number == 2:
                     elemento = Trap(x, y, sprites[valor])
-                elif valor in (1168, 1155, 1283, 1220, 1282, 1157, 1346, 1092, 1347) and self.mundo_number == "1" \
-                        or valor in (16, 18, 20, 85, 86, 336, 338, 340, 466, 405, 406, 469, 470) and self.mundo_number == "2":
+                elif valor in (1168, 1155, 1283, 1220, 1282, 1157, 1346, 1092, 1347) and self.mundo_number == 1 \
+                        or valor in (16, 18, 20, 85, 86, 336, 338, 340, 466, 405, 406, 469, 470) and self.mundo_number == 2:
                     elemento = LowWall(x, y, sprites[valor])
-                elif valor in (514, 515, 516, 517, 578, 579, 580, 581, 876, 878, 768, 2436, 2437, 2438, 2500, 2502, 2564, 2565, 2566) and self.mundo_number == "1" \
-                        or valor in (1, 512, 513, 576, 577, 1360, 1361, 1362, 1424, 1426, 1488, 1489, 1490, 1486, 1550, 1614, 1678) and self.mundo_number == "2":
+                elif valor in (514, 515, 516, 517, 578, 579, 580, 581, 876, 878, 768, 2436, 2437, 2438, 2500, 2502, 2564, 2565, 2566) and self.mundo_number == 1 \
+                        or valor in (1, 512, 513, 576, 577, 1360, 1361, 1362, 1424, 1426, 1488, 1489, 1490, 1486, 1550, 1614, 1678) and self.mundo_number == 2:
                     elemento = Decoracion(x, y, sprites[valor])
                 elif valor != -1 and valor in sprites:
                     elemento = Wall(x, y, sprites[valor])
@@ -237,7 +227,28 @@ class World:
                 and self.camara_y - settings.TILE_SIZE <= elemento.rect_element.y < self.camara_y + self.alto_pantalla + settings.TILE_SIZE
         )
 
-    def update(self):
+    def eventos(self, eventos):
+
+        for evento in eventos:
+            if evento.type == pygame.QUIT:
+                self.director.salir_programa()
+
+            if self.control.pausar(evento):
+                self.director.apilar_escena(PauseMenu(self.control, self.director))
+
+            if self.control.change_weapon(evento):  # cambiar arma secundaria con la tecla G (temporario)
+                self.player.cambiar_arma_secundaria()
+            if self.control.change_world(evento):
+                self.director.cambiar_escena(World(self.alto_pantalla, self.ancho_pantalla, self.director,
+                                                   self.ui, self.control, (self.mundo_number%2) + 1, self.player,
+                                                   SKY_WORLDS[(self.mundo_number%2) + 1]))
+
+        self.player.eventos(self)
+
+    def update(self, time):
+
+        self.player.update(self)
+
         """Actualiza el mundo y los elementos."""
         for elemento in self.enemigos:
             elemento.update(self.player, self)
@@ -251,7 +262,29 @@ class World:
                     elemento.animacion_elimninar()
                     lista.remove(elemento)
 
-    def draw(self):
+    def dibujar(self, pantalla):
+        self.draw(pantalla)
+
+        for enemigo in self.enemigos:
+            enemigo.dibujar_enemigo(pantalla, self.camara_x, self.camara_y)
+
+        self.player.draw(pantalla, self.camara_x, self.camara_y)
+
+        for enemigo in self.enemigos:
+            enemigo.arma.dibujar_balas(pantalla, self.camara_x, self.camara_y)
+
+        self.player.arma.dibujar_balas(pantalla, self.camara_x, self.camara_y)
+
+        if self.hasSky:
+            self.draw_sky(pantalla)
+
+        for enemigo in self.enemigos:
+            self.ui.draw_health_bar(enemigo, pantalla, self.camara_x, self.camara_y)
+
+        self.ui.draw_health_bar_player(self.player, pantalla)
+        self.ui.dibujar_minimapa(self.player, self, pantalla)
+
+    def draw(self, pantalla):
         """Dibuja todas las capas en orden, desde la más baja hasta la más alta."""
         for capa in sorted(self.capas.keys()):  # Dibuja en orden numérico
             if self.hasSky and max(self.capas.keys()) == capa:
@@ -259,16 +292,16 @@ class World:
 
             for elemento in self.elementos_por_capa[capa]:
                 if self.elemento_en_pantalla(elemento):
-                    elemento.dibujar(self)
+                    elemento.dibujar(pantalla, self.camara_x, self.camara_y)
 
         self.actualizar_transicion()
 
-    def draw_sky(self):
+    def draw_sky(self, pantalla):
         """Dibuja solo la última capa (capa más alta)."""
         capa_mas_alta = max(self.capas.keys())  # Encuentra la última capa
         for elemento in self.elementos_por_capa[capa_mas_alta]:
             if self.elemento_en_pantalla(elemento):
-                elemento.dibujar(self)
+                elemento.dibujar(pantalla, self.camara_x, self.camara_y)
 
 
 

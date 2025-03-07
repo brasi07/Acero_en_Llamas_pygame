@@ -151,9 +151,9 @@ class Enemy(Tank):
         return (jugador.rect_element.x // TILE_SIZE // 32 == self.indice_mundo_x) and (jugador.rect_element.y // TILE_SIZE // 18 == self.indice_mundo_y)
 
        
-    def dibujar_enemigo(self, mundo):
-        self.dibujar(mundo)
-        self.arma.dibujar_arma(mundo)
+    def dibujar_enemigo(self, pantalla, x, y):
+        self.dibujar(pantalla, x, y)
+        self.arma.dibujar_arma(pantalla, x, y)
 
     def distancia_jugador(self, jugador):
         return math.hypot(jugador.rect_element.x - self.rect_element.x, jugador.rect_element.y - self.rect_element.y)

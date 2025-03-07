@@ -6,7 +6,7 @@ from weapons import *
 
 class Player(Tank):
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, controller):
 
         # Llamamos primero al constructor de la clase base (Tank)
         super().__init__(4, 3, x, y, RESIZE_PLAYER, RESIZE_PLAYER, collision_layer=CollisionLayer.PLAYER, tank_type="jugador")
@@ -17,31 +17,34 @@ class Player(Tank):
         self.colision_layer_balas = CollisionLayer.BULLET_PLAYER
         self.barra_vida = ResourceManager.load_animation(f"vida_jugador.png", 48, 7, 5, resizex=5, resizey=0.5)
         self.muerto = False
+        self.control = controller
+
+    def eventos(self, mundo):
+        teclas = pygame.key.get_pressed()
+        self.movimiento_x, self.movimiento_y = self.obtener_movimiento(teclas)
+        self.gestionar_armas(mundo, teclas)
+
 
     def update(self, mundo):
         if self.vida <= 0:
             self.muerto = True
             self.vida = self.vida_inicial
+
         self.mover(mundo)
         self.arma.update_secundaria(self, mundo)
         self.arma.update(mundo=mundo)
-        self.gestionar_armas(mundo)
         self.verificar_fuera_pantalla(mundo)
 
     def mover(self, mundo):
-        teclas = pygame.key.get_pressed()
-        movimiento_x, movimiento_y = self.obtener_movimiento(teclas)
-        self.actualizar_posicion(movimiento_x, movimiento_y, mundo)
+        self.actualizar_posicion(self.movimiento_x, self.movimiento_y, mundo)
 
     def obtener_movimiento(self, teclas):
-        movimiento_x = (-self.velocidad if teclas[pygame.K_LEFT] or teclas[pygame.K_a] else 0) + \
-                       (self.velocidad if teclas[pygame.K_RIGHT] or teclas[pygame.K_d] else 0)
-        movimiento_y = (-self.velocidad if teclas[pygame.K_UP] or teclas[pygame.K_w] else 0) + \
-                       (self.velocidad if teclas[pygame.K_DOWN] or teclas[pygame.K_s] else 0)
-        if movimiento_x and movimiento_y:
-            movimiento_x *= 0.707
-            movimiento_y *= 0.707
-        return movimiento_x, movimiento_y
+        mov_x = (self.control.derecha(teclas) - self.control.izquierda(teclas)) * self.velocidad
+        mov_y = (self.control.abajo(teclas) - self.control.arriba(teclas)) * self.velocidad
+        if mov_x != 0 and mov_y != 0:
+            mov_x *= 0.707
+            mov_y *= 0.707
+        return mov_x, mov_y
 
     def verificar_fuera_pantalla(self, mundo):
         if self.rect_element.right > mundo.camara_x + mundo.ancho_pantalla + 50:
@@ -53,13 +56,13 @@ class Player(Tank):
         elif self.rect_element.top < mundo.camara_y - 50:
             mundo.cambiar_pantalla("arriba")
 
-    def gestionar_armas(self, mundo):
-        if pygame.mouse.get_pressed()[0]:
+    def gestionar_armas(self, mundo, teclas):
+        if self.control.principal(teclas):
             if pygame.time.get_ticks() - self.tiempo_ultimo_disparo >= 1000:
                 self.arma.activar()
                 self.tiempo_ultimo_disparo = pygame.time.get_ticks()
 
-        if pygame.mouse.get_pressed()[2]:
+        if self.control.secundaria(teclas):
             self.usar_arma_especial(mundo)
 
     def cambiar_arma_secundaria(self):
@@ -68,10 +71,11 @@ class Player(Tank):
         self.arma = self.armas[self.armas_pos]
         self.arma.cambio_de_arma()
 
-    def draw(self, mundo):
+    def draw(self, pantalla, x, y):
+        #pantalla, self.ancho_pantalla, self.alto_pantalla
 
-        self.dibujar(mundo) #Dibujar base tanque
-        self.arma.dibujar_arma(mundo)
+        self.dibujar(pantalla, x, y) #Dibujar base tanque
+        self.arma.dibujar_arma(pantalla, x, y)
 
     def calcular_direccion_canon(self, mundo, jugador):
         # Obtener la posición del ratón en relación con la cámara

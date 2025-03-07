@@ -76,13 +76,13 @@ class Bullet(Element):
         return (self.x < mundo.camara_x or self.x > mundo.camara_x + ancho_pantalla or
                 self.y < mundo.camara_y or self.y > mundo.camara_y + alto_pantalla)
 
-    def draw(self, mundo):
+    def draw(self, pantalla, x, y):
         """Dibuja la bala o su animación de colisión."""
         if self.colisionando:
             if self.frame_actual < len(self.sprites_colision):
-                mundo.pantalla.blit(self.sprites_colision[self.frame_actual],
-                              (self.rect_element.x - mundo.camara_x, self.rect_element.y - mundo.camara_y))
+                pantalla.blit(self.sprites_colision[self.frame_actual],
+                              (self.rect_element.x - x, self.rect_element.y - y))
         else:
-            self.dibujar(mundo)
+            self.dibujar(pantalla, x, y)
 
 

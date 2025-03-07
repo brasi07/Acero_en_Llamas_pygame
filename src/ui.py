@@ -21,10 +21,12 @@ class Ui:
         cursor = pygame.cursors.Cursor(cursor_size, self.cursor_image)
         pygame.mouse.set_cursor(cursor)
 
-    def dibujar_minimapa(self, jugador, mundo):
+    def dibujar_minimapa(self, jugador, mundo, pantalla):
         """Dibuja el minimapa con habitaciones y conexiones."""
         minimapa = pygame.Surface((200, 100), pygame.SRCALPHA)  # Superficie del minimapa
         minimapa.fill((0, 0, 0, 0))  # Fondo completamente transparente
+
+        conexiones = []
 
         if mundo.mundo_number == "1":
             conexiones = settings.CONEXIONES1
@@ -77,28 +79,28 @@ class Ui:
                 pygame.draw.line(minimapa, color, (x1_px, y1_px), (x2_px, y2_px), 8)
 
         # Dibujar el minimapa en la pantalla
-        mundo.pantalla.blit(minimapa, settings.MINIMAPA_POS)
+        pantalla.blit(minimapa, settings.MINIMAPA_POS)
 
-    def draw_health_bar(self, tank, mundo):
+    def draw_health_bar(self, tank, pantalla, cam_x, cam_y):
         """Dibuja una barra de vida debajo del tanque con fondo rojo."""
 
         # Posición de la barra de vida
         barra_ancho = tank.barra_vida.get_width()  # Ancho total de la barra de vida
         barra_alto = 6  # Altura de la barra de vida
-        x = tank.rect_element.x + tank.rect_element.width // 2 - barra_ancho // 2 - mundo.camara_x
-        y = tank.rect_element.y - mundo.camara_y
+        x = tank.rect_element.x + tank.rect_element.width // 2 - barra_ancho // 2 - cam_x
+        y = tank.rect_element.y - cam_y
 
         # Calcular vida actual (porcentaje)
         vida_porcentaje = max(tank.vida / tank.vida_inicial, 0)  # Evitar valores negativos
         vida_ancho = int(barra_ancho * vida_porcentaje)  # Ajustar el ancho de la barra verde
 
         # Dibujar fondo rojo
-        pygame.draw.rect(mundo.pantalla, ROJO, (x, y+2, barra_ancho, barra_alto))
+        pygame.draw.rect(pantalla, ROJO, (x, y+2, barra_ancho, barra_alto))
 
         # Dibujar la vida en verde sobre el fondo rojo
-        pygame.draw.rect(mundo.pantalla, ROJO_CLARO, (x, y+2, vida_ancho, barra_alto))
+        pygame.draw.rect(pantalla, ROJO_CLARO, (x, y+2, vida_ancho, barra_alto))
 
-        mundo.pantalla.blit(tank.barra_vida, (x, y))
+        pantalla.blit(tank.barra_vida, (x, y))
 
 
     def draw_health_bar_player(self, jugador, pantalla):

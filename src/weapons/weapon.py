@@ -53,16 +53,16 @@ class Weapon:
         self.imagen_canon = self.imagen_canon_base
         self.imagen_accesorio = self.imagenes_accesorio_base
 
-    def dibujar_balas(self, mundo):
+    def dibujar_balas(self, pantalla, x, y):
         for bala in self.balas:
-            bala.draw(mundo)
+            bala.draw(pantalla, x, y)
 
-    def dibujar_arma(self, mundo):
+    def dibujar_arma(self, pantalla, x, y):
         if self.imagen_accesorio: #dibujar arma secundaria si necesario
             self.rect_accesorio = self.imagen_accesorio.get_rect(top=self.tank.rect_element.bottom)
-            mundo.pantalla.blit(self.imagen_accesorio, (self.tank.rect_element.centerx - self.rect_accesorio.width // 2 - mundo.camara_x, self.tank.rect_element.centery - self.tank.rect_element.height // 2 - mundo.camara_y))
+            pantalla.blit(self.imagen_accesorio, (self.tank.rect_element.centerx - self.rect_accesorio.width // 2 - x, self.tank.rect_element.centery - self.tank.rect_element.height // 2 - y))
 
-        mundo.pantalla.blit(self.imagen_canon, (self.tank.rect_element.centerx - self.rect_canon.width // 2 - mundo.camara_x, self.tank.rect_element.centery - self.rect_canon.height // 2 - mundo.camara_y))
+        pantalla.blit(self.imagen_canon, (self.tank.rect_element.centerx - self.rect_canon.width // 2 - x, self.tank.rect_element.centery - self.rect_canon.height // 2 - y))
 
     def dibujar_minas(self,mundo):
         pass

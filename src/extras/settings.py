@@ -58,6 +58,11 @@ CONEXIONES2 = [
     ((2, 1), (1, 1), NEGRO_TRANSLUCIDO),
 ]
 
+SKY_WORLDS = {
+    1 : True,
+    2 : False
+}
+
 class CollisionLayer(Enum):
     PLAYER = 1
     ENEMY = 2
