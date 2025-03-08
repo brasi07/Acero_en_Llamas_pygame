@@ -2,9 +2,8 @@ import pygame
 
 from controller import KeyboardControl
 from director import Director
-from extras.settings import ANCHO, ALTO, FPS, SKY_WORLDS
 from ui import Ui
-from world import World
+from worlds.world1 import World1
 from tanks.player import Player
 
 class Game:
@@ -21,8 +20,8 @@ class Game:
 
         self.jugador = Player(0, 0, self.control)
 
-        self.mundo1 = World(self.director.pantalla.get_height(), self.director.pantalla.get_width(),
-                            self.director, Ui(), self.control, 1, self.jugador, SKY_WORLDS[1])
+        self.mundo1 = World1(self.director.pantalla.get_height(), self.director.pantalla.get_width(),
+                            self.director, Ui(), self.control, self.jugador)
 
         self.director.apilar_escena(self.mundo1)
 

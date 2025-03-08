@@ -26,14 +26,6 @@ class Ui:
         minimapa = pygame.Surface((200, 100), pygame.SRCALPHA)  # Superficie del minimapa
         minimapa.fill((0, 0, 0, 0))  # Fondo completamente transparente
 
-        conexiones = []
-
-        if mundo.mundo_number == "1":
-            conexiones = settings.CONEXIONES1
-        elif mundo.mundo_number == "2":
-            conexiones = settings.CONEXIONES2
-
-
         # Posiciones de cada habitación en el minimapa
         posiciones = {}
 
@@ -55,7 +47,7 @@ class Ui:
                 pygame.draw.rect(minimapa, color, (x, y, settings.HABITACION_ANCHO, settings.HABITACION_ALTO), border_radius=3)
 
         # Dibujar conexiones con colores variables
-        for ((y1, x1), (y2, x2), color) in conexiones:
+        for ((y1, x1), (y2, x2), color) in mundo.CONEXIONES:
             if (y1, x1) in posiciones and (y2, x2) in posiciones:
                 # Obtener coordenadas de los centros de las habitaciones
                 x1_px, y1_px = posiciones[(y1, x1)]

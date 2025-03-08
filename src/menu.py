@@ -3,10 +3,10 @@ from abc import abstractmethod
 import pygame
 
 from extras.settings import ANCHO, ALTO, VERDE
-from fase import Escenario
+from scene import Scene
 
 
-class Menu(Escenario):
+class Menu(Scene):
 
     opciones = []
 
@@ -15,15 +15,10 @@ class Menu(Escenario):
 
     @abstractmethod
     def __init__(self, director):
-
         super().__init__(director)
         pygame.font.init()
-
         pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-
-        # Fuente
         self.font = pygame.font.Font(None, 74)
-
         self.selected_item = 0
 
     def dibujar(self, pantalla):
@@ -43,11 +38,8 @@ class Menu(Escenario):
 class PauseMenu(Menu):
 
     def __init__(self, controller, director):
-
         self.opciones = ["Back to Game", "Quit"]
-
         self.control = controller
-
         super().__init__(director)
 
     def do_the_thing(self):
@@ -56,7 +48,6 @@ class PauseMenu(Menu):
             0: self.volver_al_juego,
             1: self.salir_juego
         }
-
         actions[self.selected_item]()
 
 

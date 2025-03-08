@@ -1,64 +1,37 @@
 import csv
 import re  # Para extraer números del nombre del archivo
+from abc import ABC, abstractmethod
 
 import pygame
-
 from extras import settings
 from elements import Wall, LowWall, Decoracion, Button, Door, Trap
-from extras.resourcesmanager import ResourceManager
-from extras.settings import SKY_WORLDS
-from fase import Escenario
-from menu import PauseMenu
+from scene import Scene
 from tanks.enemies import EnemyBrown, EnemyGreen, EnemyPurple, EnemyRed, Enemy
 from tanks.enemies.bosses import Mecha, MegaCannon, WarTrain
 from tanks.player import Player
 
 
-class World(Escenario):
-    def __init__(self, alto_pantalla, ancho_pantalla, director, ui, controller, mundo_number=1, player=None, hasSky=False):
+class World(Scene, ABC):
+    def __init__(self, alto_pantalla, ancho_pantalla, director, ui, controller, player=None):
 
         super().__init__(director)
 
         self.ui = ui
         self.control = controller
-
         self.ui.set_cursor()
-
         self.player = player
-        self.mundo_number = mundo_number  # Número del mundo actual
-        self.hasSky = hasSky
 
         self.ancho_pantalla = ancho_pantalla
         self.alto_pantalla = alto_pantalla
 
-        # Buscar archivos de mapa según el nuevo formato "Mapa_{mundo}_{capa}.csv"
-        archivos_mapa = ResourceManager.buscar_archivos_mapa(self.mundo_number)
-
-        # Diccionario para almacenar las capas
         self.capas = {}
-
-        # Cargar los mapas desde los archivos CSV
-        for archivo in archivos_mapa:
-            capa_numero = self.extraer_numero_capa(archivo)  # Obtener número de capa desde el nombre
-            self.capas[capa_numero] = ResourceManager.load_map_from_csv(archivo)
-
-        # Obtener dimensiones del mapa en tiles
-        self.num_filas = len(self.capas[1]) if 1 in self.capas else 0
-        self.num_columnas = len(self.capas[1][0]) if self.num_filas > 0 else 0
-
-        # Diccionario de sprites para cada capa
         self.sprites_por_capa = {}
+        self.hasSky = False
+        self.CONEXIONES = []
+        self.num_filas = 0
+        self.num_columnas = 0
 
-        # Cargar dinámicamente los sprites según la capa
-        for capa in self.capas.keys():
-            carpeta_elementos = ResourceManager.locate_resource(f"elementos_{self.mundo_number}_{capa}")
-            self.sprites_por_capa[capa] = ResourceManager.load_files_from_folder(carpeta_elementos)
-
-        # Crear la cámara
-        self.camara_x, self.camara_y = self.ancho_pantalla, self.alto_pantalla
-
-        # Diccionario de elementos_1_2 para cada capa
-        self.elementos_por_capa = {capa: [] for capa in self.capas.keys()}
+        self.elementos_por_capa = {}
         self.elementos_actualizables = []
         self.enemigos = []
 
@@ -66,23 +39,25 @@ class World(Escenario):
         self.en_transicion = False
         self.enfocando_objeto = False
         self.tiempo_inicio = 0
+        self.camara_x, self.camara_y = 0, 0
         self.destino_camara_x, self.destino_camara_y = 0,0
 
-        self.puertas = {}
+        self.traps = ()
+        self.lowWalls = ()
+        self.decorations = ()
 
-        # Generar los elementos_1_2 de cada capa
-        for capa, tiles in self.capas.items():
-            self.generar_elementos(tiles, self.elementos_por_capa[capa], self.sprites_por_capa[capa], self.enemigos, self.elementos_actualizables)
-
-        self.mapas_binarios = self.generar_mapas_binarios()
-
-    def extraer_numero_capa(self, archivo):
+    @staticmethod
+    def extraer_numero_capa(archivo):
         """Extrae el número de capa desde el nombre del archivo 'Mapa_X_Y.csv'."""
         match = re.search(r'Mapa_\d+_(\d+)\.csv', archivo)
         return int(match.group(1)) if match else 1  # Si no encuentra número, asume capa 1
 
+    def eventos(self, eventos):
+        pass
+
     def generar_elementos(self, mapa_tiles, lista_elementos, sprites, lista_enemigos, lista_actualizables):
         """Crea los elementos del mapa ajustándolos al tamaño de la pantalla."""
+        puertas = {}
 
         for y, fila in enumerate(mapa_tiles):
             for x, valor in enumerate(fila):
@@ -94,9 +69,9 @@ class World(Escenario):
                 if 5100 <= valor <= 5199:  # Rango de valores reservados para puertas
                     elemento = Door(x, y, sprites[1315], sprites[580])
                     pos = valor - 5100
-                    if pos not in self.puertas:
-                        self.puertas[pos] = []
-                    self.puertas[pos].append(elemento)
+                    if pos not in puertas:
+                        puertas[pos] = []
+                    puertas[pos].append(elemento)
                 elif valor == 0:
                     self.camara_x = x // (self.ancho_pantalla / settings.TILE_SIZE) * self.ancho_pantalla
                     self.camara_y = y // (self.alto_pantalla / settings.TILE_SIZE) * self.alto_pantalla
@@ -116,17 +91,15 @@ class World(Escenario):
                     elemento = MegaCannon(x, y, valor % 10)
                 elif 7060 <= valor <= 7069:
                     elemento = WarTrain(x, y, valor % 10)
-                elif 5000 <= valor <= 5099 and self.mundo_number == 1:  # Rango de valores reservados para botones
+                elif 5000 <= valor <= 5099:  # Rango de valores reservados para botones
                     pos = valor - 5000
-                    puertas_a_activar = self.puertas.get(pos)
+                    puertas_a_activar = puertas.get(pos)
                     elemento = Button(x, y, sprites[2142], puertas_a_activar, self)
-                elif valor == 836 and self.mundo_number == 1 or valor == 1425 and self.mundo_number == 2:
+                elif valor in self.traps:
                     elemento = Trap(x, y, sprites[valor])
-                elif valor in (1168, 1155, 1283, 1220, 1282, 1157, 1346, 1092, 1347) and self.mundo_number == 1 \
-                        or valor in (16, 18, 20, 85, 86, 336, 338, 340, 466, 405, 406, 469, 470) and self.mundo_number == 2:
+                elif valor in self.lowWalls:
                     elemento = LowWall(x, y, sprites[valor])
-                elif valor in (514, 515, 516, 517, 578, 579, 580, 581, 876, 878, 768, 2436, 2437, 2438, 2500, 2502, 2564, 2565, 2566) and self.mundo_number == 1 \
-                        or valor in (1, 512, 513, 576, 577, 1360, 1361, 1362, 1424, 1426, 1488, 1489, 1490, 1486, 1550, 1614, 1678) and self.mundo_number == 2:
+                elif valor in self.decorations:
                     elemento = Decoracion(x, y, sprites[valor])
                 elif valor != -1 and valor in sprites:
                     elemento = Wall(x, y, sprites[valor])
@@ -226,24 +199,6 @@ class World(Escenario):
                 self.camara_x - settings.TILE_SIZE <= elemento.rect_element.x < self.camara_x + self.ancho_pantalla + settings.TILE_SIZE
                 and self.camara_y - settings.TILE_SIZE <= elemento.rect_element.y < self.camara_y + self.alto_pantalla + settings.TILE_SIZE
         )
-
-    def eventos(self, eventos):
-
-        for evento in eventos:
-            if evento.type == pygame.QUIT:
-                self.director.salir_programa()
-
-            if self.control.pausar(evento):
-                self.director.apilar_escena(PauseMenu(self.control, self.director))
-
-            if self.control.change_weapon(evento):  # cambiar arma secundaria con la tecla G (temporario)
-                self.player.cambiar_arma_secundaria()
-            if self.control.change_world(evento):
-                self.director.cambiar_escena(World(self.alto_pantalla, self.ancho_pantalla, self.director,
-                                                   self.ui, self.control, (self.mundo_number%2) + 1, self.player,
-                                                   SKY_WORLDS[(self.mundo_number%2) + 1]))
-
-        self.player.eventos(self)
 
     def update(self, time):
 

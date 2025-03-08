@@ -24,7 +24,6 @@ class Player(Tank):
         self.movimiento_x, self.movimiento_y = self.obtener_movimiento(teclas)
         self.gestionar_armas(mundo, teclas)
 
-
     def update(self, mundo):
         if self.vida <= 0:
             self.muerto = True
