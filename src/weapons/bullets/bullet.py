@@ -11,7 +11,7 @@ class Bullet(Element):
                         for i in range(1, 11)]
 
     def __init__(self, cannon_tip, angulo, tipoColision):
-        self.imagen = ResourceManager.load_and_scale_image("bala.png", settings.RESIZE_PLAYER * 0.07, settings.RESIZE_PLAYER * 0.07)
+        self.imagen = ResourceManager.load_and_scale_image("bala_base.png", settings.RESIZE_PLAYER * 0.07, settings.RESIZE_PLAYER * 0.07)
         self.x, self.y = cannon_tip
 
         super().__init__(self.x, self.y, self.imagen, tipoColision)

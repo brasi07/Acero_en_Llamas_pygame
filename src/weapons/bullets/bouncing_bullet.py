@@ -1,7 +1,10 @@
 import time
+
+from extras.resourcesmanager import ResourceManager
 from weapons.bullets.bullet import Bullet
 from elements.interactable.interactable import Interactable
-from extras.settings import COLLISION_RULES, CollisionLayer
+from extras.settings import COLLISION_RULES, CollisionLayer, RESIZE_PLAYER
+
 
 class BouncingBullet(Bullet):
 
@@ -9,6 +12,7 @@ class BouncingBullet(Bullet):
         super().__init__(cannon_tip, angulo, tipoColision)
         self.rebote_count = 0
         self.rebote_max = 2
+        self.imagen = ResourceManager.load_and_scale_image("bala_botadora.png", RESIZE_PLAYER * 0.1, RESIZE_PLAYER * 0.1)
 
     def iniciar_colision(self, elemento):
         if isinstance(elemento, Interactable):
