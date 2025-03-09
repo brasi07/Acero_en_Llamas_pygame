@@ -56,6 +56,7 @@ class Enemy(Tank):
             return
 
         pantalla_binaria = mundo.mapas_binarios[self.indice_mundo_x][self.indice_mundo_y]
+
         start = ((self.rect_element.centerx // TILE_SIZE) % 32, (self.rect_element.centery // TILE_SIZE) % 18)
         goal = ((jugador.rect_element.centerx // TILE_SIZE) % 32, (jugador.rect_element.centery // TILE_SIZE) % 18)
 

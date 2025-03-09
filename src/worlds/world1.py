@@ -45,11 +45,13 @@ class World1(World):
         self.num_filas = len(self.capas[1]) if 1 in self.capas else 0
         self.num_columnas = len(self.capas[1][0]) if self.num_filas > 0 else 0
         self.elementos_por_capa = {capa: [] for capa in self.capas.keys()}
-        self.mapas_binarios = self.generar_mapas_binarios()
 
         for capa, tiles in self.capas.items():
             self.generar_elementos(tiles, self.elementos_por_capa[capa], self.sprites_por_capa[capa], self.enemigos,
                                    self.elementos_actualizables)
+
+        self.mapas_binarios = self.generar_mapas_binarios()
+
 
     def eventos(self, eventos):
         from worlds.world2 import World2
