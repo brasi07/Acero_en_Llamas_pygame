@@ -6,8 +6,8 @@ from menu import PauseMenu
 from worlds.world import World
 
 class World2(World):
-    def __init__(self, alto_pantalla, ancho_pantalla, director, ui, controller, player):
-        super().__init__(alto_pantalla, ancho_pantalla, director, ui, controller, player)
+    def __init__(self, alto_pantalla, ancho_pantalla, director, ui):
+        super().__init__(alto_pantalla, ancho_pantalla, director, ui)
         world_number = 2
         self.hasSky = True
         self.traps = (1425, -2)
@@ -53,4 +53,4 @@ class World2(World):
     def manejar_evento_especifico(self, evento):
         from worlds.world1 import World1
         if self.control.change_world(evento):
-            self.director.cambiar_escena(World1(self.alto_pantalla, self.ancho_pantalla, self.director, self.ui, self.control, self.player))
+            self.director.cambiar_escena(World1(self.alto_pantalla, self.ancho_pantalla, self.director, self.ui))

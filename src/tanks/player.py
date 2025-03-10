@@ -1,22 +1,26 @@
 import pygame
+
+from extras import settings
 from extras.resourcesmanager import ResourceManager
 from extras.settings import CollisionLayer, RESIZE_PLAYER, EVENTO_JUGADOR_MUERTO
 from tanks.tank import Tank
 from weapons import *
+from singleton import SingletonMeta
 
-class Player(Tank):
 
-    def __init__(self, x, y, controller):
+class Player(Tank, metaclass=SingletonMeta):
+
+    def __init__(self):
 
         # Llamamos primero al constructor de la clase base (Tank)
-        super().__init__(4, 3, x, y, RESIZE_PLAYER, RESIZE_PLAYER, collision_layer=CollisionLayer.PLAYER, tank_type="jugador")
+        super().__init__(4, 3, 0, 0, RESIZE_PLAYER, RESIZE_PLAYER, collision_layer=CollisionLayer.PLAYER, tank_type="jugador")
 
         # Equipamos armas
         self.armas = [Weapon(self), Dash(self), Shotgun(self), ReboungGun(self), MineLauncher(self)]  # Lista de armas
         self.armas_pos = 0  # Índice de arma secundaria equipada
         self.colision_layer_balas = CollisionLayer.BULLET_PLAYER
         self.barra_vida = ResourceManager.load_animation(f"vida_jugador.png", 48, 7, 5, resizex=5, resizey=0.5)
-        self.control = controller
+        self.control = settings.controller
 
     def eventos(self, mundo):
         teclas = pygame.key.get_pressed()
@@ -67,6 +71,10 @@ class Player(Tank):
         # Cambia a la siguiente arma en la lista (ciclo circular)
         self.armas_pos = (self.armas_pos + 1) % len(self.armas)
         self.arma = self.armas[self.armas_pos]
+        self.arma.cambio_de_arma()
+
+    def cambiar_secundaria(self, new_weapon):
+        self.arma = new_weapon
         self.arma.cambio_de_arma()
 
     def draw(self, pantalla, x, y):

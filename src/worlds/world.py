@@ -13,14 +13,15 @@ from tanks.player import Player
 
 
 class World(Scene, ABC):
-    def __init__(self, alto_pantalla, ancho_pantalla, director, ui, controller, player):
+    def __init__(self, alto_pantalla, ancho_pantalla, director, ui):
 
         super().__init__(director)
 
         self.ui = ui
-        self.control = controller
+        self.control = settings.controller
         self.ui.set_cursor()
-        self.player = player
+
+        self.player = Player()
 
         self.ancho_pantalla = ancho_pantalla
         self.alto_pantalla = alto_pantalla
@@ -56,7 +57,7 @@ class World(Scene, ABC):
         return int(match.group(1)) if match else 1  # Si no encuentra número, asume capa 1
 
     def get_parametros(self):
-        return self.alto_pantalla, self.ancho_pantalla, self.director, self.ui, self.control, self.player
+        return self.alto_pantalla, self.ancho_pantalla, self.director, self.ui
 
     def generar_elementos(self, mapa_tiles, lista_elementos, sprites, lista_enemigos, lista_actualizables):
         """Crea los elementos del mapa ajustándolos al tamaño de la pantalla."""

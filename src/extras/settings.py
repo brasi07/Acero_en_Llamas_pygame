@@ -2,6 +2,10 @@ from enum import Enum
 
 import pygame
 
+from controller import KeyboardControl
+
+controller = KeyboardControl()
+
 FPS = 60
 ANCHO, ALTO = 1024, 576
 HABITACION_ANCHO = 32     # Ancho de cada habitación en el minimapa

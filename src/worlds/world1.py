@@ -2,12 +2,11 @@ import pygame
 
 from extras.resourcesmanager import ResourceManager
 from extras.settings import ROJO_TRANSLUCIDO, NEGRO_TRANSLUCIDO, EVENTO_JUGADOR_MUERTO
-from menu import PauseMenu
 from worlds.world import World
 
 class World1(World):
-    def __init__(self, alto_pantalla, ancho_pantalla, director, ui, controller, player):
-        super().__init__(alto_pantalla, ancho_pantalla, director, ui, controller, player)
+    def __init__(self, alto_pantalla, ancho_pantalla, director, ui):
+        super().__init__(alto_pantalla, ancho_pantalla, director, ui)
         world_number = 1
         self.hasSky = True
         self.traps = (836, -2)
@@ -54,4 +53,4 @@ class World1(World):
     def manejar_evento_especifico(self, evento):
         from worlds.world2 import World2
         if self.control.change_world(evento):
-            self.director.cambiar_escena(World2(self.alto_pantalla, self.ancho_pantalla, self.director, self.ui, self.control, self.player))
+            self.director.cambiar_escena(World2(self.alto_pantalla, self.ancho_pantalla, self.director, self.ui))

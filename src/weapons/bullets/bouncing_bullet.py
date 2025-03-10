@@ -28,6 +28,8 @@ class BouncingBullet(Bullet):
 
             self.rebote_count += 1
 
+            self.dano += 1 #se incrementa el daño por rebote
+
             overlap_x = min(self.rect_element.right - elemento.rect_element.left,
                             elemento.rect_element.right - self.rect_element.left)  # calcula cuanto colisionan los rectangulos por la lateral
 

@@ -21,6 +21,7 @@ class Bullet(Element):
         self.velocidad = 7
         self.vel_x = math.cos(self.angulo) * self.velocidad
         self.vel_y = math.sin(self.angulo) * self.velocidad
+        self.dano = 1
 
         # Estado de la bala
         self.colisionando = False
@@ -58,9 +59,9 @@ class Bullet(Element):
         self.tiempo_colision = time.time()
         self.rect_element = self.sprites_colision[0].get_rect(center=self.rect_element.center)  # Centrar explosión
 
-    def realizar_dano(self, elemento, dano=1):
+    def realizar_dano(self, elemento):
         if hasattr(elemento, "vida"):
-            elemento.recibir_dano(dano)
+            elemento.recibir_dano(self.dano)
             return True
         return False
 
