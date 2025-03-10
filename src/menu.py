@@ -17,7 +17,6 @@ class Menu(Scene):
     def __init__(self, director):
         super().__init__(director)
         pygame.font.init()
-        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
         self.font = pygame.font.Font(None, 74)
         self.selected_item = 0
 
@@ -64,6 +63,8 @@ class PauseMenu(Menu):
     def eventos(self, eventos):
 
         for evento in eventos:
+            if evento.type == pygame.QUIT:
+                self.director.salir_programa()
             if self.control.aceptar(evento):
                 self.do_the_thing()
             if self.control.rechazar(evento):
