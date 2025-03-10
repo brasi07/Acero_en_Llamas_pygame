@@ -1,6 +1,6 @@
 import pygame
 from extras.resourcesmanager import ResourceManager
-from extras.settings import CollisionLayer, RESIZE_PLAYER
+from extras.settings import CollisionLayer, RESIZE_PLAYER, EVENTO_JUGADOR_MUERTO
 from tanks.tank import Tank
 from weapons import *
 
@@ -16,7 +16,6 @@ class Player(Tank):
         self.armas_pos = 0  # Índice de arma secundaria equipada
         self.colision_layer_balas = CollisionLayer.BULLET_PLAYER
         self.barra_vida = ResourceManager.load_animation(f"vida_jugador.png", 48, 7, 5, resizex=5, resizey=0.5)
-        self.muerto = False
         self.control = controller
 
     def eventos(self, mundo):
@@ -26,7 +25,7 @@ class Player(Tank):
 
     def update(self, mundo):
         if self.vida <= 0:
-            self.muerto = True
+            pygame.event.post(pygame.event.Event(EVENTO_JUGADOR_MUERTO))
             self.vida = self.vida_inicial
 
         self.mover(mundo)

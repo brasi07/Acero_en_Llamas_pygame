@@ -6,7 +6,7 @@ from menu import PauseMenu
 from worlds.world import World
 
 class World2(World):
-    def __init__(self, alto_pantalla, ancho_pantalla, director, ui, controller, player=None):
+    def __init__(self, alto_pantalla, ancho_pantalla, director, ui, controller, player):
         super().__init__(alto_pantalla, ancho_pantalla, director, ui, controller, player)
         world_number = 2
         self.hasSky = True

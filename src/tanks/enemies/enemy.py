@@ -18,7 +18,6 @@ class Enemy(Tank):
         
         super().__init__(vida, velocidad, x, y, resizex, resizey, collision_layer=CollisionLayer.ENEMY, tank_level=tank_level)
 
-
         # Inicializamos en patrulla
         self.state = EnemyState.PATROLLING
 

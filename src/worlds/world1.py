@@ -1,13 +1,12 @@
 import pygame
 
 from extras.resourcesmanager import ResourceManager
-from extras.settings import ROJO_TRANSLUCIDO, NEGRO_TRANSLUCIDO
+from extras.settings import ROJO_TRANSLUCIDO, NEGRO_TRANSLUCIDO, EVENTO_JUGADOR_MUERTO
 from menu import PauseMenu
 from worlds.world import World
 
-
 class World1(World):
-    def __init__(self, alto_pantalla, ancho_pantalla, director, ui, controller, player=None):
+    def __init__(self, alto_pantalla, ancho_pantalla, director, ui, controller, player):
         super().__init__(alto_pantalla, ancho_pantalla, director, ui, controller, player)
         world_number = 1
         self.hasSky = True
@@ -15,7 +14,6 @@ class World1(World):
         self.lowWalls = (1168, 1155, 1283, 1220, 1282, 1157, 1346, 1092, 1347)
         self.decorations = (514, 515, 516, 517, 578, 579, 580, 581, 876, 878, 768, 2436, 2437, 2438, 2500, 2502, 2564, 2565, 2566)
 
-        # Conexiones entre habitaciones (pares de coordenadas en la matriz)
         self.CONEXIONES = [
             ((1, 1), (2, 1), ROJO_TRANSLUCIDO),
             ((0, 0), (0, 1), NEGRO_TRANSLUCIDO),  # Habitación (0,0) conecta con (0,1)
@@ -59,6 +57,8 @@ class World1(World):
         for evento in eventos:
             if evento.type == pygame.QUIT:
                 self.director.salir_programa()
+            elif evento.type == EVENTO_JUGADOR_MUERTO:
+                self.director.reiniciar_escena()
 
             if self.control.pausar(evento):
                 self.director.apilar_escena(PauseMenu(self.control, self.director))

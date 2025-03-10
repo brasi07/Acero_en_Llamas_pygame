@@ -1,4 +1,3 @@
-import csv
 import re  # Para extraer números del nombre del archivo
 from abc import ABC, abstractmethod
 
@@ -12,7 +11,7 @@ from tanks.player import Player
 
 
 class World(Scene, ABC):
-    def __init__(self, alto_pantalla, ancho_pantalla, director, ui, controller, player=None):
+    def __init__(self, alto_pantalla, ancho_pantalla, director, ui, controller, player):
 
         super().__init__(director)
 
@@ -51,6 +50,9 @@ class World(Scene, ABC):
         """Extrae el número de capa desde el nombre del archivo 'Mapa_X_Y.csv'."""
         match = re.search(r'Mapa_\d+_(\d+)\.csv', archivo)
         return int(match.group(1)) if match else 1  # Si no encuentra número, asume capa 1
+
+    def get_parametros(self):
+        return self.alto_pantalla, self.ancho_pantalla, self.director, self.ui, self.control, self.player
 
     def eventos(self, eventos):
         pass

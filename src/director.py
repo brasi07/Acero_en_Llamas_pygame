@@ -8,7 +8,9 @@ class Director:
         self.pantalla = pygame.display.set_mode((ANCHO, ALTO), pygame.FULLSCREEN | pygame.SCALED | pygame.DOUBLEBUF)
         self.pila_escenas = []
         self.salir_escena = False
-        self.escena_actual = None
+        self.escena_guardada = None
+        self.escena_guardada_clase = None
+        self.escena_parametros = None
         self.clock = pygame.time.Clock()
 
     def bucle(self, escena):
@@ -37,10 +39,20 @@ class Director:
             self.pila_escenas.pop()
 
     def cambiar_escena(self, nueva_escena):
-        self.salir_de_escena()
+        if self.escena_guardada:
+            self.salir_de_escena()
+
+        self.escena_guardada = nueva_escena
+        self.escena_guardada_clase = type(nueva_escena)
+        self.escena_parametros = nueva_escena.get_parametros()
+
         self.pila_escenas.append(nueva_escena)
+
+    def reiniciar_escena(self):
+        if self.escena_guardada_clase and self.escena_parametros:
+            nueva_escena = self.escena_guardada_clase(*self.escena_parametros)
+            self.cambiar_escena(nueva_escena)
 
     def apilar_escena(self, nueva_escena):
         self.salir_escena = True
-        self.escena_actual = nueva_escena
         self.pila_escenas.append(nueva_escena)

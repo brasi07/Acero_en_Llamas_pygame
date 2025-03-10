@@ -23,7 +23,7 @@ class Game:
         self.mundo1 = World1(self.director.pantalla.get_height(), self.director.pantalla.get_width(),
                             self.director, Ui(), self.control, self.jugador)
 
-        self.director.apilar_escena(self.mundo1)
+        self.director.cambiar_escena(self.mundo1)
 
     def run(self):
         self.director.ejecutar()

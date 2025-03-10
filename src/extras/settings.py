@@ -1,12 +1,13 @@
 from enum import Enum
 
+import pygame
+
 FPS = 60
 ANCHO, ALTO = 1024, 576
 HABITACION_ANCHO = 32     # Ancho de cada habitación en el minimapa
 HABITACION_ALTO = 18      # Alto de cada habitación en el minimapa
 ESPACIADO = 4            # Espacio entre habitaciones en el minimapa
 MINIMAPA_POS = (50, ALTO - HABITACION_ALTO * 4 - ESPACIADO * 3 - 50)  # Posición en pantalla (esquina superior derecha)
-
 
 RESIZE_PLAYER = 2.5
 RESIZE_CANNON = 2.0
@@ -27,6 +28,8 @@ ROJO_TRANSLUCIDO = (255, 0, 0, 180)
 VERDE = (0, 255, 0)
 AMARILLO = (255, 255, 0)
 ELIMINAR_FONDO = (248, 0, 255)
+
+EVENTO_JUGADOR_MUERTO = pygame.USEREVENT + 1
 
 # Conexiones entre habitaciones (pares de coordenadas en la matriz)
 CONEXIONES1 = [
@@ -57,11 +60,6 @@ CONEXIONES2 = [
     ((2, 0), (2, 1), NEGRO_TRANSLUCIDO),
     ((2, 1), (1, 1), NEGRO_TRANSLUCIDO),
 ]
-
-SKY_WORLDS = {
-    1 : True,
-    2 : False
-}
 
 class CollisionLayer(Enum):
     PLAYER = 1
