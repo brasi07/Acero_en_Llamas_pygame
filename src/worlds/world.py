@@ -58,9 +58,6 @@ class World(Scene, ABC):
     def get_parametros(self):
         return self.alto_pantalla, self.ancho_pantalla, self.director, self.ui, self.control, self.player
 
-    def eventos(self, eventos):
-        pass
-
     def generar_elementos(self, mapa_tiles, lista_elementos, sprites, lista_enemigos, lista_actualizables):
         """Crea los elementos del mapa ajustándolos al tamaño de la pantalla."""
         puertas = {}

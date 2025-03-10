@@ -31,36 +31,6 @@ ELIMINAR_FONDO = (248, 0, 255)
 
 EVENTO_JUGADOR_MUERTO = pygame.USEREVENT + 1
 
-# Conexiones entre habitaciones (pares de coordenadas en la matriz)
-CONEXIONES1 = [
-    ((1, 1), (2, 1), ROJO_TRANSLUCIDO),
-    ((0, 0), (0, 1), NEGRO_TRANSLUCIDO),  # Habitación (0,0) conecta con (0,1)
-    ((0, 1), (0, 2), NEGRO_TRANSLUCIDO),
-    ((0, 0), (1, 0), NEGRO_TRANSLUCIDO),
-    ((1, 0), (2, 0), NEGRO_TRANSLUCIDO),
-    ((2, 0), (3, 0), NEGRO_TRANSLUCIDO),
-    ((0, 1), (0, 2), NEGRO_TRANSLUCIDO),
-    ((0, 1), (1, 1), NEGRO_TRANSLUCIDO),
-    ((1, 1), (1, 2), NEGRO_TRANSLUCIDO),
-    ((1, 2), (2, 2), NEGRO_TRANSLUCIDO),
-    ((2, 2), (3, 2), NEGRO_TRANSLUCIDO),
-    ((3, 2), (3, 1), NEGRO_TRANSLUCIDO),
-]
-
-CONEXIONES2 = [
-    ((3, 0), (3, 1), NEGRO_TRANSLUCIDO),  # Habitación (0,0) conecta con (0,1)
-    ((3, 1), (3, 2), NEGRO_TRANSLUCIDO),
-    ((3, 2), (2, 2), NEGRO_TRANSLUCIDO),
-    ((2, 2), (1, 2), NEGRO_TRANSLUCIDO),
-    ((1, 2), (0, 2), NEGRO_TRANSLUCIDO),
-    ((0, 2), (0, 1), NEGRO_TRANSLUCIDO),
-    ((0, 1), (0, 0), NEGRO_TRANSLUCIDO),
-    ((0, 0), (1, 0), NEGRO_TRANSLUCIDO),
-    ((1, 0), (2, 0), NEGRO_TRANSLUCIDO),
-    ((2, 0), (2, 1), NEGRO_TRANSLUCIDO),
-    ((2, 1), (1, 1), NEGRO_TRANSLUCIDO),
-]
-
 class CollisionLayer(Enum):
     PLAYER = 1
     ENEMY = 2
