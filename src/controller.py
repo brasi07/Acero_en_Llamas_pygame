@@ -102,6 +102,9 @@ class KeyboardControl(Control):
     def change_world(self, evento):
         return evento.type == pygame.KEYDOWN and evento.key == pygame.K_m
 
+    def open_minimap(self, evento):
+        return evento.type == pygame.KEYDOWN and evento.key == pygame.K_LSHIFT
+
     def change_weapon(self, evento):
         return evento.type == pygame.KEYDOWN and evento.key == pygame.K_g
 

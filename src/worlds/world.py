@@ -4,6 +4,8 @@ from abc import ABC, abstractmethod
 import pygame
 from extras import settings
 from elements import Wall, LowWall, Decoracion, Button, Door, Trap
+from extras.settings import EVENTO_JUGADOR_MUERTO
+from menu import PauseMenu
 from scene import Scene
 from tanks.enemies import EnemyBrown, EnemyGreen, EnemyPurple, EnemyRed, Enemy
 from tanks.enemies.bosses import Mecha, MegaCannon, WarTrain
@@ -40,6 +42,8 @@ class World(Scene, ABC):
         self.tiempo_inicio = 0
         self.camara_x, self.camara_y = 0, 0
         self.destino_camara_x, self.destino_camara_y = 0,0
+
+        self.minimap_active = False
 
         self.traps = ()
         self.lowWalls = ()
@@ -202,6 +206,27 @@ class World(Scene, ABC):
                 and self.camara_y - settings.TILE_SIZE <= elemento.rect_element.y < self.camara_y + self.alto_pantalla + settings.TILE_SIZE
         )
 
+    def eventos(self, eventos):
+        """ Lógica común para todos los mundos """
+        for evento in eventos:
+            if evento.type == pygame.QUIT:
+                self.director.salir_programa()
+            elif evento.type == EVENTO_JUGADOR_MUERTO:
+                self.director.reiniciar_escena()
+
+            if self.control.pausar(evento):
+                self.director.apilar_escena(PauseMenu(self.control, self.director))
+
+            if self.control.change_weapon(evento):
+                self.player.cambiar_arma_secundaria()
+
+            self.manejar_evento_especifico(evento)
+
+        self.player.eventos(self)
+
+    def manejar_evento_especifico(self, evento):
+        pass
+
     def update(self, time):
 
         self.player.update(self)
@@ -239,7 +264,8 @@ class World(Scene, ABC):
             self.ui.draw_health_bar(enemigo, pantalla, self.camara_x, self.camara_y)
 
         self.ui.draw_health_bar_player(self.player, pantalla)
-        self.ui.dibujar_minimapa(self.player, self, pantalla)
+        if self.minimap_active:
+            self.ui.dibujar_minimapa(self.player, self, pantalla)
 
     def draw(self, pantalla):
         """Dibuja todas las capas en orden, desde la más baja hasta la más alta."""

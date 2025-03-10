@@ -50,21 +50,7 @@ class World2(World):
         self.mapas_binarios = self.generar_mapas_binarios()
 
 
-    def eventos(self, eventos):
+    def manejar_evento_especifico(self, evento):
         from worlds.world1 import World1
-
-        for evento in eventos:
-            if evento.type == pygame.QUIT:
-                self.director.salir_programa()
-
-            if self.control.pausar(evento):
-                self.director.apilar_escena(PauseMenu(self.control, self.director))
-
-            if self.control.change_weapon(evento):  # cambiar arma secundaria con la tecla G (temporario)
-                self.player.cambiar_arma_secundaria()
-            if self.control.change_world(evento):
-                self.director.cambiar_escena(
-                    World1(self.alto_pantalla, self.ancho_pantalla, self.director, self.ui, self.control,
-                           self.player))
-
-        self.player.eventos(self)
+        if self.control.change_world(evento):
+            self.director.cambiar_escena(World1(self.alto_pantalla, self.ancho_pantalla, self.director, self.ui, self.control, self.player))
