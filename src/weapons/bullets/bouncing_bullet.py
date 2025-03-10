@@ -45,7 +45,7 @@ class BouncingBullet(Bullet):
             return False
 
         # Comprobar si los rectángulos colisionan y devuelve el element colisionado
-        return self.rect_element.colliderect(other_element.rect_element), other_element
+        return self.rect_element.colliderect(other_element.rect_element)
 
     def update(self, mundo, ancho_pantalla, alto_pantalla):
         """Actualiza la posición de la bala y verifica colisiones."""
@@ -59,7 +59,7 @@ class BouncingBullet(Bullet):
 
         # Verificar colisiones con los elementos del mundo
         for elemento in mundo.elementos_por_capa.get(2, []):  # Evita KeyError si la capa no existe
-            if self.check_collision(elemento) == (True, elemento):
+            if self.check_collision(elemento):
 
                 if self.realizar_dano(elemento):
                     self.rebote_count = self.rebote_max
