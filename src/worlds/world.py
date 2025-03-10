@@ -220,6 +220,9 @@ class World(Scene, ABC):
             if self.control.change_weapon(evento):
                 self.player.cambiar_arma_secundaria()
 
+            if self.control.open_minimap(evento):
+                self.minimap_active = not self.minimap_active
+
             self.manejar_evento_especifico(evento)
 
         self.player.eventos(self)

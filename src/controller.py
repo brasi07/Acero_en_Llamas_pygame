@@ -103,7 +103,7 @@ class KeyboardControl(Control):
         return evento.type == pygame.KEYDOWN and evento.key == pygame.K_m
 
     def open_minimap(self, evento):
-        return evento.type == pygame.KEYDOWN and evento.key == pygame.K_LSHIFT
+        return (evento.type == pygame.KEYDOWN or evento.type == pygame.KEYUP)and evento.key == pygame.K_SPACE
 
     def change_weapon(self, evento):
         return evento.type == pygame.KEYDOWN and evento.key == pygame.K_g
