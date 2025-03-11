@@ -1,31 +1,23 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 
 from elements.interactable.interactable import Interactable
-from extras.settings import TILE_SIZE
-from tanks import Player
+from extras.settings import CollisionLayer
 
 
 class Pickable(ABC, Interactable):
 
-    def __init__(self, x, y, sprite, layer):
-        self.receiver = Player()
-        super().__init__(x * TILE_SIZE, y * TILE_SIZE, sprite, layer)
+    def __init__(self, x, y, sprite):
+        super().__init__(x, y, sprite, CollisionLayer.INTERACTUABLE)
         #poner los sprites del pickable
-
-    @abstractmethod
-    def pick(self):
-        del self
 
 class PickableWeapon(Pickable):
 
-    def __init__(self, x, y, layer, weapon):
+    def __init__(self, x, y, weapon):
         self.weapon = weapon
-        super().__init__(x, y, weapon.imagen_accesorio, layer)
+        super().__init__(x, y, weapon.get_pickable_image())
 
     def interactuar(self, objeto):
-        if self.check_collision(objeto):
-            self.pick()
-
-    def pick(self):
-        self.receiver.cambiar_secundaria(self.weapon)
-        super().pick()
+        from tanks import Player
+        if isinstance(objeto, Player) and self.check_collision(objeto):
+            self.eliminar = True
+            objeto.cambiar_secundaria(self.weapon)

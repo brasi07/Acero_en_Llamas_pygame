@@ -2,9 +2,11 @@ import pygame
 
 from extras.resourcesmanager import ResourceManager
 from extras.settings import CollisionLayer, TILE_SIZE
+from pickable import PickableWeapon
 from tanks.enemies.astar import *
 from tanks.tank import Tank
 from weapons import Weapon
+from weapons.weapon_pool import WeaponPool
 
 
 class EnemyState:
@@ -33,6 +35,12 @@ class Enemy(Tank):
         self.attack_range = 280 # Distancia para atacar
 
         self.arma = Weapon(self)
+        self.arma_drop = None
+
+        if self.modo_patrulla == "elite":
+            self.arma_drop = WeaponPool().random_weapon()
+            self.arma = WeaponPool().set_enemy_weapon(self)
+
         self.colision_layer_balas = CollisionLayer.BULLET_ENEMY
 
         self.indice_mundo_x = (self.rect_element.x // TILE_SIZE) // 32
@@ -45,7 +53,9 @@ class Enemy(Tank):
         modos = {
             0: "horizontal",
             1: "circular",
-            2: "vertical"
+            2: "vertical",
+            3: "torreta",
+            4: "elite"
         }
         return modos.get(modo_patrulla, "circular")
 
@@ -61,6 +71,7 @@ class Enemy(Tank):
 
         if self.vida <= 0:
             self.eliminar = True
+            self.drop_weapon(mundo)
 
         self.arma.update(mundo, tank=jugador)
         distancia = self.distancia_jugador(jugador)
@@ -73,7 +84,14 @@ class Enemy(Tank):
         elif self.state == EnemyState.CHASING:
             self.manejar_persecucion(mundo, pantalla_binaria, start, goal, TILE_SIZE)
         elif self.state == EnemyState.ATTACKING:
-            self.manejar_ataque(pantalla_binaria, start, goal)
+            self.manejar_ataque(mundo, pantalla_binaria, start, goal)
+
+
+    def drop_weapon(self, mundo):
+        if self.modo_patrulla == "elite":
+            #print(f"Antes de drop_weapon: {mundo.elementos_por_capa.get(2, [])}")
+            drop = PickableWeapon(self.x // TILE_SIZE, self.y // TILE_SIZE, self.arma_drop)
+            mundo.elementos_por_capa[2].append(drop)
 
     def manejar_patrullaje(self, mundo):
         """Controla el movimiento en el estado de patrullaje."""
@@ -127,13 +145,18 @@ class Enemy(Tank):
             if ((self.rect_element.centerx // tile_size) % 32, (self.rect_element.centery // tile_size) % 18) == (next_step[0], next_step[1]):
                 self.path.pop(0)
 
-    def manejar_ataque(self, pantalla_binaria, start, goal):
+    def manejar_ataque(self, mundo, pantalla_binaria, start, goal):
         """Gestiona la lógica de ataque."""
         if not raycasting(pantalla_binaria, start, goal):
             self.state = EnemyState.CHASING
             self.path = astar(pantalla_binaria, start, goal)
         elif pygame.time.get_ticks() - self.tiempo_ultimo_disparo >= 3000:
-            self.arma.activar()
+
+            if self.modo_patrulla == "elite":
+                self.arma.activar_secundaria(self, mundo)
+            else:
+                self.arma.activar()
+
             self.tiempo_ultimo_disparo = pygame.time.get_ticks()
 
     def calcular_direccion_canon(self, mundo, jugador):

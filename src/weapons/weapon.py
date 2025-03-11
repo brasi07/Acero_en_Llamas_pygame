@@ -73,6 +73,9 @@ class Weapon:
     def update_secundaria(self, tank, mundo):
         pass
 
+    def get_pickable_image(self):
+        return self.imagen_canon_base
+
 
 
 

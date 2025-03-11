@@ -54,3 +54,6 @@ class Dash(Weapon):
                 tank.actualizar_posicion(movimiento_x, movimiento_y, mundo)
             else:
                 self.activo = False  # Finaliza el Dash
+
+    def get_pickable_image(self):
+        return self.imagenes_accesorio_base["arriba"]

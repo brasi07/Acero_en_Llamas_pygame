@@ -4,10 +4,11 @@ import pygame
 
 from extras import settings
 from extras.resourcesmanager import ResourceManager
-from extras.settings import VERDE, ROJO, ROJO_CLARO
+from extras.settings import ROJO, ROJO_CLARO
+from singleton import SingletonMeta
 
 
-class Ui:
+class Ui(metaclass=SingletonMeta):
     def __init__(self):
         """Inicializa la UI con la pantalla y el tanque del jugador."""
         self.font = pygame.font.Font(None, 36)  # Fuente para los textos

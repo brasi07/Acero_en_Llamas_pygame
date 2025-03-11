@@ -1,5 +1,5 @@
 import re  # Para extraer números del nombre del archivo
-from abc import ABC, abstractmethod
+from abc import ABC
 
 import pygame
 from extras import settings
@@ -10,14 +10,15 @@ from scene import Scene
 from tanks.enemies import EnemyBrown, EnemyGreen, EnemyPurple, EnemyRed, Enemy
 from tanks.enemies.bosses import Mecha, MegaCannon, WarTrain
 from tanks.player import Player
+from ui import Ui
 
 
 class World(Scene, ABC):
-    def __init__(self, alto_pantalla, ancho_pantalla, director, ui):
+    def __init__(self, alto_pantalla, ancho_pantalla, director):
 
         super().__init__(director)
 
-        self.ui = ui
+        self.ui = Ui()
         self.control = settings.controller
         self.ui.set_cursor()
 
@@ -57,7 +58,7 @@ class World(Scene, ABC):
         return int(match.group(1)) if match else 1  # Si no encuentra número, asume capa 1
 
     def get_parametros(self):
-        return self.alto_pantalla, self.ancho_pantalla, self.director, self.ui
+        return self.alto_pantalla, self.ancho_pantalla, self.director
 
     def generar_elementos(self, mapa_tiles, lista_elementos, sprites, lista_enemigos, lista_actualizables):
         """Crea los elementos del mapa ajustándolos al tamaño de la pantalla."""
@@ -252,8 +253,6 @@ class World(Scene, ABC):
 
         for enemigo in self.enemigos:
             enemigo.dibujar_enemigo(pantalla, self.camara_x, self.camara_y)
-
-        for enemigo in self.enemigos:
             enemigo.arma.dibujar_balas(pantalla, self.camara_x, self.camara_y)
 
         self.player.arma.dibujar_balas(pantalla, self.camara_x, self.camara_y)

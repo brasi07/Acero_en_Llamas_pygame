@@ -2,11 +2,14 @@ import pygame
 
 from extras.resourcesmanager import ResourceManager
 from extras.settings import ROJO_TRANSLUCIDO, NEGRO_TRANSLUCIDO, EVENTO_JUGADOR_MUERTO, EVENTO_BOSS_MUERTO
+from pickable import PickableWeapon
+from tanks import Player
+from weapons import Shotgun, Dash
 from worlds.world import World
 
 class World1(World):
-    def __init__(self, alto_pantalla, ancho_pantalla, director, ui):
-        super().__init__(alto_pantalla, ancho_pantalla, director, ui)
+    def __init__(self, alto_pantalla, ancho_pantalla, director):
+        super().__init__(alto_pantalla, ancho_pantalla, director)
         world_number = 1
         self.hasSky = True
         self.traps = (836, -2)
@@ -43,6 +46,7 @@ class World1(World):
         self.num_columnas = len(self.capas[1][0]) if self.num_filas > 0 else 0
         self.elementos_por_capa = {capa: [] for capa in self.capas.keys()}
 
+
         for capa, tiles in self.capas.items():
             self.generar_elementos(tiles, self.elementos_por_capa[capa], self.sprites_por_capa[capa], self.enemigos,
                                    self.elementos_actualizables)
@@ -53,4 +57,4 @@ class World1(World):
     def manejar_evento_especifico(self, evento):
         from worlds.world2 import World2
         if self.control.change_world(evento) or evento.type == EVENTO_BOSS_MUERTO:
-            self.director.cambiar_escena(World2(self.alto_pantalla, self.ancho_pantalla, self.director, self.ui))
+            self.director.cambiar_escena(World2(self.alto_pantalla, self.ancho_pantalla, self.director))
