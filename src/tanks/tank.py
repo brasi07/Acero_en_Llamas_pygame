@@ -86,7 +86,7 @@ class Tank(Element):
 
     def usar_arma_especial(self, mundo):  # usar habilidad especial
         tiempo_actual = pygame.time.get_ticks()
-        if tiempo_actual - self.ultimo_uso_secundaria >= settings.COOLDOWN:
+        if tiempo_actual - self.ultimo_uso_secundaria >= self.arma.cooldown:
             self.arma.activar_secundaria(self, mundo)
             self.ultimo_uso_secundaria = tiempo_actual  # Reinicia el cooldown
 

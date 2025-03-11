@@ -1,4 +1,6 @@
 import pygame
+
+from extras.settings import RESIZE_PLAYER
 from weapons.bullets.bouncing_bullet import BouncingBullet
 from extras import settings
 from extras.resourcesmanager import ResourceManager

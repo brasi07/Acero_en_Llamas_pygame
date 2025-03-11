@@ -1,10 +1,5 @@
-import pygame
-
 from extras.resourcesmanager import ResourceManager
-from extras.settings import ROJO_TRANSLUCIDO, NEGRO_TRANSLUCIDO, EVENTO_JUGADOR_MUERTO, EVENTO_BOSS_MUERTO
-from pickable import PickableWeapon
-from tanks import Player
-from weapons import Shotgun, Dash
+from extras.settings import ROJO_TRANSLUCIDO, NEGRO_TRANSLUCIDO, EVENTO_BOSS_MUERTO
 from worlds.world import World
 
 class World1(World):

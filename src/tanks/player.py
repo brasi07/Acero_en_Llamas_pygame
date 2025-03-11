@@ -6,6 +6,7 @@ from extras.settings import CollisionLayer, RESIZE_PLAYER, EVENTO_JUGADOR_MUERTO
 from tanks.tank import Tank
 from weapons import *
 from singleton import SingletonMeta
+from weapons.rocket_launcher import RocketLauncher
 
 
 class Player(Tank, metaclass=SingletonMeta):
@@ -16,7 +17,7 @@ class Player(Tank, metaclass=SingletonMeta):
         super().__init__(4, 3, 0, 0, RESIZE_PLAYER, RESIZE_PLAYER, collision_layer=CollisionLayer.PLAYER, tank_type="jugador")
 
         # Equipamos armas
-        self.armas = [Weapon(self), Dash(self), Shotgun(self), ReboungGun(self), MineLauncher(self)]  # Lista de armas
+        self.armas = [Weapon(self), Dash(self), Shotgun(self), ReboungGun(self), RocketLauncher(self), MineLauncher(self)]  # Lista de armas
         self.armas_pos = 0  # Índice de arma secundaria equipada
         self.colision_layer_balas = CollisionLayer.BULLET_PLAYER
         self.barra_vida = ResourceManager.load_animation(f"vida_jugador.png", 48, 7, 5, resizex=5, resizey=0.5)

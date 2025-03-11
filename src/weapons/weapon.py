@@ -1,5 +1,7 @@
 import numpy as np
 import pygame
+
+from extras.settings import RESIZE_PLAYER, COOLDOWN
 from weapons.bullets.bullet import Bullet
 from extras.resourcesmanager import ResourceManager
 
@@ -15,6 +17,8 @@ class Weapon:
         self.rect_canon = self.imagen_canon.get_rect(center=tank.rect_element.center)
         self.rect_accesorio = None
 
+        self.cooldown = COOLDOWN
+
         self.angulo_cannon = 0
         self.balas = []
 
@@ -24,8 +28,8 @@ class Weapon:
         cannon_length = self.rect_canon.height // 4  # Largo del cañon
 
         # Calcular desplazamiento desde el centro del cañón
-        x_offset = cannon_length * np.cos(angle_rad)
-        y_offset = cannon_length * np.sin(angle_rad)
+        x_offset = cannon_length * np.cos(angle_rad)# + self.bulletSize * np.cos(angle_rad)
+        y_offset = cannon_length * np.sin(angle_rad)# + self.bulletSize * np.sin(angle_rad)
 
         # Devolver la nueva posición del midtop corregido
         return self.rect_canon.centerx + x_offset, self.rect_canon.centery + y_offset

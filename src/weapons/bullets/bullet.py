@@ -2,7 +2,7 @@ import math
 import time
 from extras import settings
 from extras.resourcesmanager import ResourceManager
-from extras.settings import TILE_SIZE
+from extras.settings import TILE_SIZE, RESIZE_PLAYER
 from elements.element import Element
 
 class Bullet(Element):
@@ -10,11 +10,11 @@ class Bullet(Element):
     sprites_colision = [ResourceManager.load_and_scale_image(f"expl{i}.png", 20 / TILE_SIZE, 20 / TILE_SIZE)
                         for i in range(1, 11)]
 
-    def __init__(self, cannon_tip, angulo, tipoColision):
-        self.imagen = ResourceManager.load_and_scale_image("bala_base.png", settings.RESIZE_PLAYER * 0.07, settings.RESIZE_PLAYER * 0.07)
+    def __init__(self, cannon_tip, angulo, tipo_colision):
+        self.imagen = ResourceManager.load_and_scale_image("bala_base.png", RESIZE_PLAYER * 0.07, RESIZE_PLAYER * 0.07)
         self.x, self.y = cannon_tip
 
-        super().__init__(self.x, self.y, self.imagen, tipoColision)
+        super().__init__(self.x, self.y, self.imagen, tipo_colision)
 
         # Convertir ángulo a radianes y calcular velocidad
         self.angulo = math.radians(angulo)
@@ -48,9 +48,6 @@ class Bullet(Element):
                 self.realizar_dano(elemento)
                 self.iniciar_colision()
                 return False  # No eliminar aún, esperar animación
-
-
-
         return False
 
     def iniciar_colision(self):

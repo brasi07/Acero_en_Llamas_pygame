@@ -1,8 +1,7 @@
 import pygame
 
-from extras.resourcesmanager import ResourceManager
 from extras.settings import CollisionLayer, TILE_SIZE
-from pickable import PickableWeapon
+from elements.interactable.pickable import PickableWeapon
 from tanks.enemies.astar import *
 from tanks.tank import Tank
 from weapons import Weapon
@@ -150,7 +149,7 @@ class Enemy(Tank):
         if not raycasting(pantalla_binaria, start, goal):
             self.state = EnemyState.CHASING
             self.path = astar(pantalla_binaria, start, goal)
-        elif pygame.time.get_ticks() - self.tiempo_ultimo_disparo >= 3000:
+        elif pygame.time.get_ticks() - self.tiempo_ultimo_disparo >= self.arma.cooldown:
 
             if self.modo_patrulla == "elite":
                 self.arma.activar_secundaria(self, mundo)

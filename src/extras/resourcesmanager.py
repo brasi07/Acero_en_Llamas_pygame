@@ -25,16 +25,33 @@ class ResourceManager(object):
     @classmethod
     def load_animation(cls, name, sizex, sizey, number_sprites, resizex=RESIZE_PLAYER, resizey=RESIZE_PLAYER):
         if name in cls.resources and isinstance(cls.resources[name], list):
-            return cls.resources[name]
+            return cls.resources[name]  # Retorna si ya fue cargado
 
-        ruta = cls.locate_resource(name)  # Ubicar el recurso
+        ruta = cls.locate_resource(name)  # Ubica la imagen
+        sprite_sheet = spritesheet.SpriteSheet(ruta)  # Carga el spritesheet
 
-        sprite_sheet = spritesheet.SpriteSheet(ruta)  # Intentar cargar el spritesheet
-        animacion = sprite_sheet.load_strip((0, 0, sizex, sizey), number_sprites, ELIMINAR_FONDO)
+        sprites = []  # Lista para almacenar los sprites
+        ancho_total, alto_total = sprite_sheet.sheet.get_size()  # Tamaño total de la imagen
 
-        cls.resources[name] = [pygame.transform.scale(frame, (resizex * TILE_SIZE, resizey * TILE_SIZE)) for frame in animacion]
+        # Número de sprites por fila (calculado en base al ancho de la imagen)
+        sprites_por_fila = ancho_total // sizex
 
-        return cls.resources[name]
+        for i in range(number_sprites):
+            # Calcula la posición X y Y de cada sprite
+            x = (i % sprites_por_fila) * sizex
+            y = (i // sprites_por_fila) * sizey
+            rect = (x, y, sizex, sizey)  # Rectángulo del sprite
+
+            # Extrae el sprite de la imagen
+            sprite = sprite_sheet.image_at(rect, ELIMINAR_FONDO)
+
+            # Escalar si es necesario
+            sprite = pygame.transform.scale(sprite, (resizex * TILE_SIZE, resizey * TILE_SIZE))
+
+            sprites.append(sprite)  # Agregar el sprite a la lista
+
+        cls.resources[name] = sprites  # Guarda en caché
+        return sprites  # Retorna la lista de sprites
 
     @classmethod
     def load_sprites(cls, resizex, resizey, nombre):
