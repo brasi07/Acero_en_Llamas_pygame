@@ -10,6 +10,7 @@ class Shotgun(Weapon):
         self.nombre_sprite = "turret_01_mk4"
         self.tiempo_inicio = None  # Guarda el tiempo de activacivación
         self.animacion = ResourceManager.load_animation(f"{self.nombre_sprite}.png", 128, 128, 8)
+
         self.imagen_canon_base = self.animacion[0]
         self.activo = False
 

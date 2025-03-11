@@ -22,19 +22,19 @@ class ResourceManager(object):
 
         raise FileNotFoundError(f"No se encontró {name} en {carpeta_recursos}")
 
-
     @classmethod
     def load_animation(cls, name, sizex, sizey, number_sprites, resizex=RESIZE_PLAYER, resizey=RESIZE_PLAYER):
-
-        if name in cls.resources:
-            return cls.resources[name]
-        else:
-            ruta = cls.locate_resource(name)
-            sprite_sheet = spritesheet.SpriteSheet(ruta)
-            animacion = sprite_sheet.load_strip((0, 0, sizex, sizey), number_sprites, ELIMINAR_FONDO)
-            cls.resources[name] =  [pygame.transform.scale(frame, (resizex * TILE_SIZE, resizey * TILE_SIZE)) for frame in animacion]
+        if name in cls.resources and isinstance(cls.resources[name], list):
             return cls.resources[name]
 
+        ruta = cls.locate_resource(name)  # Ubicar el recurso
+
+        sprite_sheet = spritesheet.SpriteSheet(ruta)  # Intentar cargar el spritesheet
+        animacion = sprite_sheet.load_strip((0, 0, sizex, sizey), number_sprites, ELIMINAR_FONDO)
+
+        cls.resources[name] = [pygame.transform.scale(frame, (resizex * TILE_SIZE, resizey * TILE_SIZE)) for frame in animacion]
+
+        return cls.resources[name]
 
     @classmethod
     def load_sprites(cls, resizex, resizey, nombre):

@@ -34,6 +34,7 @@ AMARILLO = (255, 255, 0)
 ELIMINAR_FONDO = (248, 0, 255)
 
 EVENTO_JUGADOR_MUERTO = pygame.USEREVENT + 1
+EVENTO_BOSS_MUERTO = pygame.USEREVENT + 2  # Asegúrate de que sea único
 
 class CollisionLayer(Enum):
     PLAYER = 1
