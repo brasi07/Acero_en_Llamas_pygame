@@ -1,8 +1,4 @@
-import numpy as np
-import pygame
-
 from extras.resourcesmanager import ResourceManager
-from extras.settings import RESIZE_PLAYER
 from weapons import Weapon
 from weapons.bullets.Rocket import Rocket
 

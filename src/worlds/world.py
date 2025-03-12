@@ -11,6 +11,7 @@ from tanks.enemies import EnemyBrown, EnemyGreen, EnemyPurple, EnemyRed, Enemy
 from tanks.enemies.bosses import Mecha, MegaCannon, WarTrain
 from tanks.player import Player
 from ui import Ui
+from worlds.element_factory import ElementFactory
 
 
 class World(Scene, ABC):
@@ -66,48 +67,9 @@ class World(Scene, ABC):
 
         for y, fila in enumerate(mapa_tiles):
             for x, valor in enumerate(fila):
+                valor = int(valor)  # Asegurar que es un número
 
-                valor = int(valor)  # Asegurarse de que el valor es un número
-                elemento = None
-
-                # Primer pase: Almacenar puertas
-                if 5100 <= valor <= 5199:  # Rango de valores reservados para puertas
-                    elemento = Door(x, y, sprites[1315], sprites[580])
-                    pos = valor - 5100
-                    if pos not in puertas:
-                        puertas[pos] = []
-                    puertas[pos].append(elemento)
-                elif valor == 0:
-                    self.camara_x = x // (self.ancho_pantalla / settings.TILE_SIZE) * self.ancho_pantalla
-                    self.camara_y = y // (self.alto_pantalla / settings.TILE_SIZE) * self.alto_pantalla
-                    self.player.establecer_posicion(x * settings.TILE_SIZE, y * settings.TILE_SIZE)
-                    elemento = self.player
-                elif 7000 <= valor <= 7009:
-                    elemento = EnemyBrown(x, y, valor % 10)
-                elif 7010 <= valor <= 7019:
-                    elemento = EnemyGreen(x, y, valor % 10)
-                elif 7020 <= valor <= 7029:
-                    elemento = EnemyPurple(x, y, valor % 10)
-                elif 7030 <= valor <= 7039:
-                    elemento = EnemyRed(x, y, valor % 10)
-                elif 7040 <= valor <= 7049:
-                    elemento = Mecha(x, y, valor % 10)
-                elif 7050 <= valor <= 7059:
-                    elemento = MegaCannon(x, y, valor % 10)
-                elif 7060 <= valor <= 7069:
-                    elemento = WarTrain(x, y, valor % 10)
-                elif 5000 <= valor <= 5099:  # Rango de valores reservados para botones
-                    pos = valor - 5000
-                    puertas_a_activar = puertas.get(pos)
-                    elemento = Button(x, y, sprites[2142], puertas_a_activar, self)
-                elif valor in self.traps:
-                    elemento = Trap(x, y, sprites[valor])
-                elif valor in self.lowWalls:
-                    elemento = LowWall(x, y, sprites[valor])
-                elif valor in self.decorations:
-                    elemento = Decoracion(x, y, sprites[valor])
-                elif valor != -1 and valor in sprites:
-                    elemento = Wall(x, y, sprites[valor])
+                elemento = ElementFactory.create_element(valor, x, y, sprites, puertas, self)
 
                 if elemento:
                     lista_elementos.append(elemento)
