@@ -21,11 +21,10 @@ class Weapon:
         self.cooldown = COOLDOWN
 
         self.angulo_cannon = 0
-        self.balas = []
 
-    def activar(self):
+    def activar(self, mundo):
         nueva_bala = Bullet(self)
-        self.balas.append(nueva_bala)
+        mundo.add_bullet(nueva_bala)
 
     def update(self, mundo, tank=None):
         # Calcular la dirección del cañón
@@ -37,17 +36,9 @@ class Weapon:
         self.imagen_canon = pygame.transform.rotate(self.imagen_canon_base, -self.angulo_cannon - 90)
         self.rect_canon = self.imagen_canon.get_rect(center=self.tank.rect_element.center)
 
-        for bala in self.balas[:]:
-            if bala.update(mundo, mundo.ancho_pantalla, mundo.alto_pantalla):
-                self.balas.remove(bala)
-
     def cambio_de_arma(self):
         self.imagen_canon = self.imagen_canon_base
         self.imagen_accesorio = self.imagenes_accesorio_base
-
-    def dibujar_balas(self, pantalla, x, y):
-        for bala in self.balas:
-            bala.draw(pantalla, x, y)
 
     def dibujar_arma(self, pantalla, x, y):
         if self.imagen_accesorio: #dibujar arma secundaria si necesario

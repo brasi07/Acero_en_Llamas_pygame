@@ -22,9 +22,10 @@ class Shotgun(Weapon):
         bala_central = Bullet(self)
         bala_izquierda = Bullet(self, self.angulo_cannon - 15)
         bala_derecha = Bullet(self, self.angulo_cannon + 15)
-        self.balas.append(bala_central)
-        self.balas.append(bala_izquierda)
-        self.balas.append(bala_derecha)
+
+        mundo.add_bullet(bala_central)
+        mundo.add_bullet(bala_izquierda)
+        mundo.add_bullet(bala_derecha)
         self.activo = True
 
     def update_secundaria(self, tank, mundo):

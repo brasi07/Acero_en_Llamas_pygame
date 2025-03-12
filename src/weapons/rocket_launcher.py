@@ -20,7 +20,7 @@ class RocketLauncher(Weapon):
             self.rocket_counter -= 1
 
         rocket = Rocket(self, self.posRocket)
-        self.balas.append(rocket)
+        mundo.add_bullet(rocket)
 
         # Alternar entre -30, -10, 10, y 30 para hacer que los misiles salgan de diferentes lados
         posiciones_ciclo = [-30, -20, -10, 10, 20, 30]

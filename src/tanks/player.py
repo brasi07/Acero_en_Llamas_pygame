@@ -62,7 +62,7 @@ class Player(Tank, metaclass=SingletonMeta):
     def gestionar_armas(self, mundo, teclas):
         if self.control.principal(teclas):
             if pygame.time.get_ticks() - self.tiempo_ultimo_disparo >= 1000:
-                self.arma.activar()
+                self.arma.activar(mundo)
                 self.tiempo_ultimo_disparo = pygame.time.get_ticks()
 
         if self.control.secundaria(teclas):

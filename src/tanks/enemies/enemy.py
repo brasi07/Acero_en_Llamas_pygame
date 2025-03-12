@@ -88,7 +88,7 @@ class Enemy(Tank):
 
     def drop_weapon(self, mundo):
         if self.modo_patrulla == "elite":
-            drop = PickableWeapon(self.x // TILE_SIZE, self.y // TILE_SIZE, self.arma_drop)
+            drop = PickableWeapon(self.rect_element.x // TILE_SIZE, self.rect_element.y // TILE_SIZE, self.arma_drop)
             mundo.elementos_por_capa[2].append(drop)
             mundo.elementos_actualizables.append(drop)
 
@@ -154,7 +154,7 @@ class Enemy(Tank):
             if self.modo_patrulla == "elite":
                 self.arma.activar_secundaria(self, mundo)
             else:
-                self.arma.activar()
+                self.arma.activar(mundo)
 
             self.tiempo_ultimo_disparo = pygame.time.get_ticks()
 
