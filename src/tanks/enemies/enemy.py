@@ -91,6 +91,7 @@ class Enemy(Tank):
             #print(f"Antes de drop_weapon: {mundo.elementos_por_capa.get(2, [])}")
             drop = PickableWeapon(self.x // TILE_SIZE, self.y // TILE_SIZE, self.arma_drop)
             mundo.elementos_por_capa[2].append(drop)
+            mundo.elementos_actualizables.append(drop)
 
     def manejar_patrullaje(self, mundo):
         """Controla el movimiento en el estado de patrullaje."""

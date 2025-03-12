@@ -10,6 +10,7 @@ class Weapon:
         self.tank = tank
         self.imagen_canon_base = ResourceManager.cargar_canon(0, "weapons", tank.tank_level)
         self.imagenes_accesorio_base = None
+        self.imagen_bala = ResourceManager.load_and_scale_image("bala_base.png", RESIZE_PLAYER * 0.07, RESIZE_PLAYER * 0.07)
 
         self.imagen_canon = self.imagen_canon_base
         self.imagen_accesorio = self.imagenes_accesorio_base
@@ -22,21 +23,8 @@ class Weapon:
         self.angulo_cannon = 0
         self.balas = []
 
-    def get_cannon_tip(self):
-        """Calcula la punta del cañón después de la rotación"""
-        angle_rad = np.radians(self.angulo_cannon)  # Convertir ángulo a radianes
-        cannon_length = self.rect_canon.height // 4  # Largo del cañon
-
-        # Calcular desplazamiento desde el centro del cañón
-        x_offset = cannon_length * np.cos(angle_rad)# + self.bulletSize * np.cos(angle_rad)
-        y_offset = cannon_length * np.sin(angle_rad)# + self.bulletSize * np.sin(angle_rad)
-
-        # Devolver la nueva posición del midtop corregido
-        return self.rect_canon.centerx + x_offset, self.rect_canon.centery + y_offset
-
     def activar(self):
-        cannon_tip = self.get_cannon_tip()  # Obtener la punta del cañón
-        nueva_bala = Bullet(cannon_tip, self.angulo_cannon, self.tank.colision_layer_balas)
+        nueva_bala = Bullet(self)
         self.balas.append(nueva_bala)
 
     def update(self, mundo, tank=None):

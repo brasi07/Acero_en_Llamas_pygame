@@ -8,12 +8,12 @@ from weapons.bullets import Bullet
 
 
 class Rocket(Bullet):
-    def __init__(self, cannon_tip, angulo, tipo_colision):
-        super().__init__(cannon_tip, angulo, tipo_colision)
+    def __init__(self, arma, desplazamiento_lateral):
+        super().__init__(arma, desplazamiento_lateral=desplazamiento_lateral)
         self.imagen = ResourceManager.load_and_scale_image("bala_cohete.png", RESIZE_PLAYER * 0.15, RESIZE_PLAYER * 0.3)
-        self.imagen = pygame.transform.rotate(self.imagen, -angulo-90)
+        self.imagen = pygame.transform.rotate(self.imagen, -arma.angulo_cannon-90)
         self.rect = self.imagen.get_rect(center=self.rect_element.center)
         self.velocidad = 10
-        self.vel_x = math.cos(self.angulo) * self.velocidad
-        self.vel_y = math.sin(self.angulo) * self.velocidad
+        self.vel_x = math.cos(self.angle_rad) * self.velocidad
+        self.vel_y = math.sin(self.angle_rad) * self.velocidad
 

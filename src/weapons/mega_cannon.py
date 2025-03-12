@@ -17,12 +17,8 @@ class WeaponMegaCannon(Weapon):
 
     def activar_secundaria(self, tank, mundo):
         self.tiempo_inicio = pygame.time.get_ticks()
-        bala_central = Bullet(self.get_cannon_tip(), self.angulo_cannon, self.tank.colision_layer_balas)
-        bala_izquierda = Bullet(self.get_cannon_tip(), self.angulo_cannon - 15, self.tank.colision_layer_balas)
-        bala_derecha = Bullet(self.get_cannon_tip(), self.angulo_cannon + 15, self.tank.colision_layer_balas)
-        self.balas.append(bala_central)
-        self.balas.append(bala_izquierda)
-        self.balas.append(bala_derecha)
+        bala = Bullet(self)
+        self.balas.append(bala)
         self.activo = True
 
     def update_secundaria(self, tank, mundo):

@@ -1,5 +1,8 @@
 import math
 import time
+
+import numpy as np
+
 from extras import settings
 from extras.resourcesmanager import ResourceManager
 from extras.settings import TILE_SIZE, RESIZE_PLAYER
@@ -10,17 +13,16 @@ class Bullet(Element):
     sprites_colision = [ResourceManager.load_and_scale_image(f"expl{i}.png", 20 / TILE_SIZE, 20 / TILE_SIZE)
                         for i in range(1, 11)]
 
-    def __init__(self, cannon_tip, angulo, tipo_colision):
-        self.imagen = ResourceManager.load_and_scale_image("bala_base.png", RESIZE_PLAYER * 0.07, RESIZE_PLAYER * 0.07)
-        self.x, self.y = cannon_tip
+    def __init__(self, arma, angulo=None, desplazamiento_lateral=0, desplazamiento_frontal=0):
+        self.arma = arma
+        self.angle_rad = math.radians(angulo if angulo else arma.angulo_cannon)
+        x, y = self.get_cannon_tip(desplazamiento_lateral, desplazamiento_frontal)
 
-        super().__init__(self.x, self.y, self.imagen, tipo_colision)
+        super().__init__(x, y, arma.imagen_bala, arma.tank.colision_layer_balas)
 
-        # Convertir ángulo a radianes y calcular velocidad
-        self.angulo = math.radians(angulo)
         self.velocidad = 7
-        self.vel_x = math.cos(self.angulo) * self.velocidad
-        self.vel_y = math.sin(self.angulo) * self.velocidad
+        self.vel_x = math.cos(self.angle_rad) * self.velocidad
+        self.vel_y = math.sin(self.angle_rad) * self.velocidad
         self.dano = 1
 
         # Estado de la bala
@@ -68,6 +70,28 @@ class Bullet(Element):
         self.frame_actual = int((tiempo_transcurrido / 1.0) * len(self.sprites_colision))
 
         return self.frame_actual >= len(self.sprites_colision)  # Eliminar cuando la animación termine
+
+    def get_cannon_tip(self, desplazamiento_lateral, desplazamiento_frontal):
+        """Calcula la punta del cañón después de la rotación, permitiendo desplazamiento en ambos ejes."""
+
+        cannon_length = self.arma.rect_canon.height // 4  # Largo del cañón
+
+        # Convertir ángulo a radianes
+        angle_rad = self.angle_rad
+
+        # Desplazamiento en la dirección del cañón (frontal)
+        x_offset = (cannon_length + desplazamiento_frontal) * np.cos(angle_rad)
+        y_offset = (cannon_length + desplazamiento_frontal) * np.sin(angle_rad)
+
+        # Desplazamiento lateral (perpendicular al cañón)
+        x_lateral_offset = desplazamiento_lateral * np.cos(angle_rad + np.pi / 2)  # 90° perpendiculares
+        y_lateral_offset = desplazamiento_lateral * np.sin(angle_rad + np.pi / 2)
+
+        # Calcular posición final
+        cannon_x = self.arma.rect_canon.centerx + x_offset + x_lateral_offset
+        cannon_y = self.arma.rect_canon.centery + y_offset + y_lateral_offset
+
+        return cannon_x, cannon_y
 
     def fuera_de_pantalla(self, mundo, ancho_pantalla, alto_pantalla):
         """Verifica si la bala ha salido de la pantalla."""

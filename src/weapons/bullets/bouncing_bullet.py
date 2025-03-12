@@ -8,8 +8,8 @@ from extras.settings import COLLISION_RULES, CollisionLayer, RESIZE_PLAYER
 
 class BouncingBullet(Bullet):
 
-    def __init__(self, cannon_tip, angulo, tipo_colision):
-        super().__init__(cannon_tip, angulo, tipo_colision)
+    def __init__(self, arma):
+        super().__init__(arma)
         self.rebote_count = 0
         self.rebote_max = 2
         self.imagen = ResourceManager.load_and_scale_image("bala_botadora.png", RESIZE_PLAYER * 0.1, RESIZE_PLAYER * 0.1)
