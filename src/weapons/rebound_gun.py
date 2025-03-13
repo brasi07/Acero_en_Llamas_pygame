@@ -17,7 +17,7 @@ class ReboungGun(Weapon):
         self.frame_actual = 0
         self.ultimo_cambio_frame = 0
 
-    def activar_secundaria(self, mundo):
+    def activar_secundaria(self, mundo, tank=None):
         self.tiempo_inicio = pygame.time.get_ticks()
         bala_rebote = BouncingBullet(self)
         mundo.add_bullet(bala_rebote)

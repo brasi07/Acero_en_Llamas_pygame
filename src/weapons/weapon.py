@@ -50,7 +50,7 @@ class Weapon:
     def dibujar_minas(self,mundo):
         pass
 
-    def activar_secundaria(self, mundo):
+    def activar_secundaria(self, mundo, tank=None):
         pass
 
     def update_secundaria(self, tank, mundo):

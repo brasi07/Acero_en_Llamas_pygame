@@ -7,8 +7,8 @@ from weapons.saw import Saw
 
 
 class Mecha(Enemy):
-    def __init__(self, x, y, modo_patrulla):
-        super().__init__(20, 2.5, x, y, RESIZE_PLAYER, RESIZE_PLAYER, tank_level="_boss1")
+    def __init__(self, x, y):
+        super().__init__(20, 2.5, x, y, RESIZE_PLAYER, RESIZE_PLAYER, "horizontal", tank_level="_boss1", elite=False)
         self.arma = Saw(self)
 
     def update(self, jugador, mundo):
@@ -39,7 +39,7 @@ class Mecha(Enemy):
             if distancia > TILE_SIZE*1.5:
                 self.manejar_persecucion(mundo, pantalla_binaria, start, goal, TILE_SIZE)
             else:
-                self.arma.activar_secundaria(jugador, mundo)
+                self.arma.activar_secundaria(mundo, jugador)
 
     def manejar_persecucion(self, mundo, pantalla_binaria, start, goal, tile_size):
 

@@ -15,7 +15,7 @@ class WeaponMegaCannon(Weapon):
         self.frame_actual = 0
         self.ultimo_cambio_frame = 0
 
-    def activar_secundaria(self, mundo):
+    def activar_secundaria(self, mundo, tank=None):
         self.tiempo_inicio = pygame.time.get_ticks()
         bala = Bullet(self)
         mundo.add_bullet(bala)

@@ -17,7 +17,7 @@ class Dash(Weapon):
         self.dx = 0
         self.dy = 0
 
-    def activar_secundaria(self, mundo):
+    def activar_secundaria(self, mundo, tank=None):
         """Activa el Dash con desplazamiento en función del tiempo."""
         if not self.activo:
             self.activo = True

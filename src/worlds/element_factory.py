@@ -24,11 +24,11 @@ class ElementFactory:
         elif 7000 <= valor <= 7399:
             return ElementFactory.crear_enemigo(valor, x, y)
         elif valor == 7400:
-            return Mecha(x, y, valor % 10)
+            return Mecha(x, y)
         elif valor == 7401:
-            return MegaCannon(x, y, valor % 10)
+            return MegaCannon(x, y)
         elif valor == 7402:
-            return WarTrain(x, y, valor % 10)
+            return WarTrain(x, y)
 
         elif 5000 <= valor <= 5099:  # Botones
             pos = valor - 5000
