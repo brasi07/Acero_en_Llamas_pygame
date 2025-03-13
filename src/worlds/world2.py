@@ -2,7 +2,6 @@ import pygame
 
 from extras.resourcesmanager import ResourceManager
 from extras.settings import NEGRO_TRANSLUCIDO
-from menu import PauseMenu
 from worlds.world import World
 
 class World2(World):

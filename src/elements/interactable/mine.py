@@ -3,6 +3,7 @@ from elements.interactable.interactable import Interactable
 from extras.resourcesmanager import ResourceManager
 from extras.settings import CollisionLayer, TIME_FRAME
 
+
 class Mine(Interactable):
 
     def __init__(self, x, y):
@@ -11,9 +12,10 @@ class Mine(Interactable):
         self.frame_actual = -1
         self.ultimo_cambio_frame = 0
         self.activo = False
+        self.objeto_colisionando = True
         self.animacion = ResourceManager.load_animation("explosiones4A.png", 32, 32, 6, resizex=1, resizey=1)
         self.duracion = 5000 #tiempo en ms que la mina queda en el suelo
-        super().__init__(x, y, self.imagen, CollisionLayer.BULLET_PLAYER)
+        super().__init__(x, y, self.imagen, CollisionLayer.BOTH)
 
     def update(self, jugador):
         if self.activo:
@@ -25,6 +27,15 @@ class Mine(Interactable):
                     else:
                         self.eliminar = True
                     self.imagen = self.animacion[self.frame_actual]
-    
+
+        if not self.check_collision(jugador):
+            self.objeto_colisionando = False
+
     def interactuar(self, objeto):
-         self.activo = True
+        from tanks.tank import Tank
+        if not self.objeto_colisionando and self.check_collision(objeto) and not self.activo:
+            objeto.recibir_dano(1)
+            self.activo = True
+
+    def deactivate(self):
+        self.activo = True

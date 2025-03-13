@@ -9,7 +9,7 @@ class WeaponPool(metaclass=SingletonMeta):
 
     def __init__(self):
         from tanks import Player
-        self.pool = [Dash(Player()), Shotgun(Player()), RocketLauncher(Player()), ReboungGun(Player())]
+        self.pool = [Dash(Player()), Shotgun(Player()), RocketLauncher(Player()), ReboungGun(Player()), MineLauncher(Player())]
         self.number = random.randint(0, len(self.pool) - 1)
 
     def random_weapon(self):
@@ -27,3 +27,5 @@ class WeaponPool(metaclass=SingletonMeta):
                 return RocketLauncher(enemy)
             case 3:
                 return ReboungGun(enemy)
+            case 4:
+                return MineLauncher(enemy)

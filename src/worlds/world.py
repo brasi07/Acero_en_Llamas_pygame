@@ -52,6 +52,7 @@ class World(Scene, ABC):
         self.decorations = ()
 
         self.balas = []
+        self.minas = []
 
     @staticmethod
     def extraer_numero_capa(archivo):
@@ -160,6 +161,9 @@ class World(Scene, ABC):
     def add_bullet(self, bala):
         self.balas.append(bala)
 
+    def add_mine(self, mine):
+        self.minas.append(mine)
+
     def cambiar_pantalla(self, direccion):
 
         dir_cam = {
@@ -249,6 +253,13 @@ class World(Scene, ABC):
             if bala.update(self, self.ancho_pantalla, self.alto_pantalla):
                 self.balas.remove(bala)
 
+
+        tiempo_actual = pygame.time.get_ticks()
+        for mina in self.minas:
+            if (tiempo_actual - mina.tiempo_creacion) > mina.duracion:
+                mina.deactivate()
+                self.minas.remove(mina)
+
         for lista in [self.enemigos, self.elementos_actualizables, self.elementos_por_capa[2]]:
             for elemento in lista.copy():
                 if elemento.eliminar:
@@ -265,6 +276,9 @@ class World(Scene, ABC):
 
         for bala in self.balas:
             bala.draw(pantalla, self.camara_x, self.camara_y)
+
+        for mina in self.minas:
+            mina.dibujar(pantalla, self.camara_x, self.camara_y)
 
         if self.hasSky:
             self.draw_sky(pantalla)
