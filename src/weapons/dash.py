@@ -17,7 +17,7 @@ class Dash(Weapon):
         self.dx = 0
         self.dy = 0
 
-    def activar_secundaria(self, tank, mundo):
+    def activar_secundaria(self, mundo):
         """Activa el Dash con desplazamiento en función del tiempo."""
         if not self.activo:
             self.activo = True
@@ -36,7 +36,7 @@ class Dash(Weapon):
             }
 
             # Obtener dirección normalizada del tanque
-            direccion_normalizada = direcciones.get(tank.direccion, (0, 0))
+            direccion_normalizada = direcciones.get(self.tank.direccion, (0, 0))
             self.dx = direccion_normalizada[0] * self.velocidad_dash
             self.dy = direccion_normalizada[1] * self.velocidad_dash
 

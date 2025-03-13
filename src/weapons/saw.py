@@ -27,9 +27,9 @@ class Saw(Weapon):
         self.ultimo_golpe = 0  # Guarda el tiempo del último golpe
         self.tiempo_actual = 0
 
-    def activar_secundaria(self, tank, mundo):
+    def activar_secundaria(self, mundo):
         if self.tiempo_actual - self.ultimo_golpe > 1000:
-            tank.recibir_dano(1)
+            self.tank.recibir_dano(1)
             self.ultimo_golpe = self.tiempo_actual
 
     def update_secundaria(self, tank, mundo):

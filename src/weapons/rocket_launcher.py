@@ -11,7 +11,7 @@ class RocketLauncher(Weapon):
         self.rocket_counter = 5
         self.posRocket = -30
 
-    def activar_secundaria(self, tank, mundo):
+    def activar_secundaria(self, mundo):
         if self.rocket_counter == 0:
             self.cooldown = 12000
             self.rocket_counter = 5

@@ -10,7 +10,7 @@ class MineLauncher(Weapon):
         # self.imagenes_accesorio_base = self.tank.generar_sprites(settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, "jugador", "armas/mina")
         self.activo = False
 
-    def activar_secundaria(self, tank, mundo):
+    def activar_secundaria(self, mundo):
         self.activo = True
         self.tiempo_inicio = pygame.time.get_ticks()
         nova_mina = Mine(self.tank.rect_element.centerx / TILE_SIZE, self.tank.rect_element.centery / TILE_SIZE)

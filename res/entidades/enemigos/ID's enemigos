@@ -1,12 +1,15 @@
-brown:----------------7000 - 7009
-green:----------------7010 - 7019
-purple:---------------7020 - 7029
-red:------------------7030 - 7039
+70__:   type brown
+71__:   type green
+72__:   type purple
+73__:   type red
+7_0_:   patrol horizontal
+7_1_:   patrol vertical
+7_2_:   patrol circular
+7_3_:   patrol torreta
+7__0:   patrulla horizontal
+7__1:   patrulla horizontal
 
-    ___1:---------patrulla horizontal
-    ___2:---------patrulla vertical
-    ___3:---------patrulla circular
 
-boss1:----------------7040 - 7049
-boss2:----------------7050 - 7059
-boss3:----------------7060 - 7069
+boss1:----------------7400
+boss2:----------------7401
+boss3:----------------7402

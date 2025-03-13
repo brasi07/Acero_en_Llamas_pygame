@@ -14,31 +14,29 @@ class EnemyState:
     ATTACKING = "attacking"
 
 class Enemy(Tank):
-    # TODO: Pasar el daño del enemigo para ajustar los distintos niveles
-    def __init__(self, vida, velocidad, x, y, resizex, resizey, tank_level, modo_patrulla=0):
-        
+    def __init__(self, vida, velocidad, x, y, resizex, resizey, modo_patrulla, elite, tank_level):
         super().__init__(vida, velocidad, x, y, resizex, resizey, collision_layer=CollisionLayer.ENEMY, tank_level=tank_level)
 
-        # Inicializamos en patrulla
-        self.state = EnemyState.PATROLLING
+        self.state = EnemyState.PATROLLING if modo_patrulla != "torreta" else EnemyState.ATTACKING
+        self.chase_range = 300
+        self.attack_range = 280
 
-        self.modo_patrulla = self.determinar_modo_patrulla(modo_patrulla)
+        self.modo_patrulla = modo_patrulla
         self.patrol_direction = 1  # 1 derecha, -1 izquierda
         self.start_x = self.x
         self.start_y = self.y
         self.patrol_movement = 350  # Rango de patrulla
-
         self.patrol_phase = 0  # Fase de patrulla
 
-        self.chase_range = 300  # Distancia para empezar a perseguir
-        self.attack_range = 280 # Distancia para atacar
+        self.elite = elite
+        self.arma_drop = WeaponPool().random_weapon()
+        self.arma = WeaponPool().set_enemy_weapon(self) if elite else Weapon(self)
 
-        self.arma = Weapon(self)
-        self.arma_drop = None
-
-        if self.modo_patrulla == "elite":
-            self.arma_drop = WeaponPool().random_weapon()
-            self.arma = WeaponPool().set_enemy_weapon(self)
+        if elite:
+            self.velocidad *= 1.2
+            self.vida_inicial *= 2
+            self.vida = self.vida_inicial
+            self.chase_range *= 1.5
 
         self.colision_layer_balas = CollisionLayer.BULLET_ENEMY
 
@@ -46,31 +44,21 @@ class Enemy(Tank):
         self.indice_mundo_y = (self.rect_element.y // TILE_SIZE) // 18
 
         self.path = []
-
-    @staticmethod
-    def determinar_modo_patrulla(modo_patrulla):
-        modos = {
-            0: "horizontal",
-            1: "circular",
-            2: "vertical",
-            3: "torreta",
-            4: "elite"
-        }
-        return modos.get(modo_patrulla, "circular")
+        self.tiempo_ultimo_disparo = 0  # Control del cooldown de ataque
 
     def update(self, jugador, mundo):
+
         """Actualiza el estado del enemigo dependiendo de la distancia y el estado actual."""
         if not self.en_la_misma_pantalla(jugador):
             return
 
         pantalla_binaria = mundo.mapas_binarios[self.indice_mundo_x][self.indice_mundo_y]
-
         start = ((self.rect_element.centerx // TILE_SIZE) % 32, (self.rect_element.centery // TILE_SIZE) % 18)
         goal = ((jugador.rect_element.centerx // TILE_SIZE) % 32, (jugador.rect_element.centery // TILE_SIZE) % 18)
 
         if self.vida <= 0:
             self.eliminar = True
-            self.drop_weapon(mundo)
+            if self.elite:  self.drop_weapon(mundo)
 
         self.arma.update(mundo, tank=jugador)
         distancia = self.distancia_jugador(jugador)
@@ -78,22 +66,20 @@ class Enemy(Tank):
         if (distancia < self.chase_range or self.vida != self.vida_inicial) and self.state == EnemyState.PATROLLING:
             self.state = EnemyState.CHASING
 
-        if self.state == EnemyState.PATROLLING:
+        if self.state == EnemyState.PATROLLING and self.modo_patrulla != "torreta":
             self.manejar_patrullaje(mundo)
-        elif self.state == EnemyState.CHASING:
+        elif self.state == EnemyState.CHASING and self.modo_patrulla != "torreta":
             self.manejar_persecucion(mundo, pantalla_binaria, start, goal, TILE_SIZE)
         elif self.state == EnemyState.ATTACKING:
             self.manejar_ataque(mundo, pantalla_binaria, start, goal)
 
-
     def drop_weapon(self, mundo):
-        if self.modo_patrulla == "elite":
-            drop = PickableWeapon(self.rect_element.centerx / TILE_SIZE, self.rect_element.centery / TILE_SIZE, self.arma_drop)
-            mundo.elementos_por_capa[2].append(drop)
-            mundo.elementos_actualizables.append(drop)
+        drop = PickableWeapon(self.rect_element.centerx / TILE_SIZE, self.rect_element.centery / TILE_SIZE,
+                              self.arma_drop)
+        mundo.elementos_por_capa[2].append(drop)
+        mundo.elementos_actualizables.append(drop)
 
     def manejar_patrullaje(self, mundo):
-        """Controla el movimiento en el estado de patrullaje."""
         if self.modo_patrulla == "circular":
             movimientos = [
                 (self.velocidad, 0, self.rect_element.x >= self.start_x + self.patrol_movement, 1),
@@ -146,16 +132,14 @@ class Enemy(Tank):
 
     def manejar_ataque(self, mundo, pantalla_binaria, start, goal):
         """Gestiona la lógica de ataque."""
-        if not raycasting(pantalla_binaria, start, goal):
+        if not raycasting(pantalla_binaria, start, goal) and self.modo_patrulla != "torreta":
             self.state = EnemyState.CHASING
             self.path = astar(pantalla_binaria, start, goal)
         elif pygame.time.get_ticks() - self.tiempo_ultimo_disparo >= self.arma.cooldown:
-
-            if self.modo_patrulla == "elite":
-                self.arma.activar_secundaria(self, mundo)
+            if self.elite:
+                self.arma.activar_secundaria(mundo)
             else:
                 self.arma.activar(mundo)
-
             self.tiempo_ultimo_disparo = pygame.time.get_ticks()
 
     def calcular_direccion_canon(self, mundo, jugador):
@@ -172,10 +156,10 @@ class Enemy(Tank):
     def en_la_misma_pantalla(self, jugador):
         return (jugador.rect_element.x // TILE_SIZE // 32 == self.indice_mundo_x) and (jugador.rect_element.y // TILE_SIZE // 18 == self.indice_mundo_y)
 
-       
     def dibujar_enemigo(self, pantalla, x, y):
         self.dibujar(pantalla, x, y)
         self.arma.dibujar_arma(pantalla, x, y)
 
     def distancia_jugador(self, jugador):
         return math.hypot(jugador.rect_element.x - self.rect_element.x, jugador.rect_element.y - self.rect_element.y)
+

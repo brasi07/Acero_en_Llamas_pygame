@@ -17,7 +17,7 @@ class Shotgun(Weapon):
         self.frame_actual = 0
         self.ultimo_cambio_frame = 0
 
-    def activar_secundaria(self, tank, mundo):
+    def activar_secundaria(self, mundo):
         self.tiempo_inicio = pygame.time.get_ticks()
         bala_central = Bullet(self)
         bala_izquierda = Bullet(self, self.angulo_cannon - 15)
