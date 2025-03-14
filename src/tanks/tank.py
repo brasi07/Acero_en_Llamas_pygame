@@ -1,9 +1,8 @@
 import pygame
-from ..elements.interactable.interactable import Interactable
-from ..elements.element import Element
-from ..extras.resourcesmanager import ResourceManager
-from ..extras.settings import CollisionLayer, TILE_SIZE
-from ..weapons.weapon import Weapon
+from ..elements import Element
+from ..elements.interactable import Interactable
+from ..extras import CollisionLayer, TILE_SIZE, ResourceManager
+from ..weapons import Weapon
 
 class Tank(Element):
 

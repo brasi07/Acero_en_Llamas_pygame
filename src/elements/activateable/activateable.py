@@ -1,6 +1,6 @@
 import abc
 from ..element import Element
-from ...extras.settings import TILE_SIZE
+from ...extras import TILE_SIZE
 
 class Activateable(Element):
 

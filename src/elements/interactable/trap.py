@@ -1,7 +1,5 @@
 from .interactable import Interactable
-from ...extras.settings import CollisionLayer
-from ...tanks import Player
-
+from ...extras import CollisionLayer
 
 class Trap(Interactable):
     def __init__(self, x, y, imagen):
@@ -14,6 +12,7 @@ class Trap(Interactable):
             self.explotar(objeto)
 
     def explotar(self, jugador):
+        from ...tanks import Player
         if isinstance(jugador, Player):
             self.explotada = True
             jugador.recibir_dano(1)

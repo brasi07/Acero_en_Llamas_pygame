@@ -1,4 +1,4 @@
-from ....extras.settings import RESIZE_PLAYER
+from ....extras import RESIZE_PLAYER
 from ..enemy import Enemy
 
 class WarTrain(Enemy):

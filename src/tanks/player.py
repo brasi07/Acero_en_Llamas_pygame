@@ -1,11 +1,8 @@
 import pygame
-
-from ..extras.resourcesmanager import ResourceManager
-from ..extras.settings import CollisionLayer, RESIZE_PLAYER, EVENTO_JUGADOR_MUERTO, controller
+from ..extras import CollisionLayer, RESIZE_PLAYER, EVENTO_JUGADOR_MUERTO, controller, ResourceManager
 from .tank import Tank
-from ..weapons import *
+from ..weapons import Weapon, Dash, Shotgun, ReboungGun, RocketLauncher, MineLauncher
 from ..singleton import SingletonMeta
-from ..weapons.rocket_launcher import RocketLauncher
 
 
 class Player(Tank, metaclass=SingletonMeta):

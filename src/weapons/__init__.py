@@ -4,3 +4,6 @@ from .shotgun import Shotgun
 from .rebound_gun import ReboungGun
 from .mine_launcher import MineLauncher
 from .rocket_launcher import RocketLauncher
+from .mega_cannon import WeaponMegaCannon
+from .saw import Saw
+from .weapon_pool import WeaponPool

@@ -1,5 +1,4 @@
-from ..extras.resourcesmanager import ResourceManager
-from ..extras.settings import ROJO_TRANSLUCIDO, NEGRO_TRANSLUCIDO, EVENTO_BOSS_MUERTO
+from ..extras import ROJO_TRANSLUCIDO, NEGRO_TRANSLUCIDO, EVENTO_BOSS_MUERTO, ResourceManager
 from .world import World
 
 class World1(World):

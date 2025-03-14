@@ -1,8 +1,7 @@
 import pygame
 
-from ..extras.settings import TIME_FRAME
+from ..extras import TIME_FRAME, ResourceManager
 from .bullets import BouncingBullet
-from ..extras.resourcesmanager import ResourceManager
 from .weapon import Weapon
 
 class ReboungGun(Weapon):

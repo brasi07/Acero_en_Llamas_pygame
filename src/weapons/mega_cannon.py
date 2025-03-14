@@ -1,6 +1,5 @@
 import pygame
-from ..extras.settings import RESIZE_PLAYER, TIME_FRAME
-from ..extras.resourcesmanager import ResourceManager
+from ..extras import RESIZE_PLAYER, TIME_FRAME, ResourceManager
 from .weapon import Weapon
 from .bullets import Bullet
 

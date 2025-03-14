@@ -1,7 +1,5 @@
 import math
-
-from ...extras.resourcesmanager import ResourceManager
-from ...extras.settings import RESIZE_PLAYER
+from ...extras import RESIZE_PLAYER, ResourceManager
 from .bullet import Bullet
 
 class PlasmaBullet(Bullet):

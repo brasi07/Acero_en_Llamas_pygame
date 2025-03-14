@@ -1,6 +1,5 @@
 import pygame
-from ..extras import settings
-from ..extras.resourcesmanager import ResourceManager
+from ..extras import settings, ResourceManager
 from .weapon import Weapon
 
 class Dash(Weapon):

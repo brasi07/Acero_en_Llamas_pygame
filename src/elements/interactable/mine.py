@@ -1,7 +1,6 @@
 import pygame
 from .interactable import Interactable
-from ...extras.resourcesmanager import ResourceManager
-from ...extras.settings import CollisionLayer, TIME_FRAME
+from ...extras import CollisionLayer, TIME_FRAME, ResourceManager
 
 
 class Mine(Interactable):

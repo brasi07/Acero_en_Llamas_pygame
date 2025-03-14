@@ -1,5 +1,5 @@
 from .element import Element
-from ..extras.settings import TILE_SIZE, CollisionLayer
+from ..extras import TILE_SIZE, CollisionLayer
 
 class LowWall(Element):
     def __init__(self, x, y, imagen):

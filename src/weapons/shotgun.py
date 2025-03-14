@@ -1,7 +1,6 @@
 import pygame
-from ..extras import settings
-from .bullets.bullet import Bullet
-from ..extras.resourcesmanager import ResourceManager
+from ..extras import settings, ResourceManager
+from .bullets import Bullet
 from .weapon import Weapon
 
 class Shotgun(Weapon):

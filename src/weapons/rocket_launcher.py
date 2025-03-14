@@ -1,7 +1,6 @@
-from ..extras.resourcesmanager import ResourceManager
+from ..extras import ResourceManager
 from ..weapons import Weapon
-from .bullets.Rocket import Rocket
-
+from .bullets import Rocket
 
 class RocketLauncher(Weapon):
     def __init__(self, tank):

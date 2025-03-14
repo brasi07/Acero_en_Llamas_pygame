@@ -1,11 +1,7 @@
 import math
-
 import pygame
-
-from ...extras.resourcesmanager import ResourceManager
-from ...extras.settings import RESIZE_PLAYER
+from ...extras import RESIZE_PLAYER, ResourceManager
 from .bullet import Bullet
-
 
 class Rocket(Bullet):
     def __init__(self, arma, desplazamiento_lateral):

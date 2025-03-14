@@ -1,9 +1,7 @@
 import time
-
-from ...extras.resourcesmanager import ResourceManager
 from .bullet import Bullet
-from ...elements.interactable.interactable import Interactable
-from ...extras.settings import COLLISION_RULES, CollisionLayer, RESIZE_PLAYER
+from ...elements.interactable import Interactable
+from ...extras import COLLISION_RULES, CollisionLayer, RESIZE_PLAYER, ResourceManager
 
 
 class BouncingBullet(Bullet):
@@ -12,7 +10,8 @@ class BouncingBullet(Bullet):
         super().__init__(arma)
         self.rebote_count = 0
         self.rebote_max = 2
-        self.imagen = ResourceManager.load_and_scale_image("bala_botadora.png", RESIZE_PLAYER * 0.1, RESIZE_PLAYER * 0.1)
+        self.sprites = ResourceManager.load_animation("balas_botadoras.png", 32, 32, 3, RESIZE_PLAYER * 0.13, RESIZE_PLAYER * 0.13)
+        self.imagen = self.sprites[0]
 
     def iniciar_colision(self, elemento):
         if isinstance(elemento, Interactable):
@@ -27,6 +26,7 @@ class BouncingBullet(Bullet):
                 self.collision_layer = CollisionLayer.BULLET_ANY
 
             self.rebote_count += 1
+            self.imagen = self.sprites[self.rebote_count]
 
             self.dano += 1 #se incrementa el daño por rebote
 

@@ -1,12 +1,9 @@
 import pygame
-
-from ...extras.settings import CollisionLayer, TILE_SIZE
-from ...elements.interactable.pickable import PickableWeapon
+from ...extras import CollisionLayer, TILE_SIZE
+from ...elements.interactable import PickableWeapon
 from .astar import *
 from ..tank import Tank
-from ...weapons import Weapon
-from ...weapons.weapon_pool import WeaponPool
-
+from ...weapons import Weapon, WeaponPool
 
 class EnemyState:
     PATROLLING = "patrolling"

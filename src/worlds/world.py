@@ -2,13 +2,13 @@ import re  # Para extraer números del nombre del archivo
 from abc import ABC
 
 import pygame
-from ..extras import settings
-from ..elements import Wall, LowWall, Door
-from ..extras.settings import EVENTO_JUGADOR_MUERTO
+from ..extras import settings, EVENTO_JUGADOR_MUERTO
+from ..elements import Wall, LowWall
+from ..elements.activateable import Door
 from ..menu import PauseMenu
 from ..scene import Scene
+from ..tanks import Player
 from ..tanks.enemies import Enemy
-from ..tanks.player import Player
 from ..ui import Ui
 from .element_factory import ElementFactory
 

@@ -1,7 +1,4 @@
-import pygame
-
-from ..extras.resourcesmanager import ResourceManager
-from ..extras.settings import NEGRO_TRANSLUCIDO
+from ..extras import NEGRO_TRANSLUCIDO, ResourceManager
 from .world import World
 
 class World2(World):

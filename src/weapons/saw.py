@@ -1,9 +1,6 @@
 import pygame
-
-from ..extras.resourcesmanager import ResourceManager
-from ..extras.settings import TIME_FRAME
+from ..extras import TIME_FRAME, ResourceManager
 from .weapon import Weapon
-
 
 class Saw(Weapon):
     DIRECCIONES_ROTACION = {

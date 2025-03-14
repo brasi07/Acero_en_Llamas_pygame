@@ -1,5 +1,5 @@
 from .enemy import Enemy
-from ...extras.settings import RESIZE_PLAYER
+from ...extras import RESIZE_PLAYER
 
 class EnemyPurple(Enemy):
     def __init__(self, x, y, modo_patrulla, elite=False):

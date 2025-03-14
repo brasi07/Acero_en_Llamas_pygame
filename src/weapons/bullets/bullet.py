@@ -1,11 +1,8 @@
 import math
 import time
-
 import numpy as np
-
-from ...extras.resourcesmanager import ResourceManager
-from ...extras.settings import TILE_SIZE
-from ...elements.element import Element
+from ...extras import TILE_SIZE, ResourceManager
+from ...elements import Element
 
 class Bullet(Element):
     # Cargar sprites de colisión una sola vez (variable estática)

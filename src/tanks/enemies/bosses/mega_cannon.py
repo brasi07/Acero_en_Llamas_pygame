@@ -1,7 +1,7 @@
 import pygame
-from ....extras.settings import RESIZE_PLAYER
+from ....extras import RESIZE_PLAYER
 from ..enemy import Enemy
-from ....weapons.mega_cannon import WeaponMegaCannon
+from ....weapons import WeaponMegaCannon
 
 class MegaCannon(Enemy):
     def __init__(self, x, y):

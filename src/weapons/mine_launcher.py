@@ -1,6 +1,6 @@
 import pygame
-from ..elements.interactable.mine import Mine
-from ..extras.settings import TILE_SIZE
+from ..elements.interactable import Mine
+from ..extras import TILE_SIZE
 from .weapon import Weapon
 
 class MineLauncher(Weapon):
