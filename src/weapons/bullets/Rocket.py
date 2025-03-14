@@ -2,9 +2,9 @@ import math
 
 import pygame
 
-from extras.resourcesmanager import ResourceManager
-from extras.settings import RESIZE_PLAYER
-from weapons.bullets import Bullet
+from ...extras.resourcesmanager import ResourceManager
+from ...extras.settings import RESIZE_PLAYER
+from .bullet import Bullet
 
 
 class Rocket(Bullet):

@@ -1,6 +1,6 @@
-from extras.resourcesmanager import ResourceManager
-from extras.settings import ROJO_TRANSLUCIDO, NEGRO_TRANSLUCIDO, EVENTO_BOSS_MUERTO
-from worlds.world import World
+from ..extras.resourcesmanager import ResourceManager
+from ..extras.settings import ROJO_TRANSLUCIDO, NEGRO_TRANSLUCIDO, EVENTO_BOSS_MUERTO
+from .world import World
 
 class World1(World):
     def __init__(self, alto_pantalla, ancho_pantalla, director):
@@ -50,6 +50,6 @@ class World1(World):
 
 
     def manejar_evento_especifico(self, evento):
-        from worlds.world2 import World2
+        from .world2 import World2
         if self.control.change_world(evento) or evento.type == EVENTO_BOSS_MUERTO:
             self.director.cambiar_escena(World2(self.alto_pantalla, self.ancho_pantalla, self.director))

@@ -1,9 +1,7 @@
 import pygame
 
-from controller import KeyboardControl
-from director import Director
-from ui import Ui
-from worlds.world1 import World1
+from .director import Director
+from .worlds.world1 import World1
 
 class Game:
     def __init__(self):

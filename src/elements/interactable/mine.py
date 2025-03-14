@@ -1,7 +1,7 @@
 import pygame
-from elements.interactable.interactable import Interactable
-from extras.resourcesmanager import ResourceManager
-from extras.settings import CollisionLayer, TIME_FRAME
+from .interactable import Interactable
+from ...extras.resourcesmanager import ResourceManager
+from ...extras.settings import CollisionLayer, TIME_FRAME
 
 
 class Mine(Interactable):
@@ -32,7 +32,6 @@ class Mine(Interactable):
             self.objeto_colisionando = False
 
     def interactuar(self, objeto):
-        from tanks.tank import Tank
         if not self.objeto_colisionando and self.check_collision(objeto) and not self.activo:
             objeto.recibir_dano(1)
             self.activo = True

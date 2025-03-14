@@ -1,8 +1,8 @@
 import pygame
 
-from extras.resourcesmanager import ResourceManager
-from extras.settings import NEGRO_TRANSLUCIDO
-from worlds.world import World
+from ..extras.resourcesmanager import ResourceManager
+from ..extras.settings import NEGRO_TRANSLUCIDO
+from .world import World
 
 class World2(World):
     def __init__(self, alto_pantalla, ancho_pantalla, director):
@@ -50,6 +50,6 @@ class World2(World):
 
 
     def manejar_evento_especifico(self, evento):
-        from worlds.world1 import World1
+        from .world1 import World1
         if self.control.change_world(evento):
             self.director.cambiar_escena(World1(self.alto_pantalla, self.ancho_pantalla, self.director))

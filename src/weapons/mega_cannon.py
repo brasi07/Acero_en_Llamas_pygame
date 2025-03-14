@@ -1,8 +1,8 @@
 import pygame
-from extras.settings import RESIZE_PLAYER, TIME_FRAME
-from extras.resourcesmanager import ResourceManager
-from weapons import Weapon
-from weapons.bullets import Bullet
+from ..extras.settings import RESIZE_PLAYER, TIME_FRAME
+from ..extras.resourcesmanager import ResourceManager
+from .weapon import Weapon
+from .bullets import Bullet
 
 class WeaponMegaCannon(Weapon):
     def __init__(self, tank):

@@ -1,11 +1,11 @@
 import pygame
 
-from extras.settings import CollisionLayer, TILE_SIZE
-from elements.interactable.pickable import PickableWeapon
-from tanks.enemies.astar import *
-from tanks.tank import Tank
-from weapons import Weapon
-from weapons.weapon_pool import WeaponPool
+from ...extras.settings import CollisionLayer, TILE_SIZE
+from ...elements.interactable.pickable import PickableWeapon
+from .astar import *
+from ..tank import Tank
+from ...weapons import Weapon
+from ...weapons.weapon_pool import WeaponPool
 
 
 class EnemyState:

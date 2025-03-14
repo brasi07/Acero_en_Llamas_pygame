@@ -1,5 +1,5 @@
 import pygame
-from extras.settings import CollisionLayer, COLLISION_RULES
+from ..extras.settings import CollisionLayer, COLLISION_RULES
 
 class Element:
     def __init__(self, x, y, imagen=None, collision_layer=CollisionLayer.NONE):

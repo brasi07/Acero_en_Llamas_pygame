@@ -2,8 +2,8 @@ from abc import ABC
 
 import pygame
 
-from elements.interactable.interactable import Interactable
-from extras.settings import CollisionLayer
+from .interactable import Interactable
+from ...extras.settings import CollisionLayer
 
 
 class Pickable(ABC, Interactable):
@@ -25,7 +25,7 @@ class PickableWeapon(Pickable):
 
 
     def interactuar(self, objeto):
-        from tanks import Player
+        from ...tanks import Player
         if isinstance(objeto, Player) and self.check_collision(objeto):
             self.eliminar = True
             objeto.cambiar_secundaria(self.weapon)

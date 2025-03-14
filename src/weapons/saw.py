@@ -1,8 +1,8 @@
 import pygame
 
-from extras.resourcesmanager import ResourceManager
-from extras.settings import TIME_FRAME
-from weapons.weapon import Weapon
+from ..extras.resourcesmanager import ResourceManager
+from ..extras.settings import TIME_FRAME
+from .weapon import Weapon
 
 
 class Saw(Weapon):

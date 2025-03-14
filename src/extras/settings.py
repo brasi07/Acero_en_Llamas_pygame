@@ -2,7 +2,7 @@ from enum import Enum
 
 import pygame
 
-from controller import KeyboardControl
+from ..controller import KeyboardControl
 
 controller = KeyboardControl()
 

@@ -1,9 +1,9 @@
 import numpy as np
 import pygame
 
-from extras.settings import RESIZE_PLAYER, COOLDOWN
-from weapons.bullets.bullet import Bullet
-from extras.resourcesmanager import ResourceManager
+from ..extras.settings import RESIZE_PLAYER, COOLDOWN
+from .bullets.bullet import Bullet
+from ..extras.resourcesmanager import ResourceManager
 
 class Weapon:
     def __init__(self, tank):

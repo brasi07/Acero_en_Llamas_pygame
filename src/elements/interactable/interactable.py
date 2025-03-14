@@ -1,6 +1,6 @@
 import abc
-from elements.element import Element
-from extras.settings import TILE_SIZE
+from ..element import Element
+from ...extras.settings import TILE_SIZE
 
 class Interactable(Element):
 

@@ -1,9 +1,9 @@
 import pygame
 
-from extras.settings import RESIZE_PLAYER, TILE_SIZE, EVENTO_BOSS_MUERTO
-from tanks.enemies.astar import astar
-from tanks.enemies.enemy import Enemy, EnemyState
-from weapons.saw import Saw
+from ....extras.settings import RESIZE_PLAYER, TILE_SIZE, EVENTO_BOSS_MUERTO
+from ..astar import astar
+from ..enemy import Enemy, EnemyState
+from ....weapons.saw import Saw
 
 
 class Mecha(Enemy):

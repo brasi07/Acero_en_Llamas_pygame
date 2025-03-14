@@ -1,7 +1,7 @@
-from elements import Button, Trap, LowWall, Decoracion, Wall, Door
-from extras.settings import TILE_SIZE
-from tanks import EnemyRed, EnemyPurple, EnemyGreen, EnemyBrown
-from tanks.enemies.bosses import WarTrain, MegaCannon, Mecha
+from ..elements import Button, Trap, LowWall, Decoracion, Wall, Door
+from ..extras.settings import TILE_SIZE
+from ..tanks import EnemyRed, EnemyPurple, EnemyGreen, EnemyBrown
+from ..tanks.enemies.bosses import WarTrain, MegaCannon, Mecha
 
 class ElementFactory:
     @staticmethod

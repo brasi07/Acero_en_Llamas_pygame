@@ -1,14 +1,12 @@
 import random
 
-from singleton import SingletonMeta
-from weapons import Dash, MineLauncher, Shotgun, ReboungGun, Weapon
-from weapons.rocket_launcher import RocketLauncher
-
+from ..singleton import SingletonMeta
+from ..weapons import Dash, MineLauncher, Shotgun, ReboungGun, RocketLauncher
 
 class WeaponPool(metaclass=SingletonMeta):
 
     def __init__(self):
-        from tanks import Player
+        from ..tanks import Player
         self.pool = [Dash(Player()), Shotgun(Player()), RocketLauncher(Player()), ReboungGun(Player()), MineLauncher(Player())]
         self.number = random.randint(0, len(self.pool) - 1)
 

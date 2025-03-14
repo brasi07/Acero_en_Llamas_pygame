@@ -1,10 +1,9 @@
 import pygame
 
-from extras.settings import RESIZE_PLAYER
-from weapons.bullets.bouncing_bullet import BouncingBullet
-from extras import settings
-from extras.resourcesmanager import ResourceManager
-from weapons.weapon import Weapon
+from ..extras.settings import TIME_FRAME
+from .bullets import BouncingBullet
+from ..extras.resourcesmanager import ResourceManager
+from .weapon import Weapon
 
 class ReboungGun(Weapon):
     def __init__(self, tank):
@@ -28,7 +27,7 @@ class ReboungGun(Weapon):
             tiempo_actual = pygame.time.get_ticks()  # Obtener el tiempo actual
 
             # Si han pasado 30 ms desde el último cambio de frame
-            if tiempo_actual - self.ultimo_cambio_frame >= settings.TIME_FRAME:
+            if tiempo_actual - self.ultimo_cambio_frame >= TIME_FRAME:
                 self.ultimo_cambio_frame = tiempo_actual  # Actualizar el tiempo del último cambio
 
                 if self.frame_actual < len(self.animacion) - 1:

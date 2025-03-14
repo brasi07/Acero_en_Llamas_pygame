@@ -2,8 +2,8 @@ import csv
 import os
 from pathlib import Path
 
-from extras import spritesheet
-from extras.settings import RESIZE_PLAYER, ELIMINAR_FONDO, TILE_SIZE, RESIZE_CANNON
+from ..extras import spritesheet
+from ..extras.settings import RESIZE_PLAYER, ELIMINAR_FONDO, TILE_SIZE, RESIZE_CANNON
 
 import pygame
 

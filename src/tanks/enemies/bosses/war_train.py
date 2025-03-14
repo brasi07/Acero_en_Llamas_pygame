@@ -1,5 +1,5 @@
-from extras.settings import RESIZE_PLAYER
-from tanks.enemies.enemy import Enemy
+from ....extras.settings import RESIZE_PLAYER
+from ..enemy import Enemy
 
 class WarTrain(Enemy):
     def __init__(self, x, y):

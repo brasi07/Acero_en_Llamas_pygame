@@ -1,8 +1,5 @@
-import random
-
-from tanks.enemies.enemy import Enemy
-from extras.settings import RESIZE_PLAYER
-
+from .enemy import Enemy
+from ...extras.settings import RESIZE_PLAYER
 
 class EnemyRed(Enemy):
     def __init__(self, x, y, modo_patrulla, elite=False):

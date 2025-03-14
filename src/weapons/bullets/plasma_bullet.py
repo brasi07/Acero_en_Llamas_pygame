@@ -1,9 +1,8 @@
 import math
 
-from extras.resourcesmanager import ResourceManager
-from extras.settings import RESIZE_PLAYER
-from weapons.bullets import Bullet
-
+from ...extras.resourcesmanager import ResourceManager
+from ...extras.settings import RESIZE_PLAYER
+from .bullet import Bullet
 
 class PlasmaBullet(Bullet):
     def __init__(self, arma):

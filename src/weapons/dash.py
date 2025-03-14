@@ -1,7 +1,7 @@
 import pygame
-from extras import settings
-from extras.resourcesmanager import ResourceManager
-from weapons.weapon import Weapon
+from ..extras import settings
+from ..extras.resourcesmanager import ResourceManager
+from .weapon import Weapon
 
 class Dash(Weapon):
     def __init__(self, tank):

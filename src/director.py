@@ -1,5 +1,5 @@
 import pygame
-from extras.settings import ANCHO, ALTO, FPS
+from .extras.settings import ANCHO, ALTO, FPS
 
 
 class Director:

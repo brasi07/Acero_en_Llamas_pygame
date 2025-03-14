@@ -1,6 +1,6 @@
 import pygame
-from elements.interactable.interactable import Interactable
-from extras.settings import CollisionLayer, TILE_SIZE
+from .interactable import Interactable
+from ...extras.settings import CollisionLayer, TILE_SIZE
 
 class Button(Interactable):
     def __init__(self, x, y, sprite, objetos_a_activar, mundo):

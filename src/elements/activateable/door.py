@@ -1,5 +1,5 @@
-from elements.activateable.activateable import Activateable
-from extras.settings import CollisionLayer
+from .activateable import Activateable
+from ...extras.settings import CollisionLayer
 
 class Door(Activateable):
     def __init__(self, x, y, sprite_cerrado, sprite_abierto):

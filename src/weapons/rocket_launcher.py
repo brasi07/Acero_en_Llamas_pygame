@@ -1,6 +1,6 @@
-from extras.resourcesmanager import ResourceManager
-from weapons import Weapon
-from weapons.bullets.Rocket import Rocket
+from ..extras.resourcesmanager import ResourceManager
+from ..weapons import Weapon
+from .bullets.Rocket import Rocket
 
 
 class RocketLauncher(Weapon):

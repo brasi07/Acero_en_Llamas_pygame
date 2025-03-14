@@ -2,8 +2,8 @@ from abc import abstractmethod
 
 import pygame
 
-from extras.settings import ANCHO, ALTO, VERDE
-from scene import Scene
+from .extras.settings import ANCHO, ALTO, VERDE
+from .scene import Scene
 
 
 class Menu(Scene):

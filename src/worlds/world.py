@@ -2,15 +2,15 @@ import re  # Para extraer números del nombre del archivo
 from abc import ABC
 
 import pygame
-from extras import settings
-from elements import Wall, LowWall, Door
-from extras.settings import EVENTO_JUGADOR_MUERTO
-from menu import PauseMenu
-from scene import Scene
-from tanks.enemies import Enemy
-from tanks.player import Player
-from ui import Ui
-from worlds.element_factory import ElementFactory
+from ..extras import settings
+from ..elements import Wall, LowWall, Door
+from ..extras.settings import EVENTO_JUGADOR_MUERTO
+from ..menu import PauseMenu
+from ..scene import Scene
+from ..tanks.enemies import Enemy
+from ..tanks.player import Player
+from ..ui import Ui
+from .element_factory import ElementFactory
 
 
 class World(Scene, ABC):

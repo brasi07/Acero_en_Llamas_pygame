@@ -1,6 +1,6 @@
-from elements.interactable.interactable import Interactable
-from extras.settings import CollisionLayer
-from tanks import Player
+from .interactable import Interactable
+from ...extras.settings import CollisionLayer
+from ...tanks import Player
 
 
 class Trap(Interactable):

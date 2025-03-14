@@ -1,9 +1,9 @@
 import time
 
-from extras.resourcesmanager import ResourceManager
-from weapons.bullets.bullet import Bullet
-from elements.interactable.interactable import Interactable
-from extras.settings import COLLISION_RULES, CollisionLayer, RESIZE_PLAYER
+from ...extras.resourcesmanager import ResourceManager
+from .bullet import Bullet
+from ...elements.interactable.interactable import Interactable
+from ...extras.settings import COLLISION_RULES, CollisionLayer, RESIZE_PLAYER
 
 
 class BouncingBullet(Bullet):
