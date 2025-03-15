@@ -10,7 +10,7 @@ class ElementFactory:
     def create_element(valor, x, y, sprites, puertas, game_instance):
         """Crea una instancia del elemento correspondiente al valor."""
         if 5100 <= valor <= 5199:  # Puertas
-            elemento = Door(x, y, sprites[1315], sprites[580])
+            elemento = Door(x, y, sprites[1315], sprites[4000])
             pos = valor - 5100
             if pos not in puertas:
                 puertas[pos] = []

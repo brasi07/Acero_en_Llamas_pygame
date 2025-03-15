@@ -47,6 +47,6 @@ class World2(World):
 
 
     def manejar_evento_especifico(self, evento):
-        from .world1 import World1
+        from .world3 import World3
         if self.control.change_world(evento):
-            self.director.cambiar_escena(World1(self.alto_pantalla, self.ancho_pantalla, self.director))
+            self.director.cambiar_escena(World3(self.alto_pantalla, self.ancho_pantalla, self.director))
