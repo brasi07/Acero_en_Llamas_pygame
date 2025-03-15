@@ -10,7 +10,7 @@ class Player(Tank, metaclass=SingletonMeta):
     def __init__(self):
 
         # Llamamos primero al constructor de la clase base (Tank)
-        super().__init__(4, 10, 0, 0, RESIZE_PLAYER, RESIZE_PLAYER, collision_layer=CollisionLayer.PLAYER, tank_type="jugador")
+        super().__init__(4, 3, 0, 0, RESIZE_PLAYER, RESIZE_PLAYER, collision_layer=CollisionLayer.PLAYER, tank_type="jugador")
 
         # Equipamos armas
         self.armas = [Weapon(self), Dash(self), Shotgun(self), ReboungGun(self), RocketLauncher(self), MineLauncher(self)]  # Lista de armas
