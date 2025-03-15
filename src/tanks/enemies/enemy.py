@@ -147,8 +147,9 @@ class Enemy(Tank):
         return dirx, diry
     
     def patrullar(self):
-        self.state = EnemyState.PATROLLING
-        self.establecer_posicion(self.start_x, self.start_y)
+        if self.modo_patrulla != "torreta":
+            self.state = EnemyState.PATROLLING
+            self.establecer_posicion(self.start_x, self.start_y)
 
     def en_la_misma_pantalla(self, jugador):
         return (jugador.rect_element.x // TILE_SIZE // 32 == self.indice_mundo_x) and (jugador.rect_element.y // TILE_SIZE // 18 == self.indice_mundo_y)
