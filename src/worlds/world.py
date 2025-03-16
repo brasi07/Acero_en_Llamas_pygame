@@ -72,7 +72,6 @@ class World(Scene, ABC):
                 valor = int(valor)  # Asegurar que es un número
 
                 elemento = ElementFactory.create_element(valor, x, y, sprites, puertas, self)
-
                 if elemento:
                     lista_elementos.append(elemento)
 

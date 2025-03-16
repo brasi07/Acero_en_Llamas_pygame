@@ -48,7 +48,7 @@ class Bullet(Element):
                 return False  # No eliminar aún, esperar animación
         return False
 
-    def iniciar_colision(self):
+    def iniciar_colision(self, elemento=None):
         """Activa la animación de colisión y detiene el movimiento."""
         self.colisionando = True
         self.tiempo_colision = time.time()

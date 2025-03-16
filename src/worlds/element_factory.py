@@ -1,5 +1,5 @@
 from ..elements import LowWall, Decoracion, Wall
-from ..elements.interactable import Button, Trap
+from ..elements.interactable import Button, Trap, IceCube
 from ..elements.activateable import Door
 from ..extras import TILE_SIZE
 from ..tanks.enemies import EnemyRed, EnemyPurple, EnemyGreen, EnemyBrown
@@ -36,9 +36,14 @@ class ElementFactory:
             pos = valor - 5000
             puertas_a_activar = puertas.get(pos)
             return Button(x, y, sprites[2142], puertas_a_activar, game_instance)
-
         elif valor in game_instance.traps:
-            return Trap(x, y, sprites[valor])
+            from . import World1, World2
+            if isinstance(game_instance, World1):
+                return Trap(x, y, sprites[valor])
+            elif isinstance(game_instance, World2):
+                return IceCube(x, y, sprites[valor])
+            else:
+                return Trap(x, y, sprites[valor])
         elif valor in game_instance.lowWalls:
             return LowWall(x, y, sprites[valor])
         elif valor in game_instance.decorations:

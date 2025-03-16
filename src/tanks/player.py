@@ -18,6 +18,8 @@ class Player(Tank, metaclass=SingletonMeta):
         self.colision_layer_balas = CollisionLayer.BULLET_PLAYER
         self.barra_vida = ResourceManager.load_animation(f"vida_jugador.png", 48, 7, 5, resizex=5, resizey=0.5)
         self.control = controller
+        self.posx_change_screen = self.rect_element.x
+        self.posy_change_screen = self.rect_element.y
 
     def eventos(self, mundo):
         teclas = pygame.key.get_pressed()
@@ -47,12 +49,20 @@ class Player(Tank, metaclass=SingletonMeta):
 
     def verificar_fuera_pantalla(self, mundo):
         if self.rect_element.right > mundo.camara_x + mundo.ancho_pantalla + 50:
+            self.posx_change_screen = self.rect_element.x
+            self.posy_change_screen = self.rect_element.y
             mundo.cambiar_pantalla("derecha")
         elif self.rect_element.left < mundo.camara_x - 50:
+            self.posx_change_screen = self.rect_element.x
+            self.posy_change_screen = self.rect_element.y
             mundo.cambiar_pantalla("izquierda")
         elif self.rect_element.bottom > mundo.camara_y + mundo.alto_pantalla + 50:
+            self.posx_change_screen = self.rect_element.x
+            self.posy_change_screen = self.rect_element.y
             mundo.cambiar_pantalla("abajo")
         elif self.rect_element.top < mundo.camara_y - 50:
+            self.posx_change_screen = self.rect_element.x
+            self.posy_change_screen = self.rect_element.y
             mundo.cambiar_pantalla("arriba")
 
     def gestionar_armas(self, mundo, teclas):

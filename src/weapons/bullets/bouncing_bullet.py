@@ -62,11 +62,11 @@ class BouncingBullet(Bullet):
         # Verificar colisiones con los elementos del mundo
         for elemento in mundo.elementos_por_capa.get(2, []):  # Evita KeyError si la capa no existe
             if self.check_collision(elemento):
-
-                if self.realizar_dano(elemento):
-                    self.rebote_count = self.rebote_max
-
-                self.iniciar_colision(elemento)
+                if hasattr(elemento, "vida"):
+                    if self.realizar_dano(elemento):
+                        self.rebote_count = self.rebote_max
+                else:
+                    self.iniciar_colision(elemento)
                 return False  # No eliminar aún, esperar animación
 
         # Verificar si la bala sale de la pantalla

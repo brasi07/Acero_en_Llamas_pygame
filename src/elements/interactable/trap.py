@@ -4,15 +4,14 @@ from ...extras import CollisionLayer
 class Trap(Interactable):
     def __init__(self, x, y, imagen):
         super().__init__(x, y, imagen, CollisionLayer.INTERACTUABLE)
-        self.explotada=False
 
     def interactuar(self, objeto):
         # Suponiendo que el mundo tiene una referencia al jugador: mundo.jugador
-        if not self.explotada and self.check_collision(objeto):
+        if self.check_collision(objeto) and not self.eliminar:
             self.explotar(objeto)
 
     def explotar(self, jugador):
         from ...tanks import Player
         if isinstance(jugador, Player):
-            self.explotada = True
+            self.eliminar = True
             jugador.recibir_dano(1)
