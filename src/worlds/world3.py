@@ -9,7 +9,7 @@ class World3(World):
         world_number = 3
         self.hasSky = False
         self.traps = (-2, -2)
-        self.lowWalls = (1410, 2038)
+        self.lowWalls = (1410, 12, 13, 16, 679, 680)
         self.decorations = (1484, 2142)
 
         self.CONEXIONES = [
