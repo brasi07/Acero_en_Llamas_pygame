@@ -1,7 +1,7 @@
 import pygame
 from ..extras import CollisionLayer, RESIZE_PLAYER, EVENTO_JUGADOR_MUERTO, controller, ResourceManager
 from .tank import Tank
-from ..weapons import Weapon, Dash, Shotgun, ReboungGun, RocketLauncher, MineLauncher
+from ..weapons import Weapon, Dash, Shotgun, ReboungGun, RocketLauncher, MineLauncher, Shield
 from ..singleton import SingletonMeta
 
 
@@ -13,7 +13,7 @@ class Player(Tank, metaclass=SingletonMeta):
         super().__init__(4, 3, 0, 0, RESIZE_PLAYER, RESIZE_PLAYER, collision_layer=CollisionLayer.PLAYER, tank_type="jugador")
 
         # Equipamos armas
-        self.armas = [Weapon(self), Dash(self), Shotgun(self), ReboungGun(self), RocketLauncher(self), MineLauncher(self)]  # Lista de armas
+        self.armas = [Weapon(self), Dash(self), Shotgun(self), ReboungGun(self), RocketLauncher(self), MineLauncher(self), Shield(self)]  # Lista de armas
         self.armas_pos = 0  # Índice de arma secundaria equipada
         self.colision_layer_balas = CollisionLayer.BULLET_PLAYER
         self.barra_vida = ResourceManager.load_animation(f"vida_jugador.png", 48, 7, 5, resizex=5, resizey=0.5)
@@ -66,6 +66,8 @@ class Player(Tank, metaclass=SingletonMeta):
             mundo.cambiar_pantalla("arriba")
 
     def gestionar_armas(self, mundo, teclas):
+        tiempo_actual = pygame.time.get_ticks()
+
         if self.control.principal(teclas):
             if pygame.time.get_ticks() - self.tiempo_ultimo_disparo >= 1000:
                 self.arma.activar(mundo)
@@ -73,6 +75,11 @@ class Player(Tank, metaclass=SingletonMeta):
 
         if self.control.secundaria(teclas):
             self.usar_arma_especial(mundo)
+
+        if tiempo_actual - self.ultimo_uso_secundaria >= self.arma.cooldown and hasattr(self.arma, "activar_secundaria"):
+            mundo.ui.set_cursor2()
+        else:
+            mundo.ui.set_cursor1()
 
     def cambiar_arma_secundaria(self):
         # Cambia a la siguiente arma en la lista (ciclo circular)

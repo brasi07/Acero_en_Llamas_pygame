@@ -20,7 +20,6 @@ class World(Scene, ABC):
 
         self.ui = Ui()
         self.control = settings.controller
-        self.ui.set_cursor()
 
         self.player = Player()
 

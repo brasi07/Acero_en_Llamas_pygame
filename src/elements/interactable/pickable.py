@@ -1,7 +1,8 @@
 import pygame
 from abc import ABC
 from .interactable import Interactable
-from ...extras import CollisionLayer
+from ...extras import CollisionLayer, EVENTO_COLECCIONABLE_RECOGIDO
+
 
 class Pickable(ABC, Interactable):
 
@@ -38,6 +39,18 @@ class PickableWeapon(Pickable):
     def interactuar(self, objeto):
         from ...tanks import Player
         if isinstance(objeto, Player) and self.check_collision(objeto):
-            self.eliminar = True
             objeto.cambiar_secundaria(self.weapon)
+            self.eliminar = True
+
+class PickableCollectable(Pickable):
+
+    def __init__(self, x, y, weapon):
+        self.weapon = weapon
+        super().__init__(x, y, weapon.get_pickable_image())
+
+    def interactuar(self, objeto):
+        from ...tanks import Player
+        if isinstance(objeto, Player) and self.check_collision(objeto):
+            pygame.event.post(pygame.event.Event(EVENTO_COLECCIONABLE_RECOGIDO))
+            self.eliminar = True
 

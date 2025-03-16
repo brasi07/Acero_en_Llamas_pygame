@@ -16,6 +16,8 @@ class Weapon:
         self.rect_canon = self.imagen_canon.get_rect(center=tank.rect_element.center)
         self.rect_accesorio = None
 
+        self.under_weapon = True
+
         self.cooldown = COOLDOWN
 
         self.angulo_cannon = 0
@@ -39,16 +41,17 @@ class Weapon:
         self.imagen_accesorio = self.imagenes_accesorio_base
 
     def dibujar_arma(self, pantalla, x, y):
-        if self.imagen_accesorio: #dibujar arma secundaria si necesario
+        if self.imagen_accesorio and self.under_weapon: #dibujar arma secundaria si necesario
             self.rect_accesorio = self.imagen_accesorio.get_rect(top=self.tank.rect_element.bottom)
             pantalla.blit(self.imagen_accesorio, (self.tank.rect_element.centerx - self.rect_accesorio.width // 2 - x, self.tank.rect_element.centery - self.tank.rect_element.height // 2 - y))
 
         pantalla.blit(self.imagen_canon, (self.tank.rect_element.centerx - self.rect_canon.width // 2 - x, self.tank.rect_element.centery - self.rect_canon.height // 2 - y))
 
-    def dibujar_minas(self,mundo):
-        pass
+        if self.imagen_accesorio and not self.under_weapon: #dibujar arma secundaria si necesario
+            self.rect_accesorio = self.imagen_accesorio.get_rect(top=self.tank.rect_element.bottom)
+            pantalla.blit(self.imagen_accesorio, (self.tank.rect_element.centerx - self.rect_accesorio.width // 2 - x, self.tank.rect_element.centery - self.tank.rect_element.height // 2 - y))
 
-    def activar_secundaria(self, mundo, tank=None):
+    def dibujar_minas(self,mundo):
         pass
 
     def update_secundaria(self, tank, mundo):

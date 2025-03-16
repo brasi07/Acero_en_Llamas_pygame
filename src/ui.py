@@ -11,14 +11,21 @@ class Ui(metaclass=SingletonMeta):
     def __init__(self):
         """Inicializa la UI con la pantalla y el tanque del jugador."""
         self.font = pygame.font.Font(None, 36)  # Fuente para los textos
-        self.cursor_image = ResourceManager.load_and_scale_image("mirilla.png", 0.75, 0.75)  # Cursor personalizado
-        self.set_cursor()
+        self.cursor_image1 = ResourceManager.load_and_scale_image("mirilla.png", 0.75, 0.75)  # Cursor personalizado
+        self.cursor_image2 = ResourceManager.load_and_scale_image("mirilla2.png", 0.75, 0.75)
+        self.set_cursor1()
 
 
-    def set_cursor(self):
+    def set_cursor1(self):
         """Establece un cursor personalizado."""
-        cursor_size = (self.cursor_image.get_width() // 2, self.cursor_image.get_height() // 2)
-        cursor = pygame.cursors.Cursor(cursor_size, self.cursor_image)
+        cursor_size = (self.cursor_image1.get_width() // 2, self.cursor_image1.get_height() // 2)
+        cursor = pygame.cursors.Cursor(cursor_size, self.cursor_image1)
+        pygame.mouse.set_cursor(cursor)
+
+    def set_cursor2(self):
+        """Establece un cursor personalizado."""
+        cursor_size = (self.cursor_image2.get_width() // 2, self.cursor_image2.get_height() // 2)
+        cursor = pygame.cursors.Cursor(cursor_size, self.cursor_image2)
         pygame.mouse.set_cursor(cursor)
 
     def dibujar_minimapa(self, jugador, mundo, pantalla):

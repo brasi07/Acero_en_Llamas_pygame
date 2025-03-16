@@ -6,4 +6,5 @@ from .mine_launcher import MineLauncher
 from .rocket_launcher import RocketLauncher
 from .mega_cannon import WeaponMegaCannon
 from .saw import Saw
+from .shield import Shield
 from .weapon_pool import WeaponPool

@@ -47,7 +47,6 @@ class World1(World):
 
         self.mapas_binarios = self.generar_mapas_binarios()
 
-
     def manejar_evento_especifico(self, evento):
         from .world2 import World2
         if self.control.change_world(evento) or evento.type == EVENTO_BOSS_MUERTO:
