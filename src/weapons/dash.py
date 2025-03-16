@@ -1,12 +1,12 @@
 import pygame
-from ..extras import settings, ResourceManager
+from ..extras import ResourceManager, RESIZE_PLAYER
 from .weapon import Weapon
 
 class Dash(Weapon):
     def __init__(self, tank):
         super().__init__(tank)
         self.nombre_sprite = "dash"
-        self.imagenes_accesorio_base = ResourceManager.load_sprites(settings.RESIZE_PLAYER, settings.RESIZE_PLAYER, "dash")
+        self.imagenes_accesorio_base = ResourceManager.load_sprites(RESIZE_PLAYER, RESIZE_PLAYER, "dash")
 
         self.duracion_ms = 200  # Duración total del Dash en milisegundos
         self.tiempo_inicio = None

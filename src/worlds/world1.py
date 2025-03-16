@@ -52,3 +52,4 @@ class World1(World):
         from .world2 import World2
         if self.control.change_world(evento) or evento.type == EVENTO_BOSS_MUERTO:
             self.director.cambiar_escena(World2(self.alto_pantalla, self.ancho_pantalla, self.director))
+            self.player.vida = self.player.vida_inicial
