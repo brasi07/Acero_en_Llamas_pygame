@@ -9,6 +9,7 @@ class RocketLauncher(Weapon):
         self.imagen_canon_base = self.sprites[11]
         self.rocket_counter = 5
         self.posRocket = -30
+        self.cooldown = 200
 
     def activar_secundaria(self, mundo, tank=None):
         if self.rocket_counter == 0:

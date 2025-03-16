@@ -1,5 +1,5 @@
 import pygame
-from ..extras import ResourceManager, RESIZE_PLAYER
+from ..extras import ResourceManager, RESIZE_PLAYER, COOLDOWN
 from .weapon import Weapon
 
 class Dash(Weapon):
@@ -11,6 +11,7 @@ class Dash(Weapon):
         self.duracion_ms = 200  # Duración total del Dash en milisegundos
         self.tiempo_inicio = None
         self.activo = False
+        self.cooldown = COOLDOWN
 
         self.velocidad_dash = 0.1  # Velocidad del Dash (píxeles por milisegundo)
         self.dx = 0

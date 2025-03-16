@@ -132,7 +132,7 @@ class Enemy(Tank):
         if not raycasting(pantalla_binaria, start, goal) and self.modo_patrulla != "torreta":
             self.state = EnemyState.CHASING
             self.path = astar(pantalla_binaria, start, goal)
-        elif pygame.time.get_ticks() - self.tiempo_ultimo_disparo >= self.arma.cooldown:
+        elif self.arma.cooldown and pygame.time.get_ticks() - self.tiempo_ultimo_disparo >= self.arma.cooldown:
             if self.elite:
                 self.arma.activar_secundaria(mundo)
             else:

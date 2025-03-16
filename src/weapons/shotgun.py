@@ -1,5 +1,5 @@
 import pygame
-from ..extras import settings, ResourceManager, RESIZE_CANNON
+from ..extras import settings, ResourceManager, RESIZE_CANNON, COOLDOWN
 from .bullets import Bullet
 from .weapon import Weapon
 
@@ -21,7 +21,7 @@ class Shotgun(Weapon):
 
 
         self.activo = False
-
+        self.cooldown = COOLDOWN
         self.frame_actual = 0
         self.ultimo_cambio_frame = 0
 

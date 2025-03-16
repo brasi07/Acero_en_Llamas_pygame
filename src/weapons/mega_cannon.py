@@ -1,5 +1,5 @@
 import pygame
-from ..extras import RESIZE_PLAYER, TIME_FRAME, ResourceManager
+from ..extras import RESIZE_PLAYER, TIME_FRAME, ResourceManager, COOLDOWN
 from .weapon import Weapon
 from .bullets import Bullet
 
@@ -10,6 +10,8 @@ class WeaponMegaCannon(Weapon):
         self.animacion = ResourceManager.load_animation("mega_canon.png", 128, 128, 11, RESIZE_PLAYER * 2, RESIZE_PLAYER * 2)
         self.imagen_canon_base = self.animacion[0]
         self.activo = False
+        self.cooldown = COOLDOWN
+
 
         self.frame_actual = 0
         self.ultimo_cambio_frame = 0

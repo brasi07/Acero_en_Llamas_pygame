@@ -23,6 +23,8 @@ class Saw(Weapon):
         self.ultimo_cambio_frame = 0
         self.ultimo_golpe = 0  # Guarda el tiempo del último golpe
         self.tiempo_actual = 0
+        self.cooldown = 1000
+
 
     def activar_secundaria(self, mundo, jugador):
         if self.tiempo_actual - self.ultimo_golpe > 1000:

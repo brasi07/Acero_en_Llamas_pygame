@@ -1,6 +1,6 @@
 import numpy as np
 import pygame
-from ..extras import RESIZE_PLAYER, COOLDOWN, ResourceManager
+from ..extras import RESIZE_PLAYER, ResourceManager
 from .bullets import Bullet
 
 class Weapon:
@@ -15,11 +15,9 @@ class Weapon:
 
         self.rect_canon = self.imagen_canon.get_rect(center=tank.rect_element.center)
         self.rect_accesorio = None
+        self.cooldown = None
 
         self.under_weapon = True
-
-        self.cooldown = COOLDOWN
-
         self.angulo_cannon = 0
 
     def activar(self, mundo):
@@ -52,6 +50,9 @@ class Weapon:
             pantalla.blit(self.imagen_accesorio, (self.tank.rect_element.centerx - self.rect_accesorio.width // 2 - x, self.tank.rect_element.centery - self.tank.rect_element.height // 2 - y))
 
     def dibujar_minas(self,mundo):
+        pass
+
+    def activar_secundaria(self, mundo, tank=None):
         pass
 
     def update_secundaria(self, tank, mundo):

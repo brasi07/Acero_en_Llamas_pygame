@@ -1,6 +1,6 @@
 import pygame
 
-from ..extras import TIME_FRAME, ResourceManager, RESIZE_CANNON
+from ..extras import TIME_FRAME, ResourceManager, RESIZE_CANNON, COOLDOWN
 from .bullets import BouncingBullet
 from .weapon import Weapon
 
@@ -18,6 +18,7 @@ class ReboungGun(Weapon):
             self.animacion = ResourceManager.load_animation(f"weapons{tank.tank_level}_128x128.png", 128, 128, 16, RESIZE_CANNON, RESIZE_CANNON)
             self.imagen_canon_base = self.animacion[4]
         self.activo = False
+        self.cooldown = COOLDOWN
 
         self.frame_actual = 0
         self.ultimo_cambio_frame = 0

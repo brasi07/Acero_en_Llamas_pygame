@@ -1,6 +1,6 @@
 import pygame
 from ..elements.interactable import Mine
-from ..extras import TILE_SIZE, ResourceManager, RESIZE_PLAYER
+from ..extras import TILE_SIZE, ResourceManager, RESIZE_PLAYER, COOLDOWN
 from .weapon import Weapon
 
 class MineLauncher(Weapon):
@@ -9,6 +9,8 @@ class MineLauncher(Weapon):
         self.tiempo_inicio = pygame.time.get_ticks()
         self.imagenes_accesorio_base = ResourceManager.load_sprites(RESIZE_PLAYER, RESIZE_PLAYER, "mines")
         self.activo = False
+        self.cooldown = COOLDOWN
+
 
     def activar_secundaria(self, mundo, tank=None):
         self.activo = True

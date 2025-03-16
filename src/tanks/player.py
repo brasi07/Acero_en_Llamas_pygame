@@ -76,7 +76,7 @@ class Player(Tank, metaclass=SingletonMeta):
         if self.control.secundaria(teclas):
             self.usar_arma_especial(mundo)
 
-        if tiempo_actual - self.ultimo_uso_secundaria >= self.arma.cooldown and hasattr(self.arma, "activar_secundaria"):
+        if  self.arma.cooldown and tiempo_actual - self.ultimo_uso_secundaria >= self.arma.cooldown:
             mundo.ui.set_cursor2()
         else:
             mundo.ui.set_cursor1()
