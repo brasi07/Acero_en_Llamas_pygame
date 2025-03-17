@@ -20,6 +20,10 @@ class Player(Tank, metaclass=SingletonMeta):
         self.control = controller
         self.posx_change_screen = self.rect_element.x
         self.posy_change_screen = self.rect_element.y
+        self.deslizar=False
+        self.anterior_mov_x=0
+        self.anterior_mov_y = 0
+        self.contador_desliz=0
 
     def eventos(self, mundo):
         teclas = pygame.key.get_pressed()
@@ -35,17 +39,26 @@ class Player(Tank, metaclass=SingletonMeta):
         self.arma.update_secundaria(self, mundo)
         self.arma.update(mundo=mundo)
         self.verificar_fuera_pantalla(mundo)
+        if self.contador_desliz <5:
+            self.deslizar=False
+        else:
+            self.contador_desliz=self.contador_desliz+1
 
     def mover(self, mundo):
         self.actualizar_posicion(self.movimiento_x, self.movimiento_y, mundo)
 
     def obtener_movimiento(self, teclas):
-        mov_x = (self.control.derecha(teclas) - self.control.izquierda(teclas)) * self.velocidad
-        mov_y = (self.control.abajo(teclas) - self.control.arriba(teclas)) * self.velocidad
-        if mov_x != 0 and mov_y != 0:
-            mov_x *= 0.707
-            mov_y *= 0.707
-        return mov_x, mov_y
+        if self.deslizar==False:
+            mov_x = (self.control.derecha(teclas) - self.control.izquierda(teclas)) * self.velocidad
+            mov_y = (self.control.abajo(teclas) - self.control.arriba(teclas)) * self.velocidad
+            if mov_x != 0 and mov_y != 0:
+                mov_x *= 0.707
+                mov_y *= 0.707
+            self.anterior_mov_x = mov_x
+            self.anterior_mov_y = mov_y
+            return mov_x, mov_y
+        else:
+            return self.anterior_mov_x,self.anterior_mov_y
 
     def verificar_fuera_pantalla(self, mundo):
         if self.rect_element.right > mundo.camara_x + mundo.ancho_pantalla + 50:

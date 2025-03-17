@@ -1,9 +1,11 @@
 from ..elements import LowWall, Decoracion, Wall
-from ..elements.interactable import Button, Trap, IceCube
+from ..elements.interactable import Button, Trap, IceCube, IceFloor
 from ..elements.activateable import Door
 from ..extras import TILE_SIZE
 from ..tanks.enemies import EnemyRed, EnemyPurple, EnemyGreen, EnemyBrown
 from ..tanks.enemies.bosses import WarTrain, MegaCannon, Mecha
+
+
 
 class ElementFactory:
     @staticmethod
@@ -31,6 +33,8 @@ class ElementFactory:
             return MegaCannon(x, y)
         elif valor == 7402:
             return WarTrain(x, y)
+        elif valor == 1234: #valor provisional
+            return IceFloor(x,y)
 
         elif 5000 <= valor <= 5099:  # Botones
             pos = valor - 5000

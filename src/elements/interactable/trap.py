@@ -8,10 +8,10 @@ class Trap(Interactable):
     def interactuar(self, objeto):
         # Suponiendo que el mundo tiene una referencia al jugador: mundo.jugador
         if self.check_collision(objeto) and not self.eliminar:
-            self.explotar(objeto)
+            self.deslizar(objeto)
 
-    def explotar(self, jugador):
+    def deslizar(self, jugador):
         from ...tanks import Player
-        if isinstance(jugador, Player):
-            self.eliminar = True
-            jugador.recibir_dano(1)
+        #if isinstance(jugador, Player): #Si queremos solo jugador
+        self.eliminar = True
+        jugador.establecer_posicion(jugador.posx_change_screen, jugador.posy_change_screen)
