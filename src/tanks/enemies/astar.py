@@ -51,7 +51,7 @@ def astar(grid, start, goal):
                     continue  # Bloqueo en la esquina
 
             # Costo base del movimiento
-            move_cost = 1.414 if abs(dx) + abs(dy) == 2 else 1
+            move_cost = 14 if abs(dx) + abs(dy) == 2 else 10
             
             # Usamos la función de raycasting para ver si hay línea de visión
             if not raycasting(grid, neighbor, goal):
