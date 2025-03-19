@@ -16,7 +16,7 @@ class MineLauncher(Weapon):
         self.activo = True
         self.tiempo_inicio = pygame.time.get_ticks()
         nova_mina = Mine(self.tank.rect_element.centerx / TILE_SIZE, self.tank.rect_element.centery / TILE_SIZE)
-        mundo.elementos_por_capa[2].append(nova_mina)
+        mundo.elementos_por_capa_y_pantalla[2][nova_mina.fila_pantalla][nova_mina.col_pantalla].append(nova_mina)
         mundo.elementos_actualizables.append(nova_mina)
         mundo.add_mine(nova_mina)
 

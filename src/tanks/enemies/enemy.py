@@ -73,7 +73,7 @@ class Enemy(Tank):
     def drop_weapon(self, mundo):
         drop = PickableWeapon(self.rect_element.centerx / TILE_SIZE, self.rect_element.centery / TILE_SIZE,
                               self.arma_drop)
-        mundo.elementos_por_capa[2].append(drop)
+        mundo.elementos_por_capa_y_pantalla[2][self.indice_mundo_x][self.indice_mundo_y].append(drop)
         mundo.elementos_actualizables.append(drop)
 
     def manejar_patrullaje(self, mundo):

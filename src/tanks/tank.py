@@ -1,7 +1,7 @@
 import pygame
 from ..elements import Element
 from ..elements.interactable import Interactable
-from ..extras import CollisionLayer, TILE_SIZE, ResourceManager
+from ..extras import CollisionLayer, TILE_SIZE, ResourceManager, ANCHO, ALTO
 from ..weapons import Weapon
 
 class Tank(Element):
@@ -45,10 +45,11 @@ class Tank(Element):
     def verificar_colision(self, dx, dy, mundo):
         self.rect_element.x += dx
         self.rect_element.y += dy
+        self.fila_pantalla, self.col_pantalla = self.obtener_pantalla_actual()
 
         colision = False
         # Problema: Se recorren todos los elementos, pero debería ser solo los de colisión
-        for e in mundo.elementos_por_capa[2]:
+        for e in mundo.elementos_por_capa_y_pantalla[2][self.fila_pantalla][self.col_pantalla]:
             if isinstance(e, Interactable):
                 e.interactuar(self)
 
@@ -60,7 +61,6 @@ class Tank(Element):
             self.rect_element.x -= dx
             self.rect_element.y -= dy
         return colision
-
 
     def determinar_direccion(self, dx, dy):
         direcciones = {

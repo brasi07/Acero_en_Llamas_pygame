@@ -41,7 +41,7 @@ class Bullet(Element):
             return True  # Eliminar la bala
 
         # Verificar colisiones con los elementos del mundo
-        for elemento in mundo.elementos_por_capa.get(2, []):  # Evita KeyError si la capa no existe
+        for elemento in mundo.elementos_por_capa_y_pantalla[2][self.fila_pantalla][self.col_pantalla]:  # Evita KeyError si la capa no existe
             if self.check_collision(elemento):
                 self.realizar_dano(elemento)
                 self.iniciar_colision()

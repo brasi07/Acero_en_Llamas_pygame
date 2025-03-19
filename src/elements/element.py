@@ -1,5 +1,6 @@
 import pygame
-from ..extras import CollisionLayer, COLLISION_RULES
+from ..extras import CollisionLayer, COLLISION_RULES, ANCHO, ALTO
+
 
 class Element:
     def __init__(self, x, y, imagen=None, collision_layer=CollisionLayer.NONE):
@@ -17,6 +18,9 @@ class Element:
             self.rect_element = pygame.Rect(self.x, self.y, 0, 0)
             self.mask = None
 
+        self.fila_pantalla, self.col_pantalla = self.obtener_pantalla_actual()
+
+
     def dibujar(self, pantalla, x, y):
         """Dibuja el elemento en la pantalla."""
         if self.imagen:
@@ -26,6 +30,13 @@ class Element:
 
     def animacion_elimninar(self):
         pass
+
+    def obtener_pantalla_actual(self):
+        """Calcula en qué pantalla está el jugador basado en su posición."""
+        col_pantalla = int(self.rect_element.x // ANCHO)
+        fila_pantalla = int(self.rect_element.y // ALTO)
+
+        return fila_pantalla, col_pantalla
 
     def check_collision(self, other_element):
         """Verifica colisión con otro elemento basado en la tabla de colisiones."""
