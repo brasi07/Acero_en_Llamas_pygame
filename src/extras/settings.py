@@ -42,18 +42,20 @@ class CollisionLayer(Enum):
     ENEMY = 2
     BULLET_PLAYER = 3
     BULLET_ENEMY = 4
-    BULLET_ANY = 5
-    WALL = 6
-    LOW_WALL = 7
-    INTERACTUABLE=8
-    NONE = 9  # Para elementos sin colisión
-    BOTH = 10
+    BULLET_BOSS2 = 5
+    BULLET_ANY = 6
+    WALL = 7
+    LOW_WALL = 8
+    INTERACTUABLE= 9
+    NONE = 10  # Para elementos sin colisión
+    BOTH = 11
 
 COLLISION_RULES = {
     CollisionLayer.PLAYER: {CollisionLayer.ENEMY, CollisionLayer.BULLET_ENEMY, CollisionLayer.BULLET_ANY, CollisionLayer.WALL, CollisionLayer.LOW_WALL},
     CollisionLayer.ENEMY: {CollisionLayer.PLAYER, CollisionLayer.ENEMY, CollisionLayer.BULLET_PLAYER, CollisionLayer.BULLET_ANY, CollisionLayer.WALL, CollisionLayer.LOW_WALL},
     CollisionLayer.BULLET_PLAYER: {CollisionLayer.ENEMY, CollisionLayer.WALL},
     CollisionLayer.BULLET_ENEMY: {CollisionLayer.PLAYER, CollisionLayer.WALL},
+    CollisionLayer.BULLET_BOSS2: {CollisionLayer.PLAYER},
     CollisionLayer.BULLET_ANY: {CollisionLayer.PLAYER, CollisionLayer.ENEMY, CollisionLayer.WALL},
     CollisionLayer.WALL: set(),
     CollisionLayer.LOW_WALL: set(),

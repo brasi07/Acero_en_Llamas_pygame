@@ -67,7 +67,7 @@ class Bullet(Element):
 
         return self.frame_actual >= len(self.sprites_colision)  # Eliminar cuando la animación termine
 
-    def get_cannon_tip(self, desplazamiento_lateral, desplazamiento_frontal):
+    def get_cannon_tip(self, desplazamiento_lateral=0, desplazamiento_frontal=0):
         """Calcula la punta del cañón después de la rotación, permitiendo desplazamiento en ambos ejes."""
 
         cannon_length = self.arma.rect_canon.height // 4  # Largo del cañón
