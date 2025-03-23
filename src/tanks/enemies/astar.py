@@ -1,15 +1,39 @@
 import heapq
 import math
+from collections import deque
 
 def heuristica(nodo, goal):
     """Calcula la heurística euclidiana entre dos puntos."""
     return math.sqrt((nodo[0] - goal[0])**2 + (nodo[1] - goal[1])**2)
 
-def astar(grid, start, goal):
+
+def encontrar_nodo_mas_cercano(grid, goal):
+    """Encuentra el nodo transitable más cercano al objetivo si está en un obstáculo."""
+    filas, columnas = len(grid), len(grid[0])
+    visitados = set()
+    cola = deque([goal])  # Comenzamos desde el goal
+
+    while cola:
+        x, y = cola.popleft()
+        if grid[y][x] == 0:  # Si encontramos un nodo transitable, lo usamos como nuevo objetivo
+            return (x, y)
+
+        for dx, dy in [(0,1), (0,-1), (1,0), (-1,0)]:
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < columnas and 0 <= ny < filas and (nx, ny) not in visitados:
+                visitados.add((nx, ny))
+                cola.append((nx, ny))
+
+    return goal
+
+def astar(grid, start, goal, id_mapa=None):
     """Algoritmo A* con movimiento diagonal (si no hay bloqueo en esquinas)."""
     neighbors = [(0, 1), (0, -1), (1, 0), (-1, 0),  # Movimientos ortogonales
                  (1, 1), (-1, -1), (1, -1), (-1, 1)]  # Movimientos diagonales
     
+    if grid[goal[1]][goal[0]] == 1:
+        goal = encontrar_nodo_mas_cercano(grid, goal)
+        
     open_set = []
     heapq.heappush(open_set, (0, start))
     
@@ -38,7 +62,7 @@ def astar(grid, start, goal):
                 continue
 
             # Verificar si neighbor es transitable (no es un muro)
-            if grid[neighbor[1]][neighbor[0]] == 1 and neighbor != goal:
+            if grid[neighbor[1]][neighbor[0]] not in (0, id_mapa) and neighbor != goal:
                 continue
 
             # Para movimiento diagonal, ambas celdas ortogonales deben ser libres
@@ -47,7 +71,7 @@ def astar(grid, start, goal):
                         0 <= current[0] < columnas and 0 <= current[1] + dy < filas):
                     continue  # Evitar accesos fuera de rango
                 
-                if grid[current[1]][current[0] + dx] == 1 or grid[current[1] + dy][current[0]] == 1:
+                if grid[current[1]][current[0] + dx] not in (0, id_mapa) or grid[current[1] + dy][current[0]] not in (0, id_mapa):
                     continue  # Bloqueo en la esquina
 
             # Costo base del movimiento

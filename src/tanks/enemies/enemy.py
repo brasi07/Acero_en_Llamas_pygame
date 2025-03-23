@@ -11,12 +11,13 @@ class EnemyState:
     ATTACKING = "attacking"
 
 class Enemy(Tank):
-    def __init__(self, vida, velocidad, x, y, resizex, resizey, modo_patrulla, elite, tank_level):
+    def __init__(self, vida, velocidad, x, y, resizex, resizey, modo_patrulla, elite, tank_level, id_mapa=None):
         super().__init__(vida, velocidad, x, y, resizex, resizey, collision_layer=CollisionLayer.ENEMY, tank_level=tank_level)
 
         self.state = EnemyState.PATROLLING if modo_patrulla != "torreta" else EnemyState.ATTACKING
         self.chase_range = 300
         self.attack_range = 280
+        self.id_mapa_binario = id_mapa
 
         self.modo_patrulla = modo_patrulla
         self.patrol_direction = 1  # 1 derecha, -1 izquierda
@@ -42,6 +43,7 @@ class Enemy(Tank):
 
         self.path = []
         self.tiempo_ultimo_disparo = 0  # Control del cooldown de ataque
+        self.ultima_persecucion = 0  # Control del tiempo de la última persecución
 
     def update(self, jugador, mundo):
 
@@ -52,6 +54,8 @@ class Enemy(Tank):
         pantalla_binaria = mundo.mapas_binarios[self.indice_mundo_x][self.indice_mundo_y]
         start = ((self.rect_element.centerx // TILE_SIZE) % 32, (self.rect_element.centery // TILE_SIZE) % 18)
         goal = ((jugador.rect_element.centerx // TILE_SIZE) % 32, (jugador.rect_element.centery // TILE_SIZE) % 18)
+
+        self.marcar_nodo_ocupado(pantalla_binaria, start, self.id_mapa_binario)    
 
         if self.vida <= 0:
             self.eliminar = True
@@ -64,11 +68,29 @@ class Enemy(Tank):
             self.state = EnemyState.CHASING
 
         if self.state == EnemyState.PATROLLING and self.modo_patrulla != "torreta":
-            self.manejar_patrullaje(mundo)
+            self.manejar_patrullaje(mundo, pantalla_binaria)
         elif self.state == EnemyState.CHASING and self.modo_patrulla != "torreta":
-            self.manejar_persecucion(mundo, pantalla_binaria, start, goal, TILE_SIZE)
+            self.manejar_persecucion(mundo, pantalla_binaria, start, goal, TILE_SIZE, distancia_jugador=distancia)
         elif self.state == EnemyState.ATTACKING:
             self.manejar_ataque(mundo, pantalla_binaria, start, goal)
+
+    def marcar_nodo_ocupado(self, pantalla_binaria, pos, id):
+        """Actualiza la posición del enemigo en el mapa."""
+        x, y = pos
+        for dy in range(-1, 2):
+            for dx in range(-1, 2):
+                nx, ny = x + dx, y + dy
+                if 0 <= ny < len(pantalla_binaria) and 0 <= nx < len(pantalla_binaria[0]) and pantalla_binaria[ny][nx] == 0:
+                    pantalla_binaria[ny][nx] = id
+
+    def desmarcar_nodo_ocupado(self, pantalla_binaria, pos, id):
+        """Restaura la posición (x, y) y sus 8 vecinos a transitables en el mapa binario."""
+        x, y = pos
+        for dy in range(-1, 2):
+            for dx in range(-1, 2):
+                nx, ny = x + dx, y + dy
+                if 0 <= ny < len(pantalla_binaria) and 0 <= nx < len(pantalla_binaria[0]) and pantalla_binaria[ny][nx] == id:
+                    pantalla_binaria[ny][nx] = 0  # Solo borrar el id, dejando los 1 intactos
 
     def drop_weapon(self, mundo):
         drop = PickableWeapon(self.rect_element.centerx / TILE_SIZE, self.rect_element.centery / TILE_SIZE,
@@ -76,7 +98,7 @@ class Enemy(Tank):
         mundo.elementos_por_capa_y_pantalla[2][self.indice_mundo_x][self.indice_mundo_y].append(drop)
         mundo.elementos_actualizables.append(drop)
 
-    def manejar_patrullaje(self, mundo):
+    def manejar_patrullaje(self, mundo, pantalla_binaria):
         if self.modo_patrulla == "circular":
             movimientos = [
                 (self.velocidad, 0, self.rect_element.x >= self.start_x + self.patrol_movement, 1),
@@ -90,26 +112,40 @@ class Enemy(Tank):
 
         elif self.modo_patrulla == "horizontal":
             dx, dy = self.velocidad * self.patrol_direction, 0
+            pos_anterior = ((self.rect_element.centerx // TILE_SIZE) % 32, (self.rect_element.centery // TILE_SIZE) % 18)
             if self.actualizar_posicion(dx, dy, mundo):
                 self.patrol_direction *= -1
+                self.marcar_nodo_ocupado(pantalla_binaria, ((self.rect_element.centerx // TILE_SIZE) % 32, (self.rect_element.centery // TILE_SIZE) % 18), self.id_mapa_binario)
+                self.desmarcar_nodo_ocupado(pantalla_binaria, pos_anterior, self.id_mapa_binario)
             if abs(self.rect_element.x - self.start_x) > self.patrol_movement:
                 self.patrol_direction *= -1
 
         elif self.modo_patrulla == "vertical":
             dx, dy = 0, self.velocidad * self.patrol_direction
+            pos_anterior = ((self.rect_element.centerx // TILE_SIZE) % 32, (self.rect_element.centery // TILE_SIZE) % 18)
             if self.actualizar_posicion(dx, dy, mundo):
                 self.patrol_direction *= -1
+                self.marcar_nodo_ocupado(pantalla_binaria, ((self.rect_element.centerx // TILE_SIZE) % 32, (self.rect_element.centery // TILE_SIZE) % 18))
+                self.desmarcar_nodo_ocupado(pantalla_binaria, pos_anterior)
             if abs(self.rect_element.y - self.start_y) > self.patrol_movement:
                 self.patrol_direction *= -1
 
-    def manejar_persecucion(self, mundo, pantalla_binaria, start, goal, tile_size):
+    def manejar_persecucion(self, mundo, pantalla_binaria, start, goal, tile_size, distancia_jugador=None):
         """Gestiona el movimiento en el estado de persecución."""
-        if raycasting(pantalla_binaria, start, goal):
+
+        # Inicializar la posición anterior si aún no existe
+        if not hasattr(self, "pos_anterior"):
+            self.pos_anterior = ((self.rect_element.centerx // TILE_SIZE) % 32, (self.rect_element.centery // TILE_SIZE) % 18)
+            
+        if raycasting(pantalla_binaria, start, goal) or distancia_jugador < self.attack_range:
             self.state = EnemyState.ATTACKING
+            print(pantalla_binaria)
             return
 
-        if not self.path or self.path[-1] != goal:
-            self.path = astar(pantalla_binaria, start, goal)
+        # Recalcular ruta si no hay path o el objetivo ha cambiado
+        if (not self.path or self.path[-1] != goal) and (pygame.time.get_ticks() - self.ultima_persecucion > 1000):
+            self.ultima_persecucion = pygame.time.get_ticks()
+            self.path = astar(pantalla_binaria, start, goal, id_mapa=self.id_mapa_binario)
 
         if self.path:
             next_step = self.path[0]
@@ -124,14 +160,25 @@ class Enemy(Tank):
 
             self.actualizar_posicion(dx, dy, mundo)
 
-            if ((self.rect_element.centerx // tile_size) % 32, (self.rect_element.centery // tile_size) % 18) == (next_step[0], next_step[1]):
+            # Nueva posición del enemigo en coordenadas de tile
+            pos_actual = ((self.rect_element.centerx // TILE_SIZE) % 32, (self.rect_element.centery // TILE_SIZE) % 18)
+
+            # Si ha cambiado de tile, actualizar la matriz binaria
+            if pos_actual != self.pos_anterior:
+
+                self.desmarcar_nodo_ocupado(pantalla_binaria, (self.pos_anterior[0], self.pos_anterior[1]), self.id_mapa_binario)  # Desmarca el anterior
+                self.marcar_nodo_ocupado(pantalla_binaria,( pos_actual[0], pos_actual[1]), self.id_mapa_binario)  # Marca la nueva posición
+                self.pos_anterior = pos_actual  # Actualiza la última posición registrada
+
+            # Si ha alcanzado el siguiente paso del path, eliminarlo
+            if pos_actual == (next_step[0], next_step[1]):
                 self.path.pop(0)
 
     def manejar_ataque(self, mundo, pantalla_binaria, start, goal):
         """Gestiona la lógica de ataque."""
-        if not raycasting(pantalla_binaria, start, goal) and self.modo_patrulla != "torreta":
+        if not raycasting(pantalla_binaria, start, goal) and self.modo_patrulla != "torreta" and (pygame.time.get_ticks() - self.ultima_persecucion > 1000):
             self.state = EnemyState.CHASING
-            self.path = astar(pantalla_binaria, start, goal)
+            self.path = astar(pantalla_binaria, start, goal, id_mapa=self.id_mapa_binario)
         elif self.arma.cooldown and pygame.time.get_ticks() - self.tiempo_ultimo_disparo >= self.arma.cooldown:
             if self.elite:
                 self.arma.activar_secundaria(mundo)

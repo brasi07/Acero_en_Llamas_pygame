@@ -34,7 +34,7 @@ class Mecha(Enemy):
             self.state = EnemyState.CHASING
 
         if self.state == EnemyState.PATROLLING:
-            self.manejar_patrullaje(mundo)
+            self.manejar_patrullaje(mundo, pantalla_binaria)
         elif self.state == EnemyState.CHASING:
             if distancia > TILE_SIZE*1.5:
                 self.manejar_persecucion(mundo, pantalla_binaria, start, goal, TILE_SIZE)
@@ -44,7 +44,7 @@ class Mecha(Enemy):
     def manejar_persecucion(self, mundo, pantalla_binaria, start, goal, tile_size):
 
         """Gestiona el movimiento en el estado de persecución."""
-        if not self.path or self.path[-1] != goal:
+        if (not self.path or self.path[-1] != goal) and (pygame.time.get_ticks() - self.ultima_persecucion > 1000):
             self.path = astar(pantalla_binaria, start, goal)
 
         if self.path:
