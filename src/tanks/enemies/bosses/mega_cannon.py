@@ -16,6 +16,7 @@ class MegaCannon(Enemy):
         self.arma = WeaponMegaCannon(self)
         self.colision_layer_balas = CollisionLayer.BULLET_BOSS2
 
+
     def update(self, jugador, mundo):
         if self.vida <= 0:
             pygame.event.post(pygame.event.Event(EVENTO_BOSS_MUERTO))

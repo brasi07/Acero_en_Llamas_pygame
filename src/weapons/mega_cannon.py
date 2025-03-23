@@ -1,3 +1,4 @@
+import numpy as np
 import pygame
 
 from .bullets.plasma_beam import PlasmaBeam
@@ -15,6 +16,8 @@ class WeaponMegaCannon(Weapon):
         self.rect_canon = self.imagen_canon.get_rect(center=tank.rect_element.center)
         self.activo = False
         self.cooldown = 6000
+        self.atacando = False
+        self.dirx, self.diry = 0,0
 
         self.frame_actual = 0
         self.ultimo_cambio_frame = 0
@@ -24,6 +27,7 @@ class WeaponMegaCannon(Weapon):
         bala = PlasmaBeam(self)
         mundo.add_bullet(bala)
         self.activo = True
+        self.atacando = True
 
     def update_secundaria(self, tank, mundo):
         if self.activo:
@@ -39,6 +43,9 @@ class WeaponMegaCannon(Weapon):
                     self.frame_actual = 0
                     self.activo = False  # Desactiva la animación cuando termina
 
+
                 # Actualizar la imagen del cañón
                 self.imagen_canon_base = self.animacion[self.frame_actual]
                 self.imagen_canon = self.imagen_canon_base
+
+        self.atacando = False

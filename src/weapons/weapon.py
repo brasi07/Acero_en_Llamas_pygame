@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 import pygame
 from ..extras import RESIZE_PLAYER, ResourceManager
@@ -33,6 +35,26 @@ class Weapon:
 
         self.imagen_canon = pygame.transform.rotate(self.imagen_canon_base, -self.angulo_cannon - 90)
         self.rect_canon = self.imagen_canon.get_rect(center=self.tank.rect_element.center)
+
+    def get_cannon_tip(self, desplazamiento_lateral=0, desplazamiento_frontal=0):
+        """Calcula la punta del cañón después de la rotación, permitiendo desplazamiento en ambos ejes."""
+
+        cannon_length = self.rect_canon.height // 4  # Largo del cañón
+        angle_rad = math.radians(self.angulo_cannon)
+
+        # Desplazamiento en la dirección del cañón (frontal)
+        x_offset = (cannon_length + desplazamiento_frontal) * np.cos(angle_rad)
+        y_offset = (cannon_length + desplazamiento_frontal) * np.sin(angle_rad)
+
+        # Desplazamiento lateral (perpendicular al cañón)
+        x_lateral_offset = desplazamiento_lateral * np.cos(angle_rad + np.pi / 2)  # 90° perpendiculares
+        y_lateral_offset = desplazamiento_lateral * np.sin(angle_rad + np.pi / 2)
+
+        # Calcular posición final
+        cannon_x = self.rect_canon.centerx + x_offset + x_lateral_offset
+        cannon_y = self.rect_canon.centery + y_offset + y_lateral_offset
+
+        return cannon_x, cannon_y
 
     def cambio_de_arma(self):
         self.imagen_canon = self.imagen_canon_base
