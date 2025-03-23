@@ -1,21 +1,24 @@
 import random
-from ..singleton import SingletonMeta
 from ..weapons import Shotgun, ReboungGun, RocketLauncher
 
-class WeaponPool(metaclass=SingletonMeta):
+class WeaponPool(object):
 
-    def __init__(self):
-        from ..tanks import Player
-        self.pool = [Shotgun(Player()), RocketLauncher(Player()), ReboungGun(Player())]
-        self.number = random.randint(0, len(self.pool) - 1)
+    pool = []
 
-    def random_weapon(self):
-        self.number = random.randint(0, len(self.pool) - 1)
-        return self.pool[self.number]
+    @classmethod
+    def reset_pool(cls, player):
+        cls.pool = [Shotgun(player), RocketLauncher(player), ReboungGun(player)]
+        cls.number = random.randint(0, len(cls.pool) - 1)
 
-    def set_enemy_weapon(self, enemy):
+    @classmethod
+    def random_weapon(cls):
+        cls.number = random.randint(0, len(cls.pool) - 1)
+        return cls.pool[cls.number]
 
-        match self.number:
+    @classmethod
+    def set_enemy_weapon(cls, enemy):
+
+        match cls.number:
             case 0:
                 return Shotgun(enemy)
             case 1:
