@@ -88,12 +88,12 @@ class World(Scene, ABC):
     def generar_elementos(self, mapa_tiles, lista_elementos, sprites, lista_enemigos, lista_actualizables, capa):
         """Crea los elementos del mapa y los agrupa por pantallas y capas."""
         puertas = {}
-
+        id_enemigo = 1
         for y, fila in enumerate(mapa_tiles):
             for x, valor in enumerate(fila):
                 valor = int(valor)  # Asegurar que es un número válido
-
-                elemento = ElementFactory.create_element(valor, x, y, sprites, puertas, self)
+                id_enemigo += 1
+                elemento = ElementFactory.create_element(valor, x, y, sprites, puertas, self, id_enemigo)
 
                 if elemento:
                     lista_elementos.append(elemento)  # Agregar a la lista general de elementos

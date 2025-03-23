@@ -9,7 +9,7 @@ from ..tanks.enemies.bosses import WarTrain, MegaCannon, Mecha
 
 class ElementFactory:
     @staticmethod
-    def create_element(valor, x, y, sprites, puertas, game_instance):
+    def create_element(valor, x, y, sprites, puertas, game_instance, id_enemigo):
         """Crea una instancia del elemento correspondiente al valor."""
         if 5100 <= valor <= 5199:  # Puertas
             elemento = Door(x, y, sprites[1315], sprites[4000])
@@ -26,7 +26,7 @@ class ElementFactory:
             return game_instance.player
 
         elif 7000 <= valor <= 7399:
-            return ElementFactory.crear_enemigo(valor, x, y)
+            return ElementFactory.crear_enemigo(valor, x, y, id_enemigo)
         elif valor == 7400:
             return Mecha(x, y)
         elif valor == 7401:
@@ -58,7 +58,7 @@ class ElementFactory:
         return None  # Si no hay un elemento válido
 
     @staticmethod
-    def crear_enemigo(valor, x, y):
+    def crear_enemigo(valor, x, y, id_enemigo):
         """Crea un enemigo basado en el valor dado, asignándole tipo, patrullaje y si es élite."""
         tipos_enemigos = {
             0: EnemyBrown,
@@ -83,5 +83,5 @@ class ElementFactory:
         elite = False
         if valor % 10 != 0: elite = True
 
-        enemigo = enemy_class(x, y, modo_patrulla, elite=elite)
+        enemigo = enemy_class(x, y, modo_patrulla, elite=elite, id_mapa=id_enemigo)
         return enemigo
