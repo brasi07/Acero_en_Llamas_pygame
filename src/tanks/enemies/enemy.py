@@ -136,10 +136,9 @@ class Enemy(Tank):
         # Inicializar la posición anterior si aún no existe
         if not hasattr(self, "pos_anterior"):
             self.pos_anterior = ((self.rect_element.centerx // TILE_SIZE) % 32, (self.rect_element.centery // TILE_SIZE) % 18)
-            
-        if raycasting(pantalla_binaria, start, goal) or distancia_jugador < self.attack_range:
+        
+        if distancia_jugador < self.attack_range and (raycasting(pantalla_binaria, start, goal) or pantalla_binaria[goal[0]][goal[1]] == 1):
             self.state = EnemyState.ATTACKING
-            print(pantalla_binaria)
             return
 
         # Recalcular ruta si no hay path o el objetivo ha cambiado
