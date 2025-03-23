@@ -15,6 +15,7 @@ class MegaCannon(Enemy):
         self.muerto = False
         self.arma = WeaponMegaCannon(self)
         self.colision_layer_balas = CollisionLayer.BULLET_BOSS2
+        self.attack_range = 450
 
 
     def update(self, jugador, mundo):
@@ -32,7 +33,9 @@ class MegaCannon(Enemy):
 
         self.arma.update(mundo, jugador)
         self.arma.update_secundaria(jugador, mundo)
-        self.manejar_ataque(mundo, pantalla_binaria, start, goal)
+        distancia = self.distancia_jugador(jugador)
+        if distancia < self.attack_range:
+            self.manejar_ataque(mundo, pantalla_binaria, start, goal)
 
     def manejar_ataque(self, mundo, pantalla_binaria, start, goal):
        if self.arma.cooldown and pygame.time.get_ticks() - self.tiempo_ultimo_disparo >= self.arma.cooldown:

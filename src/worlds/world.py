@@ -105,7 +105,12 @@ class World(Scene, ABC):
                     fila_pantalla = y // self.tiles_por_pantalla_y
 
                     # Agregar el elemento a su pantalla correspondiente
-                    self.elementos_por_capa_y_pantalla[capa][fila_pantalla][col_pantalla].append(elemento)
+                    if isinstance(elemento, Player) and capa == 2:
+                        for fila in self.elementos_por_capa_y_pantalla[capa]:  # Recorre todas las filas
+                            for columna in fila:  # Recorre todas las columnas dentro de cada fila
+                                columna.append(elemento)
+                    else:
+                        self.elementos_por_capa_y_pantalla[capa][fila_pantalla][col_pantalla].append(elemento)
 
                     # Clasificar elementos especiales
                     if isinstance(elemento, Enemy):
