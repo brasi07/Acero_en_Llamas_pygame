@@ -2,6 +2,8 @@ import re  # Para extraer números del nombre del archivo
 from abc import ABC
 
 import pygame
+
+from .. import Director
 from ..extras import settings, EVENTO_JUGADOR_MUERTO, ANCHO, ALTO, ResourceManager, TILE_SIZE
 from ..elements import Wall, LowWall
 from ..elements.activateable import Door
@@ -14,14 +16,14 @@ from .element_factory import ElementFactory
 
 
 class World(Scene, ABC):
-    def __init__(self, alto_pantalla, ancho_pantalla, director, world_number):
+    def __init__(self, alto_pantalla, ancho_pantalla, world_number):
 
-        super().__init__(director)
+        super().__init__(Director())
 
         self.ui = Ui()
         self.control = settings.controller
 
-        self.player = Player()
+        self.player = self.director.partida.player
 
         self.ancho_pantalla = ancho_pantalla
         self.alto_pantalla = alto_pantalla
@@ -83,7 +85,7 @@ class World(Scene, ABC):
         return int(match.group(1)) if match else 1  # Si no encuentra número, asume capa 1
 
     def get_parametros(self):
-        return self.alto_pantalla, self.ancho_pantalla, self.director
+        return self.alto_pantalla, self.ancho_pantalla
 
     def generar_elementos(self, mapa_tiles, lista_elementos, sprites, lista_enemigos, lista_actualizables, capa):
         """Crea los elementos del mapa y los agrupa por pantallas y capas."""

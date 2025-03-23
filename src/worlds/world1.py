@@ -3,8 +3,8 @@ from ..extras import ROJO_TRANSLUCIDO, NEGRO_TRANSLUCIDO, EVENTO_BOSS_MUERTO, Re
 from .world import World
 
 class World1(World):
-    def __init__(self, alto_pantalla, ancho_pantalla, director):
-        super().__init__(alto_pantalla, ancho_pantalla, director, 1)
+    def __init__(self, alto_pantalla, ancho_pantalla):
+        super().__init__(alto_pantalla, ancho_pantalla, 1)
         self.hasSky = True
         self.traps = (836, -2)
         self.lowWalls = (1168, 1155, 1283, 1220, 1282, 1157, 1346, 1092, 1347)
@@ -34,5 +34,5 @@ class World1(World):
     def manejar_evento_especifico(self, evento):
         from .world2 import World2
         if self.control.change_world(evento) or evento.type == EVENTO_BOSS_MUERTO:
-            self.director.cambiar_escena(World2(self.alto_pantalla, self.ancho_pantalla, self.director))
+            self.director.cambiar_escena(World2(self.alto_pantalla, self.ancho_pantalla))
             self.player.vida = self.player.vida_inicial

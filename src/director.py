@@ -1,8 +1,11 @@
 import pygame
+
+from . import SingletonMeta
 from .extras.settings import ANCHO, ALTO, FPS
+from .gamesave import Partida
 
 
-class Director:
+class Director(metaclass=SingletonMeta):
 
     def __init__(self):
         self.pantalla = pygame.display.set_mode((ANCHO, ALTO), pygame.FULLSCREEN | pygame.SCALED | pygame.DOUBLEBUF)
@@ -12,6 +15,7 @@ class Director:
         self.escena_guardada_clase = None
         self.escena_parametros = None
         self.clock = pygame.time.Clock()
+        self.partida = Partida(4, -1, 0, 1)
 
     def bucle(self, escena):
         self.salir_escena = False

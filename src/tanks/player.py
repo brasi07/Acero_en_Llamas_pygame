@@ -2,15 +2,14 @@ import pygame
 from ..extras import CollisionLayer, RESIZE_PLAYER, EVENTO_JUGADOR_MUERTO, controller, ResourceManager
 from .tank import Tank
 from ..weapons import Weapon, Dash, Shotgun, ReboungGun, RocketLauncher, MineLauncher, Shield
-from ..singleton import SingletonMeta
 
 
-class Player(Tank, metaclass=SingletonMeta):
+class Player(Tank):
 
-    def __init__(self):
+    def __init__(self, vida, objetos_clave):
 
         # Llamamos primero al constructor de la clase base (Tank)
-        super().__init__(4, 3, 0, 0, RESIZE_PLAYER, RESIZE_PLAYER, collision_layer=CollisionLayer.PLAYER, tank_type="jugador")
+        super().__init__(vida, 3, 0, 0, RESIZE_PLAYER, RESIZE_PLAYER, collision_layer=CollisionLayer.PLAYER, tank_type="jugador")
 
         # Equipamos armas
         self.armas = [Weapon(self), Dash(self), Shotgun(self), ReboungGun(self), RocketLauncher(self), MineLauncher(self), Shield(self)]  # Lista de armas

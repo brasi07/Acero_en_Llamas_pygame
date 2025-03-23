@@ -13,8 +13,7 @@ class Game:
         """if evento.key == pygame.K_F11:
                             self.pantalla = pygame.display.set_mode((ANCHO, ALTO))""" #para cambiar la pantalla
 
-        self.mundo1 = World1(self.director.pantalla.get_height(), self.director.pantalla.get_width(),
-                            self.director)
+        self.mundo1 = World1(self.director.pantalla.get_height(), self.director.pantalla.get_width())
 
         self.director.cambiar_escena(self.mundo1)
 
