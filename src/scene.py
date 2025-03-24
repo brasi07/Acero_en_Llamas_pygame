@@ -17,3 +17,6 @@ class Scene(ABC):
     @abstractmethod
     def dibujar(self, *args):
         raise NotImplemented("no esta implementada la funcion")
+
+    def get_parametros(self):
+        pass
