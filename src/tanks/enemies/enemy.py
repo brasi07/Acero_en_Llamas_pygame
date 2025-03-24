@@ -32,7 +32,8 @@ class Enemy(Tank):
 
         if elite:
             self.velocidad *= 1.2
-            self.vida_inicial *= 2
+            factor = 1 + (1.5 / math.log(self.vida_inicial + 1))  # Reduce el aumento con vida más alta
+            self.vida_inicial = int(self.vida_inicial * factor)
             self.vida = self.vida_inicial
             self.chase_range *= 1.5
 
@@ -136,8 +137,10 @@ class Enemy(Tank):
         # Inicializar la posición anterior si aún no existe
         if not hasattr(self, "pos_anterior"):
             self.pos_anterior = ((self.rect_element.centerx // TILE_SIZE) % 32, (self.rect_element.centery // TILE_SIZE) % 18)
-            
-        if raycasting(pantalla_binaria, start, goal) or distancia_jugador < self.attack_range:
+
+
+
+        if distancia_jugador < self.attack_range and (raycasting(pantalla_binaria, start, goal) or pantalla_binaria[goal[0]][goal[1]] == 1):
             self.state = EnemyState.ATTACKING
             #print(pantalla_binaria)
             return
@@ -188,8 +191,8 @@ class Enemy(Tank):
 
     def calcular_direccion_canon(self, mundo, jugador):
         # Obtener la posición del ratón en relación con la cámara
-        dirx = jugador.rect_element.x - self.rect_element.x
-        diry = jugador.rect_element.y - self.rect_element.y
+        dirx = jugador.rect_element.centerx - self.rect_element.centerx
+        diry = jugador.rect_element.centery - self.rect_element.centery
 
         return dirx, diry
     

@@ -8,13 +8,14 @@ from .singleton import SingletonMeta
 
 
 class Ui(metaclass=SingletonMeta):
+
     def __init__(self):
         """Inicializa la UI con la pantalla y el tanque del jugador."""
         self.font = pygame.font.Font(None, 36)  # Fuente para los textos
         self.cursor_image1 = ResourceManager.load_and_scale_image("mirilla.png", 0.75, 0.75)  # Cursor personalizado
         self.cursor_image2 = ResourceManager.load_and_scale_image("mirilla2.png", 0.75, 0.75)
         self.set_cursor1()
-
+        self.barras = ResourceManager.load_animation("barras_UI.png", 4, 6, 12, 0.2, 0.3)
 
     def set_cursor1(self):
         """Establece un cursor personalizado."""
@@ -81,26 +82,41 @@ class Ui(metaclass=SingletonMeta):
         pantalla.blit(minimapa, MINIMAPA_POS)
 
     def draw_health_bar(self, tank, pantalla, cam_x, cam_y):
-        """Dibuja una barra de vida debajo del tanque con fondo rojo."""
+        """Dibuja la barra de vida del tanque en una única superficie y la centra."""
 
-        # Posición de la barra de vida
-        barra_ancho = tank.barra_vida.get_width()  # Ancho total de la barra de vida
-        barra_alto = 6  # Altura de la barra de vida
-        x = tank.rect_element.x + tank.rect_element.width // 2 - barra_ancho // 2 - cam_x
-        y = tank.rect_element.y - cam_y
+        # Datos de la barra de vida
+        vida_maxima = tank.vida_inicial
+        vida_actual = max(tank.vida, 0)  # Evitar negativos
+        sprite_width = self.barras[0].get_width()
+        sprite_height = self.barras[0].get_height()
 
-        # Calcular vida actual (porcentaje)
-        vida_porcentaje = max(tank.vida / tank.vida_inicial, 0)  # Evitar valores negativos
-        vida_ancho = int(barra_ancho * vida_porcentaje)  # Ajustar el ancho de la barra verde
+        num_segmentos = max(vida_maxima, 0)  # Segmentos intermedios
+        total_width = (num_segmentos + 2) * sprite_width  # Ancho total de la barra
 
-        # Dibujar fondo rojo
-        pygame.draw.rect(pantalla, ROJO, (x, y+2, barra_ancho, barra_alto))
+        # **Calcular cuántos segmentos están dañados**
+        segmentos_danados = num_segmentos - vida_actual  # Cuántos usarán self.barras[1]
+        segmentos_danados = max(0, min(segmentos_danados, num_segmentos))  # Limitar entre 0 y num_segmentos
 
-        # Dibujar la vida en verde sobre el fondo rojo
-        pygame.draw.rect(pantalla, ROJO_CLARO, (x, y+2, vida_ancho, barra_alto))
+        # Crear una superficie vacía para toda la barra de vida
+        surface_bar = pygame.Surface((total_width, sprite_height), pygame.SRCALPHA)
 
-        pantalla.blit(tank.barra_vida, (x, y))
+        primer_sprite = self.barras[0] if segmentos_danados == num_segmentos else self.barras[9]
+        ultimo_sprite = self.barras[2] if segmentos_danados > 0 else self.barras[11]
 
+        surface_bar.blit(primer_sprite, (0, 0))  # Primer segmento
+
+        for i in range(num_segmentos):
+            sprite = self.barras[1] if i >= num_segmentos - segmentos_danados else self.barras[10]
+            surface_bar.blit(sprite, ((i + 1) * sprite_width, 0))
+
+        surface_bar.blit(ultimo_sprite, ((num_segmentos + 1) * sprite_width, 0))  # Último segmento
+
+        # **Centrar la barra sobre el tanque**
+        x = tank.rect_element.centerx - cam_x - total_width // 2  # Centrar horizontalmente
+        y = tank.rect_element.y - cam_y - 2  # Un poco arriba del tanque
+
+        # **Dibujar la barra ya centrada**
+        pantalla.blit(surface_bar, (x, y))
 
     def draw_health_bar_player(self, jugador, pantalla):
         x = 20
