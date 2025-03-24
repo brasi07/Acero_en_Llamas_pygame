@@ -8,6 +8,12 @@ class ResourceManager(object):
     resources = {}
 
     @classmethod
+    def load_font(self, name, size):
+        if name not in self.resources:
+            self.resources[name] = pygame.font.Font(self.locate_resource(name), size)
+        return self.resources[name]
+        
+    @classmethod
     def locate_resource(cls, name):
         carpeta_recursos = Path(__file__).parent.parent.parent / 'res'
         resource = list(carpeta_recursos.rglob(name))
