@@ -140,13 +140,13 @@ class Enemy(Tank):
 
 
 
-        if distancia_jugador < self.attack_range and (raycasting(pantalla_binaria, start, goal) or pantalla_binaria[goal[0]][goal[1]] == 1):
+        if distancia_jugador < self.attack_range and (raycasting(pantalla_binaria, start, goal) or pantalla_binaria[goal[1]][goal[0]] == 1):
             self.state = EnemyState.ATTACKING
             #print(pantalla_binaria)
             return
 
         # Recalcular ruta si no hay path o el objetivo ha cambiado
-        if (not self.path or self.path[-1] != goal) and (pygame.time.get_ticks() - self.ultima_persecucion > 1000):
+        if (not self.path or self.path[-1] != goal) and (pygame.time.get_ticks() - self.ultima_persecucion > 2000):
             self.ultima_persecucion = pygame.time.get_ticks()
             self.path = astar(pantalla_binaria, start, goal, id_mapa=self.id_mapa_binario)
 
@@ -179,7 +179,7 @@ class Enemy(Tank):
 
     def manejar_ataque(self, mundo, pantalla_binaria, start, goal):
         """Gestiona la lógica de ataque."""
-        if not raycasting(pantalla_binaria, start, goal) and self.modo_patrulla != "torreta" and (pygame.time.get_ticks() - self.ultima_persecucion > 1000):
+        if not raycasting(pantalla_binaria, start, goal) and self.modo_patrulla != "torreta" and (pygame.time.get_ticks() - self.ultima_persecucion > 2000):
             self.state = EnemyState.CHASING
             self.path = astar(pantalla_binaria, start, goal, id_mapa=self.id_mapa_binario)
         elif self.arma.cooldown and pygame.time.get_ticks() - self.tiempo_ultimo_disparo >= self.arma.cooldown:
