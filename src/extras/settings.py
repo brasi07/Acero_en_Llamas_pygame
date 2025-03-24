@@ -12,6 +12,8 @@ HABITACION_ANCHO = 32     # Ancho de cada habitación en el minimapa
 HABITACION_ALTO = 18      # Alto de cada habitación en el minimapa
 ESPACIADO = 4            # Espacio entre habitaciones en el minimapa
 MINIMAPA_POS = (50, ALTO - HABITACION_ALTO * 4 - ESPACIADO * 3 - 50)  # Posición en pantalla (esquina superior derecha)
+BUTTON_SIZEX, BUTTON_SIZEY = ANCHO * 0.4, ALTO * 0.1
+
 
 RESIZE_PLAYER = 2.5
 RESIZE_CANNON = 2.0
