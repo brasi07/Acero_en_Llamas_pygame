@@ -2,7 +2,7 @@ import math
 
 import numpy as np
 import pygame
-from ..extras import RESIZE_PLAYER, ResourceManager
+from ..extras import RESIZE_PLAYER, ResourceManager, COOLDOWN
 from .bullets import Bullet
 
 class Weapon:
@@ -17,7 +17,7 @@ class Weapon:
 
         self.rect_canon = self.imagen_canon.get_rect(center=tank.rect_element.center)
         self.rect_accesorio = None
-        self.cooldown = None
+        self.cooldown = COOLDOWN
 
         self.under_weapon = True
         self.angulo_cannon = 0
