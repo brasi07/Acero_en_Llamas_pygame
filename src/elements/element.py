@@ -33,8 +33,8 @@ class Element:
 
     def obtener_pantalla_actual(self):
         """Calcula en qué pantalla está el jugador basado en su posición."""
-        col_pantalla = int(self.rect_element.x // ANCHO)
-        fila_pantalla = int(self.rect_element.y // ALTO)
+        col_pantalla = int(self.rect_element.centerx // ANCHO)
+        fila_pantalla = int(self.rect_element.centery // ALTO)
 
         return fila_pantalla, col_pantalla
 
