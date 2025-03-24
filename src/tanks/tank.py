@@ -1,7 +1,7 @@
 import pygame
 from ..elements import Element
 from ..elements.interactable import Interactable
-from ..extras import CollisionLayer, TILE_SIZE, ResourceManager, ANCHO, ALTO
+from ..extras import CollisionLayer, TILE_SIZE, ResourceManager, ANCHO, ALTO, RESOLUTION_SCALE
 from ..weapons import Weapon
 
 class Tank(Element):
@@ -32,10 +32,10 @@ class Tank(Element):
         self.rect_element.y = y
 
     def actualizar_posicion(self, movimiento_x, movimiento_y, mundo):
-        colision1 = self.verificar_colision(movimiento_x, 0, mundo)
-        colision2 = self.verificar_colision(0, movimiento_y, mundo)
+        colision1 = self.verificar_colision(RESOLUTION_SCALE*RESOLUTION_SCALE*movimiento_x, 0, mundo)
+        colision2 = self.verificar_colision(0, RESOLUTION_SCALE*RESOLUTION_SCALE*movimiento_y, mundo)
 
-        direccion = self.determinar_direccion(movimiento_x, movimiento_y)
+        direccion = self.determinar_direccion(RESOLUTION_SCALE*RESOLUTION_SCALE*movimiento_x, RESOLUTION_SCALE*RESOLUTION_SCALE*movimiento_y)
         if direccion:
             self.direccion = direccion
             self.imagen = self.sprites[direccion]

@@ -107,6 +107,7 @@ class ResourceManager(object):
             if archivo.endswith(".png"):
                 id_sprite = archivo.split(".")[0]  # Obtiene el nombre sin la extensión
                 sprites[int(id_sprite)] = pygame.image.load(os.path.join(carpeta, archivo))
+                sprites[int(id_sprite)] = pygame.transform.scale(sprites[int(id_sprite)], (TILE_SIZE, TILE_SIZE))
 
         cls.resources[carpeta] = sprites
 

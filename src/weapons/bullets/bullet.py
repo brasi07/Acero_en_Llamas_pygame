@@ -1,7 +1,7 @@
 import math
 import time
 import numpy as np
-from ...extras import TILE_SIZE, ResourceManager
+from ...extras import TILE_SIZE, ResourceManager, RESOLUTION_SCALE
 from ...elements import Element
 
 class Bullet(Element):
@@ -16,7 +16,7 @@ class Bullet(Element):
 
         super().__init__(x, y, arma.imagen_bala, arma.tank.colision_layer_balas)
 
-        self.velocidad = 7
+        self.velocidad = RESOLUTION_SCALE*RESOLUTION_SCALE*7
         self.vel_x = math.cos(self.angle_rad) * self.velocidad
         self.vel_y = math.sin(self.angle_rad) * self.velocidad
         self.dano = 1

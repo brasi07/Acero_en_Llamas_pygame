@@ -7,18 +7,19 @@ from ..controller import KeyboardControl
 controller = KeyboardControl()
 
 FPS = 60
-ANCHO, ALTO = 1024, 576
-HABITACION_ANCHO = 32     # Ancho de cada habitación en el minimapa
-HABITACION_ALTO = 18      # Alto de cada habitación en el minimapa
+RESOLUTION_SCALE = 1
+ANCHO, ALTO = RESOLUTION_SCALE*1024, RESOLUTION_SCALE*576
+HABITACION_ANCHO = RESOLUTION_SCALE*32     # Ancho de cada habitación en el minimapa
+HABITACION_ALTO = RESOLUTION_SCALE*18      # Alto de cada habitación en el minimapa
 ESPACIADO = 4            # Espacio entre habitaciones en el minimapa
-MINIMAPA_POS = (50, ALTO - HABITACION_ALTO * 4 - ESPACIADO * 3 - 50)  # Posición en pantalla (esquina superior derecha)
+MINIMAPA_POS = (50, (ALTO - HABITACION_ALTO * 4 - ESPACIADO * 3 - RESOLUTION_SCALE*50))  # Posición en pantalla (esquina superior derecha)
 BUTTON_SIZEX, BUTTON_SIZEY = ANCHO * 0.4, ALTO * 0.1
 
 
 RESIZE_PLAYER = 2.5
 RESIZE_CANNON = 2.0
 
-TILE_SIZE = 32
+TILE_SIZE = RESOLUTION_SCALE*32
 
 TIME_FRAME = 30
 COOLDOWN = 2000
