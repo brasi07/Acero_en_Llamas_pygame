@@ -7,7 +7,7 @@ from .. import Director
 from ..extras import settings, EVENTO_JUGADOR_MUERTO, ANCHO, ALTO, ResourceManager, TILE_SIZE
 from ..elements import Wall, LowWall
 from ..elements.activateable import Door
-from ..menu import PauseMenu
+from ..menus.menu import PauseMenu
 from ..scene import Scene
 from ..tanks import Player
 from ..tanks.enemies import Enemy
