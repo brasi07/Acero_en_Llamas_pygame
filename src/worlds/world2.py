@@ -8,7 +8,8 @@ class World2(World):
         self.hasSky = True
         self.traps = (1425, -2)
         self.lowWalls = (16, 18, 20, 85, 86, 336, 338, 340, 466, 405, 406, 469, 470)
-        self.decorations = (512, 513, 576, 577, 1360, 1361, 1362, 1424, 1426, 1488, 1489, 1490, 1486, 1550, 1614, 1678)
+        self.decorations = (512, 513, 576, 577)
+        self.ice=(1678,1614,1550,1490,1489,1488,1486,1426,1424,1362,1361,1360)
 
         self.CONEXIONES = [
             ((3, 0), (3, 1), NEGRO_TRANSLUCIDO),  # Habitación (0,0) conecta con (0,1)

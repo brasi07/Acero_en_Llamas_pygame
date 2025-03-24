@@ -11,6 +11,7 @@ class World3(World):
         self.traps = (-2, -2)
         self.lowWalls = (1410, 12, 13, 16, 679, 680)
         self.decorations = (1484, 2142)
+        self.ice = ()
 
         self.CONEXIONES = [
             ((3, 0), (3, 1), NEGRO_TRANSLUCIDO),  # Habitación (0,0) conecta con (0,1)

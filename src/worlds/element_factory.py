@@ -33,8 +33,8 @@ class ElementFactory:
             return MegaCannon(x, y)
         elif valor == 7402:
             return WarTrain(x, y)
-        elif valor == 1234: #valor provisional
-            return IceFloor(x,y)
+        elif  valor in game_instance.ice:
+            return IceFloor(x,y,sprites[valor])
 
         elif 5000 <= valor <= 5099:  # Botones
             pos = valor - 5000

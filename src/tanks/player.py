@@ -22,6 +22,7 @@ class Player(Tank):
         self.posx_change_screen = self.rect_element.x
         self.posy_change_screen = self.rect_element.y
         self.deslizar=False
+        self.acelerado=False
         self.anterior_mov_x=0
         self.anterior_mov_y = 0
         self.contador_desliz=0
@@ -40,18 +41,25 @@ class Player(Tank):
         self.arma.update_secundaria(self, mundo)
         self.arma.update(mundo=mundo)
         self.verificar_fuera_pantalla(mundo)
-        if self.contador_desliz <5:
+        if self.contador_desliz ==1:
             self.deslizar=False
         else:
             self.contador_desliz=self.contador_desliz+1
 
     def mover(self, mundo):
+        #print(f"moviendo {self.deslizar} {self.contador_desliz}")
         self.actualizar_posicion(self.movimiento_x, self.movimiento_y, mundo)
 
     def obtener_movimiento(self, teclas):
-        if self.deslizar==False:
-            mov_x = (self.control.derecha(teclas) - self.control.izquierda(teclas)) * self.velocidad
-            mov_y = (self.control.abajo(teclas) - self.control.arriba(teclas)) * self.velocidad
+        if self.deslizar==False or not ((self.control.derecha(teclas) - self.control.izquierda(teclas))==0 and (self.control.abajo(teclas) - self.control.arriba(teclas))==0):
+            if self.deslizar:
+                self.acelerado = True
+                mov_x = (self.control.derecha(teclas) - self.control.izquierda(teclas)) * self.velocidad*1.5
+                mov_y = (self.control.abajo(teclas) - self.control.arriba(teclas)) * self.velocidad*1.5
+            else:
+                self.acelerado = False
+                mov_x = (self.control.derecha(teclas) - self.control.izquierda(teclas)) * self.velocidad
+                mov_y = (self.control.abajo(teclas) - self.control.arriba(teclas)) * self.velocidad
             if mov_x != 0 and mov_y != 0:
                 mov_x *= 0.707
                 mov_y *= 0.707
@@ -59,7 +67,10 @@ class Player(Tank):
             self.anterior_mov_y = mov_y
             return mov_x, mov_y
         else:
-            return self.anterior_mov_x,self.anterior_mov_y
+            if not self.acelerado:
+                return self.anterior_mov_x*1.5,self.anterior_mov_y*1.5
+            else:
+                return self.anterior_mov_x, self.anterior_mov_y
 
     def verificar_fuera_pantalla(self, mundo):
         if self.rect_element.right > mundo.camara_x + mundo.ancho_pantalla + 50:
