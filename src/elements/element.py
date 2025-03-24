@@ -1,5 +1,5 @@
 import pygame
-from ..extras import CollisionLayer, COLLISION_RULES, ANCHO, ALTO
+from ..extras import CollisionLayer, COLLISION_RULES, ANCHO, ALTO, ResourceManager, TILE_SIZE
 
 
 class Element:
@@ -19,6 +19,8 @@ class Element:
             self.mask = None
 
         self.fila_pantalla, self.col_pantalla = self.obtener_pantalla_actual()
+        self.fila_pantalla = max(0, min(self.fila_pantalla, 3))
+        self.col_pantalla = max(0, min(self.col_pantalla, 2))
 
 
     def dibujar(self, pantalla, x, y):
