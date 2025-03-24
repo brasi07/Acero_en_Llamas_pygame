@@ -233,7 +233,7 @@ class World(Scene, ABC):
                 self.player.vida = self.player.vida_inicial
 
             if self.control.pausar(evento):
-                self.director.apilar_escena(PauseMenu(self.control, self.director))
+                self.director.apilar_escena(PauseMenu( self.director))
 
             if self.control.change_weapon(evento):
                 self.player.cambiar_arma_secundaria()
