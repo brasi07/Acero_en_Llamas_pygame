@@ -153,6 +153,28 @@ class ResourceManager(object):
         return imagen_escalada
 
     @classmethod
+    def load_and_play_wav(cls, name, loops=0):
+        if name in cls.resources:
+            audio = cls.resources[name]
+        else:
+            audio = cls.locate_resource(name)
+            cls.resources[name] = audio
+
+        pygame.mixer_music.load(cls.resources[name])
+        pygame.mixer_music.play(loops)
+
+    @classmethod
+    def stop_and_unload_wav(cls, name):
+        if name in cls.resources:
+            audio = cls.resources[name]
+        else:
+            audio = cls.locate_resource(name)
+            cls.resources[name] = audio
+
+        pygame.mixer_music.stop()
+        pygame.mixer_music.unload()
+
+    @classmethod
     def load_image(cls, name):
 
         if name in cls.resources:

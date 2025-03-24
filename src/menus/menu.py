@@ -60,10 +60,12 @@ class MainMenu(Menu):
         self.listaPantallas.append(PantallaInicialGUI(self))
         self.listaPantallas.append(PantallaConfiguracionesGUI(self))
         self.mostrarPantallaInicial()
+        ResourceManager.load_and_play_wav(f"title_theme.wav", -1)
 
     def ejecutarJuego(self): 
         from ..worlds import world1
-        
+
+        ResourceManager.stop_and_unload_wav(f"title_theme.wav")
         fase = world1.World1(self.director.pantalla.get_height(), self.director.pantalla.get_width())
         self.director.cambiar_escena(fase)
 

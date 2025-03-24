@@ -5,7 +5,7 @@ from .world import World
 
 class World3(World):
     def __init__(self, alto_pantalla, ancho_pantalla):
-        super().__init__(alto_pantalla, ancho_pantalla, 3)
+        super().__init__(alto_pantalla, ancho_pantalla, 3, "final_city.wav")
         world_number = 3
         self.hasSky = False
         self.traps = (-2, -2)
@@ -36,4 +36,5 @@ class World3(World):
     def manejar_evento_especifico(self, evento):
         from .world1 import World1
         if self.control.change_world(evento) or evento.type == EVENTO_BOSS_MUERTO:
+            ResourceManager.stop_and_unload_wav(self.song_name)
             self.director.cambiar_escena(World1(self.alto_pantalla, self.ancho_pantalla))

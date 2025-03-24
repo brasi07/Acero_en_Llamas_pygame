@@ -16,7 +16,7 @@ from .element_factory import ElementFactory
 
 
 class World(Scene, ABC):
-    def __init__(self, alto_pantalla, ancho_pantalla, world_number):
+    def __init__(self, alto_pantalla, ancho_pantalla, world_number, song_name):
 
         super().__init__(Director())
 
@@ -27,6 +27,7 @@ class World(Scene, ABC):
 
         self.ancho_pantalla = ancho_pantalla
         self.alto_pantalla = alto_pantalla
+        self.song_name = song_name
 
         self.capas = {}
         self.sprites_por_capa = {}
@@ -77,6 +78,8 @@ class World(Scene, ABC):
         self.num_filas = len(self.capas[1]) if 1 in self.capas else 0
         self.num_columnas = len(self.capas[1][0]) if self.num_filas > 0 else 0
         self.elementos_por_capa = {capa: [] for capa in self.capas.keys()}
+
+        ResourceManager.load_and_play_wav(self.song_name, -1)
 
     @staticmethod
     def extraer_numero_capa(archivo):
