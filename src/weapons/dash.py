@@ -3,8 +3,8 @@ from ..extras import ResourceManager, RESIZE_PLAYER, COOLDOWN
 from .weapon import Weapon
 
 class Dash(Weapon):
-    def __init__(self, tank):
-        super().__init__(tank)
+    def __init__(self, tank, posicion=None):
+        super().__init__(tank, posicion)
         self.nombre_sprite = "dash"
         self.imagenes_accesorio_base = ResourceManager.load_sprites(RESIZE_PLAYER, RESIZE_PLAYER, "dash")
 

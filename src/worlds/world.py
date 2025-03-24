@@ -11,6 +11,7 @@ from ..menus.menu import PauseMenu
 from ..scene import Scene
 from ..tanks import Player
 from ..tanks.enemies import Enemy
+from ..tanks.enemies.bosses import WarTrain
 from ..ui import Ui
 from .element_factory import ElementFactory
 
@@ -112,6 +113,9 @@ class World(Scene, ABC):
                         for fila in self.elementos_por_capa_y_pantalla[capa]:  # Recorre todas las filas
                             for columna in fila:  # Recorre todas las columnas dentro de cada fila
                                 columna.append(elemento)
+                    elif isinstance(elemento, WarTrain) and capa == 2:
+                        for columna in self.elementos_por_capa_y_pantalla[capa][0]:  # Recorre todas las columnas dentro de cada fila
+                            columna.append(elemento)
                     else:
                         self.elementos_por_capa_y_pantalla[capa][fila_pantalla][col_pantalla].append(elemento)
 

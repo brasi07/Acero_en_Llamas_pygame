@@ -8,8 +8,7 @@ from ....weapons import WeaponMegaCannon
 class MegaCannon(Enemy):
     def __init__(self, x, y):
         super().__init__(20, 0, x, y, RESIZE_PLAYER, RESIZE_PLAYER, "torreta", tank_level="_boss2", elite=False)
-        imagen = ResourceManager.load_and_scale_image("body_boss2.png", RESIZE_PLAYER*2, RESIZE_PLAYER*2)
-        self.imagen = imagen
+        self.imagen = ResourceManager.load_and_scale_image("body_boss2.png", RESIZE_PLAYER*2, RESIZE_PLAYER*2)
         self.rect_element = self.imagen.get_rect(topleft=(self.x-TILE_SIZE/2, self.y-TILE_SIZE/3))
         self.mask = pygame.mask.from_surface(self.imagen)
         self.muerto = False

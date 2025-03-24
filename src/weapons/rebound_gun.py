@@ -5,10 +5,10 @@ from .bullets import BouncingBullet
 from .weapon import Weapon
 
 class ReboungGun(Weapon):
-    def __init__(self, tank):
+    def __init__(self, tank, posicion=None):
         from ..tanks import Player
 
-        super().__init__(tank)
+        super().__init__(tank, posicion)
         self.tiempo_inicio = None #Guarda el tiempo de activacivación
         self.esPlayer = isinstance(self.tank, Player)
         if self.esPlayer:

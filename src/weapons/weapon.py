@@ -6,8 +6,15 @@ from ..extras import RESIZE_PLAYER, ResourceManager, COOLDOWN
 from .bullets import Bullet
 
 class Weapon:
-    def __init__(self, tank):
+    def __init__(self, tank, posicion=None):
         self.tank = tank
+        self.desplazamientox, self.desplazamientoy = 0,0
+
+        if posicion:
+            self.desplazamientox, self.desplazamientoy = posicion
+
+        self.x, self.y = self.desplazamientox + tank.rect_element.centerx, self.desplazamientoy + tank.rect_element.centery
+
         self.imagen_canon_base = ResourceManager.cargar_canon(0, "weapons", tank.tank_level)
         self.imagenes_accesorio_base = None
         self.imagen_bala = ResourceManager.load_and_scale_image("bala_base.png", RESIZE_PLAYER * 0.07, RESIZE_PLAYER * 0.07)
@@ -15,7 +22,7 @@ class Weapon:
         self.imagen_canon = self.imagen_canon_base
         self.imagen_accesorio = self.imagenes_accesorio_base
 
-        self.rect_canon = self.imagen_canon.get_rect(center=tank.rect_element.center)
+        self.rect_canon = self.imagen_canon.get_rect(center=(self.x, self.y))
         self.rect_accesorio = None
         self.cooldown = COOLDOWN
 
@@ -27,8 +34,10 @@ class Weapon:
         mundo.add_bullet(nueva_bala)
 
     def update(self, mundo, tank=None):
+        self.x, self.y = self.desplazamientox + self.tank.rect_element.centerx, self.desplazamientoy + self.tank.rect_element.centery
+
         # Calcular la dirección del cañón
-        dirx, diry = self.tank.calcular_direccion_canon(mundo, tank)
+        dirx, diry = self.tank.calcular_direccion_canon(mundo, tank, self)
         
         # Calcular el ángulo del cañón
         self.angulo_cannon = np.degrees(np.arctan2(diry, dirx))  # Guardar el ángulo para disparos
@@ -51,8 +60,8 @@ class Weapon:
         y_lateral_offset = desplazamiento_lateral * np.sin(angle_rad + np.pi / 2)
 
         # Calcular posición final
-        cannon_x = self.rect_canon.centerx + x_offset + x_lateral_offset
-        cannon_y = self.rect_canon.centery + y_offset + y_lateral_offset
+        cannon_x = self.x + x_offset + x_lateral_offset
+        cannon_y = self.y + y_offset + y_lateral_offset
 
         return cannon_x, cannon_y
 
@@ -63,13 +72,13 @@ class Weapon:
     def dibujar_arma(self, pantalla, x, y):
         if self.imagen_accesorio and self.under_weapon: #dibujar arma secundaria si necesario
             self.rect_accesorio = self.imagen_accesorio.get_rect(top=self.tank.rect_element.bottom)
-            pantalla.blit(self.imagen_accesorio, (self.tank.rect_element.centerx - self.rect_accesorio.width // 2 - x, self.tank.rect_element.centery - self.tank.rect_element.height // 2 - y))
+            pantalla.blit(self.imagen_accesorio, (self.x - self.rect_accesorio.width // 2 - x, self.y - self.tank.rect_element.height // 2 - y))
 
-        pantalla.blit(self.imagen_canon, (self.tank.rect_element.centerx - self.rect_canon.width // 2 - x, self.tank.rect_element.centery - self.rect_canon.height // 2 - y))
+        pantalla.blit(self.imagen_canon, (self.x - self.rect_canon.width // 2 - x, self.y - self.rect_canon.height // 2 - y))
 
         if self.imagen_accesorio and not self.under_weapon: #dibujar arma secundaria si necesario
             self.rect_accesorio = self.imagen_accesorio.get_rect(top=self.tank.rect_element.bottom)
-            pantalla.blit(self.imagen_accesorio, (self.tank.rect_element.centerx - self.rect_accesorio.width // 2 - x, self.tank.rect_element.centery - self.tank.rect_element.height // 2 - y))
+            pantalla.blit(self.imagen_accesorio, (self.x - self.rect_accesorio.width // 2 - x, self.y - self.tank.rect_element.height // 2 - y))
 
     def dibujar_minas(self,mundo):
         pass

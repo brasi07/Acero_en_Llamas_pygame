@@ -14,8 +14,8 @@ class Saw(Weapon):
         "abajo_derecha": -135
     }
 
-    def __init__(self, tank):
-        super().__init__(tank)
+    def __init__(self, tank, posicion=None):
+        super().__init__(tank, posicion)
         self.animacion = ResourceManager.load_animation("weapons_boss1.png", 96, 96, 3)
         self.imagen_canon_base = self.animacion[0]
         self.imagen_canon = self.imagen_canon_base

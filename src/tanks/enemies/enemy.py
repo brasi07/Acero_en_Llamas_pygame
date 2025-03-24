@@ -189,10 +189,10 @@ class Enemy(Tank):
                 self.arma.activar(mundo)
             self.tiempo_ultimo_disparo = pygame.time.get_ticks()
 
-    def calcular_direccion_canon(self, mundo, jugador):
+    def calcular_direccion_canon(self, mundo, jugador, arma):
         # Obtener la posición del ratón en relación con la cámara
-        dirx = jugador.rect_element.centerx - self.rect_element.centerx
-        diry = jugador.rect_element.centery - self.rect_element.centery
+        dirx = jugador.rect_element.centerx - self.arma.x
+        diry = jugador.rect_element.centery - self.arma.y
 
         return dirx, diry
     

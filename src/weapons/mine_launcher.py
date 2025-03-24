@@ -4,8 +4,8 @@ from ..extras import TILE_SIZE, ResourceManager, RESIZE_PLAYER, COOLDOWN
 from .weapon import Weapon
 
 class MineLauncher(Weapon):
-    def __init__(self, tank):
-        super().__init__(tank)
+    def __init__(self, tank, posicion=None):
+        super().__init__(tank, posicion)
         self.tiempo_inicio = pygame.time.get_ticks()
         self.imagenes_accesorio_base = ResourceManager.load_sprites(RESIZE_PLAYER, RESIZE_PLAYER, "mines")
         self.activo = False
