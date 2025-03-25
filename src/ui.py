@@ -91,7 +91,7 @@ class Ui(metaclass=SingletonMeta):
         sprite_height = self.barras[0].get_height()
 
         num_segmentos = max(vida_maxima, 0)  # Segmentos intermedios
-        total_width = (num_segmentos + 2) * sprite_width  # Ancho total de la barra
+        total_width = num_segmentos * sprite_width  # Ancho total de la barra
 
         # **Calcular cuántos segmentos están dañados**
         segmentos_danados = num_segmentos - vida_actual  # Cuántos usarán self.barras[1]
@@ -105,15 +105,15 @@ class Ui(metaclass=SingletonMeta):
 
         surface_bar.blit(primer_sprite, (0, 0))  # Primer segmento
 
-        for i in range(num_segmentos):
-            sprite = self.barras[1] if i >= num_segmentos - segmentos_danados else self.barras[10]
+        for i in range(num_segmentos-2):
+            sprite = self.barras[1] if i+1 >= num_segmentos - segmentos_danados else self.barras[10]
             surface_bar.blit(sprite, ((i + 1) * sprite_width, 0))
 
-        surface_bar.blit(ultimo_sprite, ((num_segmentos + 1) * sprite_width, 0))  # Último segmento
+        surface_bar.blit(ultimo_sprite, ((num_segmentos-1) * sprite_width, 0))  # Último segmento
 
         # **Centrar la barra sobre el tanque**
         x = tank.rect_element.centerx - cam_x - total_width // 2  # Centrar horizontalmente
-        y = tank.rect_element.y - cam_y - 2  # Un poco arriba del tanque
+        y = tank.rect_element.y - cam_y  # Un poco arriba del tanque
 
         # **Dibujar la barra ya centrada**
         pantalla.blit(surface_bar, (x, y))

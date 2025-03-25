@@ -91,6 +91,9 @@ class Tank(Element):
 
     def recibir_dano(self, dano):
         self.vida -= dano
+        if self.vida < 0:
+            self.vida = 0
+
 
             
 
