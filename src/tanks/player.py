@@ -122,7 +122,7 @@ class Player(Tank):
         self.dibujar(pantalla, x, y) #Dibujar base tanque
         self.arma.dibujar_arma(pantalla, x, y)
 
-    def calcular_direccion_canon(self, mundo, jugador, arma):
+    def calcular_direccion_canon(self, mundo, jugador, arma=None):
         # Obtener la posición del ratón en relación con la cámara
         cursorx, cursory = pygame.mouse.get_pos()
         dirx = cursorx - (self.rect_element.centerx - mundo.camara_x)
