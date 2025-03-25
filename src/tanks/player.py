@@ -1,4 +1,5 @@
 import pygame
+
 from ..extras import CollisionLayer, RESIZE_PLAYER, EVENTO_JUGADOR_MUERTO, controller, ResourceManager
 from .tank import Tank
 from ..weapons import Weapon, Dash, Shotgun, ReboungGun, RocketLauncher, MineLauncher, Shield

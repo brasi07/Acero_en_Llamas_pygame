@@ -11,7 +11,6 @@ class WeaponMegaCannon(Weapon):
         self.tiempo_inicio = None  # Guarda el tiempo de activacivación
         self.animacion = ResourceManager.load_animation("weapons_boss2.png", 128, 128, 11, RESIZE_PLAYER * 2, RESIZE_PLAYER * 2)
         self.imagen_canon_base = self.animacion[0]
-        self.imagen_canon = self.imagen_canon_base
         self.rect_canon = self.imagen_canon.get_rect(center=tank.rect_element.center)
         self.activo = False
         self.cooldown = 5000
@@ -31,10 +30,10 @@ class WeaponMegaCannon(Weapon):
         if not self.activo:
             self.dirx, self.diry = self.tank.calcular_direccion_canon(mundo, tank)
         
-            # Calcular el ángulo del cañón
-            self.angulo_cannon = np.degrees(np.arctan2(self.diry, self.dirx))  # Guardar el ángulo para disparos
-            self.imagen_canon = pygame.transform.rotate(self.imagen_canon_base, -self.angulo_cannon - 90)
-            self.rect_canon = self.imagen_canon.get_rect(center=self.tank.rect_element.center)
+        # Calcular el ángulo del cañón
+        self.angulo_cannon = np.degrees(np.arctan2(self.diry, self.dirx))  # Guardar el ángulo para disparos
+        self.imagen_canon = pygame.transform.rotate(self.imagen_canon_base, -self.angulo_cannon - 90)
+        self.rect_canon = self.imagen_canon.get_rect(center=self.tank.rect_element.center)
 
     def update_secundaria(self, tank, mundo):
         if self.activo:
@@ -50,7 +49,5 @@ class WeaponMegaCannon(Weapon):
                     self.frame_actual = 0
                     self.activo = False  # Desactiva la animación cuando termina
 
-
                 # Actualizar la imagen del cañón
                 self.imagen_canon_base = self.animacion[self.frame_actual]
-                # self.imagen_canon = self.imagen_canon_base
