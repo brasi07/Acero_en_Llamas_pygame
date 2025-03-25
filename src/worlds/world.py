@@ -7,13 +7,14 @@ from .. import Director
 from ..extras import settings, EVENTO_JUGADOR_MUERTO, ANCHO, ALTO, ResourceManager, TILE_SIZE
 from ..elements import Wall, LowWall
 from ..elements.activateable import Door
-from ..menus.menu import PauseMenu
+from ..menus.menu import PauseMenu, GameOverMenu
 from ..scene import Scene
 from ..tanks import Player
 from ..tanks.enemies import Enemy
 from ..tanks.enemies.bosses import WarTrain
 from ..ui import Ui
 from .element_factory import ElementFactory
+from ..weapons import Weapon
 
 
 class World(Scene, ABC):
@@ -25,6 +26,8 @@ class World(Scene, ABC):
         self.control = settings.controller
 
         self.player = self.director.partida.player
+
+        self.previous_weapon = self.player.arma
 
         self.ancho_pantalla = ancho_pantalla
         self.alto_pantalla = alto_pantalla
@@ -236,8 +239,9 @@ class World(Scene, ABC):
             if evento.type == pygame.QUIT:
                 self.director.salir_programa()
             elif evento.type == EVENTO_JUGADOR_MUERTO:
-                self.director.reiniciar_escena()
                 self.player.vida = self.player.vida_inicial
+                self.player.cambiar_secundaria(self.previous_weapon)
+                self.director.apilar_escena(GameOverMenu(self.director))
 
             if self.control.pausar(evento):
                 self.director.apilar_escena(PauseMenu( self.director))

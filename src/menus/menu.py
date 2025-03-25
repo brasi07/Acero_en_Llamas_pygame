@@ -52,6 +52,12 @@ class Menu(Scene):
     def continuar(self):
         self.director.salir_de_escena()
 
+    def cargar_partida(self):
+        pass
+
+    def return_to_title(self):
+        self.director.cambiar_escena(MainMenu(self.director))
+
 
 class MainMenu(Menu):
 
@@ -77,7 +83,20 @@ class PauseMenu(Menu):
         self.listaPantallas.append(PantallaConfiguracionesGUI(self))
         self.mostrarPantallaInicial()
 
+    def guardar_partida(self):
+        pass
 
+class GameOverMenu(Menu):
 
+    def __init__(self, director):
+        super().__init__(director)
+        self.listaPantallas.append(PantallaGameOverGUI(self))
+        self.mostrarPantallaInicial()
+        ResourceManager.load_and_play_wav(f"game_over_theme.wav")
+
+    def reintentar(self):
+        ResourceManager.stop_and_unload_wav(f"game_over_theme.wav")
+        self.director.salir_de_escena()
+        self.director.reiniciar_escena()
 
 
