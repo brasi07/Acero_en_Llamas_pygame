@@ -1,7 +1,7 @@
 import pygame
 
 from ..astar import raycasting
-from ....extras import RESIZE_PLAYER, TILE_SIZE, ResourceManager, EVENTO_BOSS_MUERTO, CollisionLayer
+from ....extras import RESIZE_PLAYER, TILE_SIZE, ResourceManager, EVENTO_BOSS_MUERTO, CollisionLayer, ALTO
 from ..enemy import Enemy
 from ....weapons import WeaponMegaCannon
 
@@ -14,7 +14,7 @@ class MegaCannon(Enemy):
         self.muerto = False
         self.arma = WeaponMegaCannon(self)
         self.colision_layer_balas = CollisionLayer.BULLET_BOSS2
-        self.attack_range = 450
+        self.attack_range = TILE_SIZE*20
 
 
     def update(self, jugador, mundo):
@@ -32,8 +32,7 @@ class MegaCannon(Enemy):
 
         self.arma.update(mundo, jugador)
         self.arma.update_secundaria(jugador, mundo)
-        distancia = self.distancia_jugador(jugador)
-        if distancia < self.attack_range:
+        if jugador.rect_element.centery < (self.fila_pantalla+1) * ALTO:
             self.manejar_ataque(mundo, pantalla_binaria, start, goal)
 
     def manejar_ataque(self, mundo, pantalla_binaria, start, goal):
