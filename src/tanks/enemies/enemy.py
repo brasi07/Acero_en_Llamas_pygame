@@ -61,6 +61,8 @@ class Enemy(Tank):
         if self.vida <= 0:
             self.eliminar = True
             if self.elite:  self.drop_weapon(mundo)
+            self.desmarcar_todos_nodos(pantalla_binaria, self.id_mapa_binario)
+            return
 
         self.arma.update(mundo, tank=jugador)
         distancia = self.distancia_jugador(jugador)
@@ -92,6 +94,12 @@ class Enemy(Tank):
                 nx, ny = x + dx, y + dy
                 if 0 <= ny < len(pantalla_binaria) and 0 <= nx < len(pantalla_binaria[0]) and pantalla_binaria[ny][nx] == id:
                     pantalla_binaria[ny][nx] = 0  # Solo borrar el id, dejando los 1 intactos
+    
+    def desmarcar_todos_nodos(self, pantalla_binaria, id):
+        for y in range(len(pantalla_binaria)):
+            for x in range(len(pantalla_binaria[0])):
+                if pantalla_binaria[y][x] == id:
+                    pantalla_binaria[y][x] = 0
 
     def drop_weapon(self, mundo):
         drop = PickableWeapon(self.rect_element.centerx / TILE_SIZE, self.rect_element.centery / TILE_SIZE,
