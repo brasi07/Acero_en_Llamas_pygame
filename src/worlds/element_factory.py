@@ -70,7 +70,6 @@ class ElementFactory:
         tipos_patrullas = {
             0: "horizontal",
             1: "vertical",
-            2: "circular",
             3: "torreta",
         }
 

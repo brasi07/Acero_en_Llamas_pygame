@@ -100,18 +100,7 @@ class Enemy(Tank):
         mundo.elementos_actualizables.append(drop)
 
     def manejar_patrullaje(self, mundo, pantalla_binaria):
-        if self.modo_patrulla == "circular":
-            movimientos = [
-                (self.velocidad, 0, self.rect_element.x >= self.start_x + self.patrol_movement, 1),
-                (0, self.velocidad, self.rect_element.y >= self.start_y + self.patrol_movement, 2),
-                (-self.velocidad, 0, self.rect_element.x <= self.start_x, 3),
-                (0, -self.velocidad, self.rect_element.y <= self.start_y, 0)
-            ]
-            dx, dy, cambiar, nueva_fase = movimientos[self.patrol_phase]
-            if cambiar:
-                self.patrol_phase = nueva_fase
-
-        elif self.modo_patrulla == "horizontal":
+        if self.modo_patrulla == "horizontal":
             dx, dy = self.velocidad * self.patrol_direction, 0
             pos_anterior = ((self.rect_element.centerx // TILE_SIZE) % 32, (self.rect_element.centery // TILE_SIZE) % 18)
             if self.actualizar_posicion(dx, dy, mundo):
