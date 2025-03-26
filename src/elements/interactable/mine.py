@@ -1,19 +1,21 @@
 import pygame
 from .interactable import Interactable
-from ...extras import CollisionLayer, TIME_FRAME, ResourceManager
+from ...extras import CollisionLayer, TIME_FRAME, ResourceManager, TILE_SIZE
 
 
 class Mine(Interactable):
 
     def __init__(self, x, y):
         self.imagen = ResourceManager.load_and_scale_image("dynamite.png", 1, 1)
+        super().__init__(x, y, self.imagen, CollisionLayer.BOTH)
+        self.rect_element = self.imagen.get_rect(center=(x*TILE_SIZE, y*TILE_SIZE))
         self.tiempo_creacion = pygame.time.get_ticks()
         self.frame_actual = -1
         self.ultimo_cambio_frame = 0
         self.activo = False
         self.objeto_colisionando = True
         self.animacion = ResourceManager.load_animation("explosiones4A.png", 32, 32, 6, resizex=1, resizey=1)
-        super().__init__(x, y, self.imagen, CollisionLayer.BOTH)
+
 
     def update(self, jugador):
         if self.activo:

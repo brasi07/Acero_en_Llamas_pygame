@@ -25,3 +25,6 @@ class Shield(Weapon):
             self.imagen_accesorio = self.imagen_escudo_roto
         self.vida_owner = self.tank.vida
 
+    def get_pickable_image(self):
+        return self.imagenes_accesorio_base
+
