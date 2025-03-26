@@ -83,6 +83,7 @@ class Ui(metaclass=SingletonMeta):
 
     def draw_health_bar(self, tank, pantalla, cam_x, cam_y):
         """Dibuja la barra de vida del tanque en una única superficie y la centra."""
+        self.barras = ResourceManager.load_animation("barras_UI.png", 4, 6, 12, 0.2, 0.3)
 
         # Datos de la barra de vida
         vida_maxima = tank.vida_inicial

@@ -28,12 +28,17 @@ class ResourceManager(object):
     @classmethod
     def load_animation(cls, name, sizex, sizey, number_sprites, resizex=Settings.RESIZE_PLAYER, resizey=Settings.RESIZE_PLAYER):
         if name in cls.resources and isinstance(cls.resources[name], list):
-            return cls.resources[name]  # Retorna si ya fue cargado
+            sprites = []
+            for imagen in cls.resources[name]:
+                sprite = pygame.transform.scale(imagen, (resizex * Settings.TILE_SIZE, resizey * Settings.TILE_SIZE))
+                sprites.append(sprite)
+            return sprites  # Retorna si ya fue cargado
 
         ruta = cls.locate_resource(name)  # Ubica la imagen
         sprite_sheet = spritesheet.SpriteSheet(ruta)  # Carga el spritesheet
 
         sprites = []  # Lista para almacenar los sprites
+        cls.resources[name] = []
         ancho_total, alto_total = sprite_sheet.sheet.get_size()  # Tamaño total de la imagen
 
         # Número de sprites por fila (calculado en base al ancho de la imagen)
@@ -47,23 +52,23 @@ class ResourceManager(object):
 
             # Extrae el sprite de la imagen
             sprite = sprite_sheet.image_at(rect, Settings.ELIMINAR_FONDO)
+            cls.resources[name].append(sprite)
 
             # Escalar si es necesario
             sprite = pygame.transform.scale(sprite, (resizex * Settings.TILE_SIZE, resizey * Settings.TILE_SIZE))
 
             sprites.append(sprite)  # Agregar el sprite a la lista
 
-        cls.resources[name] = sprites  # Guarda en caché
         return sprites  # Retorna la lista de sprites
 
     @classmethod
     def load_sprites(cls, resizex, resizey, nombre):
 
-        if nombre in cls.resources:
-            return cls.resources[nombre]
-        else:
-            sprite_base = cls.load_and_scale_image(nombre + ".png", resizex, resizey)
-            sprite_base_45 = cls.load_and_scale_image(nombre + "_45.png", resizex, resizey)
+        if nombre not in cls.resources:
+
+            sprite_base = cls.load_image(nombre + ".png")
+            sprite_base_45 = cls.load_image(nombre + "_45.png")
+
             conjunto_sprites = {
                 "arriba": sprite_base,
                 "derecha": pygame.transform.rotate(sprite_base, -90),
@@ -77,14 +82,19 @@ class ResourceManager(object):
 
             cls.resources[nombre] = conjunto_sprites
 
-            return conjunto_sprites
+        conjunto_sprites = {}
+
+        for idx, image in cls.resources[nombre].items():
+            conjunto_sprites[idx] = pygame.transform.scale(image, (resizex * Settings.TILE_SIZE, resizey * Settings.TILE_SIZE))
+
+        return conjunto_sprites
 
     @classmethod
     def play_sound(cls, sound):
         if sound not in cls.resources:
             location = cls.locate_resource(sound)
             cls.resources[sound] = pygame.mixer.Sound(location)
-            cls.resources[sound].set_volume(0.5)
+            cls.resources[sound].set_volume(0.25)
 
         cls.resources[sound].play()
 
@@ -93,34 +103,33 @@ class ResourceManager(object):
     def cargar_canon(cls, numberweapon, sprite_type, tank_color):
 
         if f"{sprite_type}{tank_color}" in cls.resources:
-            return cls.resources[f"{sprite_type}{tank_color}"]
+            return pygame.transform.scale(cls.resources[f"{sprite_type}{tank_color}"], (Settings.RESIZE_CANNON * Settings.TILE_SIZE, Settings.RESIZE_CANNON * Settings.TILE_SIZE))
 
         weapon_sprite_sheet = spritesheet.SpriteSheet(ResourceManager.locate_resource(f"{sprite_type}{tank_color}.png"))
         weapon_strip = weapon_sprite_sheet.load_strip((0, 0, 96, 96), 16, Settings.ELIMINAR_FONDO)
-        weapon_sprites = [pygame.transform.scale(frame, (
-        Settings.RESIZE_CANNON * Settings.TILE_SIZE, Settings.RESIZE_CANNON * Settings.TILE_SIZE)) for frame in
-                          weapon_strip]
-        sprite_weapon = weapon_sprites[numberweapon]
+        sprite_weapon = weapon_strip[numberweapon]
 
         cls.resources[f"{sprite_type}{tank_color}"] = sprite_weapon
 
-        return cls.resources[f"{sprite_type}{tank_color}"]
+        return pygame.transform.scale(cls.resources[f"{sprite_type}{tank_color}"], (Settings.RESIZE_CANNON * Settings.TILE_SIZE, Settings.RESIZE_CANNON * Settings.TILE_SIZE))
 
     @classmethod
     def load_files_from_folder(cls, carpeta):
 
-        if carpeta in cls.resources:
-            return cls.resources[carpeta]
-
         sprites = {}
+
+        if carpeta in cls.resources:
+            for idx, image in cls.resources[carpeta].items():
+                sprites[idx] = pygame.transform.scale(image,(Settings.TILE_SIZE, Settings.TILE_SIZE))
+            return sprites
+
+        cls.resources[carpeta] = {}
 
         for archivo in os.listdir(carpeta):
             if archivo.endswith(".png"):
                 id_sprite = archivo.split(".")[0]  # Obtiene el nombre sin la extensión
-                sprites[int(id_sprite)] = pygame.image.load(os.path.join(carpeta, archivo))
-                sprites[int(id_sprite)] = pygame.transform.scale(sprites[int(id_sprite)], (Settings.TILE_SIZE, Settings.TILE_SIZE))
-
-        cls.resources[carpeta] = sprites
+                cls.resources[carpeta][int(id_sprite)] = pygame.image.load(os.path.join(carpeta, archivo))
+                sprites[int(id_sprite)] = pygame.transform.scale(cls.resources[carpeta][int(id_sprite)], (Settings.TILE_SIZE, Settings.TILE_SIZE))
 
         return sprites
 
