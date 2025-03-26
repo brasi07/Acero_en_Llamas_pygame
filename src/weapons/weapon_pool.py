@@ -1,5 +1,6 @@
 import random
-from ..weapons import Shotgun, ReboungGun, RocketLauncher, Weapon
+
+from ..weapons import Shotgun, ReboungGun, RocketLauncher, Weapon, MineLauncher, Shield, Dash
 
 class WeaponPool(object):
 
@@ -7,12 +8,12 @@ class WeaponPool(object):
 
     @classmethod
     def reset_pool(cls, player):
-        cls.pool = [Weapon(player), Shotgun(player), RocketLauncher(player), ReboungGun(player)]
-        cls.number = random.randint(1, len(cls.pool) - 1)
+        cls.pool = [Weapon(player), Shotgun(player), RocketLauncher(player), ReboungGun(player), Dash(player), MineLauncher(player), Shield(player)]
+        cls.number = random.randint(1, 31)
 
     @classmethod
     def random_weapon(cls):
-        cls.number = random.randint(1, len(cls.pool) - 1)
+        cls.number = random.randint(1, 3)
         return cls.pool[cls.number]
 
     @classmethod
@@ -34,7 +35,7 @@ class WeaponPool(object):
     def get_weapon_number(cls, player):
         i = 1
         while i < len(cls.pool):
-            if player.arma is cls.pool[i]:
+            if type(player.arma) == type(cls.pool[i]):
                 return i
             i += 1
 

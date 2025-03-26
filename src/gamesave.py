@@ -17,6 +17,7 @@ class Partida:
         self.current_stage = world
 
     def save(self):
+        print(WeaponPool.get_weapon_number(self.player))
         data = {
             "hp" : self.player.vida,
             "posx" : self.player.rect_element.x,
