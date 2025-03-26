@@ -19,7 +19,6 @@ class Shotgun(Weapon):
             self.animacion = ResourceManager.load_animation(f"weapons{tank.tank_level}_128x128.png", 128, 128, 16, RESIZE_CANNON, RESIZE_CANNON)
             self.imagen_canon_base = self.animacion[3]
 
-
         self.activo = False
         self.cooldown = COOLDOWN
         self.frame_actual = 0
@@ -52,4 +51,3 @@ class Shotgun(Weapon):
 
                 # Actualizar la imagen del cañón
                 self.imagen_canon_base = self.animacion[self.frame_actual]
-                self.imagen_canon = self.imagen_canon_base

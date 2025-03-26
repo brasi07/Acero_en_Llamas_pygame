@@ -41,7 +41,8 @@ class PantallaGUI:
 class PantallaInicialGUI(PantallaGUI):
     def __init__(self, menu):
         super().__init__(menu, "menu_inicial.jpeg")
-        self.elementosGUI = [BotonJugar(self, (ANCHO/2,(ALTO/3 * 2))), 
+        self.elementosGUI = [BotonJugar(self, (ANCHO/2,(ALTO/3 * 2) - BUTTON_SIZEY)),
+                             BotonCargar(self, (ANCHO/2,(ALTO/3 * 2))),
                              BotonConfiguraciones(self, (ANCHO/2, ((ALTO/3 * 2)  +  BUTTON_SIZEY))),
                              BotonSalir(self, (ANCHO/2, ((ALTO/3 * 2)  +  BUTTON_SIZEY*2)))]
         
@@ -55,8 +56,10 @@ class PantallaPauseGUI(PantallaGUI):
         super().__init__(menu, "menu_inicial.jpeg")
         self.background = None
         self.elementosGUI = [BotonResume(self, (ANCHO/2, ALTO/3)),
-                             BotonConfiguraciones(self, (ANCHO/2, ALTO/3 + BUTTON_SIZEY)),
-                             BotonSalir(self, (ANCHO/2, ALTO/3 + BUTTON_SIZEY * 2))]
+                             BotonCargar(self, (ANCHO/2, ALTO/3 + BUTTON_SIZEY)),
+                             BotonGuardar(self, (ANCHO/2, ALTO/3 + BUTTON_SIZEY*2)),
+                             BotonConfiguraciones(self, (ANCHO/2, ALTO/3 + BUTTON_SIZEY*3)),
+                             BotonSalir(self, (ANCHO/2, ALTO/3 + BUTTON_SIZEY * 4))]
         
     def dibujar(self,pantalla):
         if self.background == None:
@@ -64,4 +67,11 @@ class PantallaPauseGUI(PantallaGUI):
         pantalla.blit(self.background, (0,0))
         for elemento in self.elementosGUI:
             elemento.dibujar(pantalla)
+
+class PantallaGameOverGUI(PantallaGUI):
+    def __init__(self, menu):
+        super().__init__(menu, "blank_background.jpeg")
+        self.elementosGUI = [BotonRetry(self, (ANCHO / 2, ALTO / 3 + BUTTON_SIZEY)),
+                             BotonReturnToTitle(self, (ANCHO / 2, ALTO / 3 + BUTTON_SIZEY * 2)),
+                             BotonSalir(self, (ANCHO / 2, ALTO / 3 + BUTTON_SIZEY * 3))]
 

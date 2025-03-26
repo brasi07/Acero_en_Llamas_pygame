@@ -15,6 +15,7 @@ class MegaCannon(Enemy):
         self.arma = WeaponMegaCannon(self)
         self.colision_layer_balas = CollisionLayer.BULLET_BOSS2
         self.attack_range = TILE_SIZE*20
+        self.in_screen = False
 
 
     def update(self, jugador, mundo):
@@ -24,7 +25,14 @@ class MegaCannon(Enemy):
             self.eliminar = True
 
         if not self.en_la_misma_pantalla(jugador):
+            if self.in_screen:
+                ResourceManager.stop_and_unload_wav("boss_battle_loop.wav")
+                self.in_screen = False
             return
+
+        if not self.in_screen:
+            ResourceManager.load_and_play_wav("boss_battle_loop.wav", -1)
+            self.in_screen =  True
 
         pantalla_binaria = mundo.mapas_binarios[self.indice_mundo_x][self.indice_mundo_y]
         start = ((self.rect_element.centerx // TILE_SIZE) % 32, (self.rect_element.centery // TILE_SIZE) % 18)

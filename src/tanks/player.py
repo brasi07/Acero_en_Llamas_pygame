@@ -1,7 +1,8 @@
 import pygame
+
 from ..extras import CollisionLayer, RESIZE_PLAYER, EVENTO_JUGADOR_MUERTO, controller, ResourceManager
 from .tank import Tank
-from ..weapons import Weapon, Dash, Shotgun, ReboungGun, RocketLauncher, MineLauncher, Shield
+from ..weapons import Weapon, Dash, Shotgun, ReboungGun, RocketLauncher, MineLauncher, Shield, WeaponPool
 
 
 class Player(Tank):
@@ -26,6 +27,7 @@ class Player(Tank):
         self.anterior_mov_x=0
         self.anterior_mov_y = 0
         self.contador_desliz=0
+        self.key_objs = objetos_clave
 
     def eventos(self, mundo):
         teclas = pygame.key.get_pressed()

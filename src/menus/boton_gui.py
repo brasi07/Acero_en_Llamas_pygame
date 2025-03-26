@@ -58,3 +58,31 @@ class BotonResume(BotonGUI):
 
     def accion(self):
         self.pantalla.menu.continuar()
+
+class BotonRetry(BotonGUI):
+    def __init__(self, pantalla, posicion):
+        super().__init__(pantalla, "Volver a intentar", posicion)
+
+    def accion(self):
+        self.pantalla.menu.reintentar()
+
+class BotonGuardar(BotonGUI):
+    def __init__(self, pantalla, posicion):
+        super().__init__(pantalla, "Guardar Partida", posicion)
+
+    def accion(self):
+        self.pantalla.menu.guardar_partida()
+
+class BotonCargar(BotonGUI):
+    def __init__(self, pantalla, posicion):
+        super().__init__(pantalla, "Cargar Partida", posicion)
+
+    def accion(self):
+        self.pantalla.menu.cargar_partida()
+
+class BotonReturnToTitle(BotonGUI):
+    def __init__(self, pantalla, posicion):
+        super().__init__(pantalla, "Pantalla de titulo", posicion)
+
+    def accion(self):
+        self.pantalla.menu.return_to_title()
