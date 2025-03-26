@@ -15,7 +15,7 @@ class Director(metaclass=SingletonMeta):
         self.escena_guardada_clase = None
         self.escena_parametros = None
         self.clock = pygame.time.Clock()
-        self.partida = Partida(4, -1, 0, 1)
+        self.partida = Partida(4, 0, 0, 1)
 
     def bucle(self, escena):
         self.salir_escena = False

@@ -2,7 +2,7 @@ import pygame
 
 from ..extras import CollisionLayer, RESIZE_PLAYER, EVENTO_JUGADOR_MUERTO, controller, ResourceManager
 from .tank import Tank
-from ..weapons import Weapon, Dash, Shotgun, ReboungGun, RocketLauncher, MineLauncher, Shield
+from ..weapons import Weapon, Dash, Shotgun, ReboungGun, RocketLauncher, MineLauncher, Shield, WeaponPool
 
 
 class Player(Tank):
@@ -27,6 +27,7 @@ class Player(Tank):
         self.anterior_mov_x=0
         self.anterior_mov_y = 0
         self.contador_desliz=0
+        self.key_objs = objetos_clave
 
     def eventos(self, mundo):
         teclas = pygame.key.get_pressed()
@@ -42,6 +43,7 @@ class Player(Tank):
         self.arma.update_secundaria(self, mundo)
         self.arma.update(mundo=mundo)
         self.verificar_fuera_pantalla(mundo)
+
         if self.contador_desliz ==1:
             self.deslizar=False
         else:

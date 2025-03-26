@@ -14,7 +14,6 @@ from ..tanks.enemies import Enemy
 from ..tanks.enemies.bosses import WarTrain
 from ..ui import Ui
 from .element_factory import ElementFactory
-from ..weapons import Weapon
 
 
 class World(Scene, ABC):
@@ -351,6 +350,8 @@ class World(Scene, ABC):
                         elemento.dibujar(pantalla, self.camara_x, self.camara_y)
 
         self.actualizar_transicion()
+        self.director.partida.camx = self.camara_x
+        self.director.partida.camy = self.camara_y
 
     def draw_sky(self, pantalla):
         """Dibuja solo la última capa (capa más alta) en la pantalla actual."""

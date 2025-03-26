@@ -2,6 +2,7 @@ from abc import abstractmethod
 
 import pygame
 
+from ..gamesave import Partida
 from ..scene import Scene
 from .pantallaGUI import *
 from ..tanks import player
@@ -53,7 +54,23 @@ class Menu(Scene):
         self.director.salir_de_escena()
 
     def cargar_partida(self):
-        pass
+        from ..worlds import world1, world2, world3
+        partida = Partida.load("save.pkl")
+        if partida:
+            self.director.partida = partida
+            fase = world1.World1(self.director.pantalla.get_height(), self.director.pantalla.get_width())
+            match partida.current_stage:
+                case 1:
+                    fase = world1.World1(self.director.pantalla.get_height(), self.director.pantalla.get_width())
+                case 2:
+                    fase = world2.World2(self.director.pantalla.get_height(), self.director.pantalla.get_width())
+                case 3:
+                    fase = world3.World3(self.director.pantalla.get_height(), self.director.pantalla.get_width())
+            fase.player.rect_element.x = partida.x
+            fase.player.rect_element.y = partida.y
+            fase.camara_x = partida.camx
+            fase.camara_y = partida.camy
+            self.director.cambiar_escena(fase)
 
     def return_to_title(self):
         self.director.cambiar_escena(MainMenu(self.director))
@@ -84,7 +101,7 @@ class PauseMenu(Menu):
         self.mostrarPantallaInicial()
 
     def guardar_partida(self):
-        pass
+        self.director.partida.save()
 
 class GameOverMenu(Menu):
 
