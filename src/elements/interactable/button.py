@@ -1,6 +1,7 @@
 import pygame
 from .interactable import Interactable
-from ...extras import CollisionLayer, TILE_SIZE
+from ...extras import CollisionLayer, TILE_SIZE, ResourceManager
+
 
 class Button(Interactable):
     def __init__(self, x, y, sprite, objetos_a_activar, mundo):
@@ -22,6 +23,7 @@ class Button(Interactable):
         """Solo activa el botón si el jugador NO estaba colisionando en el frame anterior."""
         if not self.camara_temporal_activa and self.check_collision(objeto) and not self.objeto_colisionando:
             self.presionar_boton()
+            ResourceManager.play_sound("button_pressed.wav")
             self.objeto_colisionando = True
 
     def update(self, jugador):

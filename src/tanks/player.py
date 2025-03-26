@@ -131,3 +131,8 @@ class Player(Tank):
         diry = cursory - (self.rect_element.centery - mundo.camara_y)
 
         return dirx, diry
+
+    def improve(self):
+        self.vida_inicial += 2
+        self.vida = self.vida_inicial
+        self.velocidad += 3

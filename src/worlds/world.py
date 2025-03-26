@@ -23,7 +23,7 @@ class World(Scene, ABC):
 
         self.ui = Ui()
         self.control = settings.controller
-
+        self.world_number = world_number
         self.player = self.director.partida.player
 
         self.previous_weapon = self.player.arma
@@ -352,6 +352,7 @@ class World(Scene, ABC):
         self.actualizar_transicion()
         self.director.partida.camx = self.camara_x
         self.director.partida.camy = self.camara_y
+        self.director.partida.current_stage = self.world_number
 
     def draw_sky(self, pantalla):
         """Dibuja solo la última capa (capa más alta) en la pantalla actual."""

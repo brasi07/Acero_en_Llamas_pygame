@@ -18,6 +18,7 @@ class PantallaGUI:
                 self.elementoClic = None
                 for elemento in self.elementosGUI:
                     if elemento.posicionEnElemento(event.pos):
+                        ResourceManager.play_sound("Menu Selection Click.wav")
                         self.elementoClic = elemento
             if event.type == pygame.MOUSEBUTTONUP:
                 for elemento in self.elementosGUI:
@@ -70,8 +71,8 @@ class PantallaPauseGUI(PantallaGUI):
 
 class PantallaGameOverGUI(PantallaGUI):
     def __init__(self, menu):
-        super().__init__(menu, "blank_background.jpeg")
-        self.elementosGUI = [BotonRetry(self, (ANCHO / 2, ALTO / 3 + BUTTON_SIZEY)),
-                             BotonReturnToTitle(self, (ANCHO / 2, ALTO / 3 + BUTTON_SIZEY * 2)),
-                             BotonSalir(self, (ANCHO / 2, ALTO / 3 + BUTTON_SIZEY * 3))]
+        super().__init__(menu, "blank_background.jpg")
+        self.elementosGUI = [BotonRetry(self, (ANCHO / 2, ALTO / 3 + BUTTON_SIZEY*2)),
+                             BotonReturnToTitle(self, (ANCHO / 2, ALTO / 3 + BUTTON_SIZEY * 3)),
+                             BotonSalir(self, (ANCHO / 2, ALTO / 3 + BUTTON_SIZEY * 4))]
 

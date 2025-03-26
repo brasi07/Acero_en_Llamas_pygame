@@ -56,6 +56,7 @@ class Bullet(Element):
 
     def realizar_dano(self, elemento):
         if hasattr(elemento, "vida"):
+            ResourceManager.play_sound("8bit_bomb_explosion.wav")
             elemento.recibir_dano(self.dano)
             return True
         return False

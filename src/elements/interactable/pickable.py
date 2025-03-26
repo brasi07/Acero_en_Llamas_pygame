@@ -1,7 +1,7 @@
 import pygame
 from abc import ABC
 from .interactable import Interactable
-from ...extras import CollisionLayer, EVENTO_COLECCIONABLE_RECOGIDO
+from ...extras import CollisionLayer, EVENTO_COLECCIONABLE_RECOGIDO, ResourceManager
 
 
 class Pickable(ABC, Interactable):
@@ -39,6 +39,7 @@ class PickableWeapon(Pickable):
     def interactuar(self, objeto):
         from ...tanks import Player
         if isinstance(objeto, Player) and self.check_collision(objeto):
+            ResourceManager.play_sound("object_picked.wav")
             objeto.cambiar_secundaria(self.weapon)
             self.eliminar = True
 
@@ -51,6 +52,7 @@ class PickableCollectable(Pickable):
     def interactuar(self, objeto):
         from ...tanks import Player
         if isinstance(objeto, Player) and self.check_collision(objeto):
+            ResourceManager.play_sound("object_picked.wav")
             pygame.event.post(pygame.event.Event(EVENTO_COLECCIONABLE_RECOGIDO))
             self.eliminar = True
 

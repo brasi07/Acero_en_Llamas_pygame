@@ -79,6 +79,16 @@ class ResourceManager(object):
             return conjunto_sprites
 
     @classmethod
+    def play_sound(cls, sound):
+        if sound not in cls.resources:
+            location = cls.locate_resource(sound)
+            cls.resources[sound] = pygame.mixer.Sound(location)
+            cls.resources[sound].set_volume(0.5)
+
+        cls.resources[sound].play()
+
+
+    @classmethod
     def cargar_canon(cls, numberweapon, sprite_type, tank_color):
 
         if f"{sprite_type}{tank_color}" in cls.resources:
