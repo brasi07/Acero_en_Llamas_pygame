@@ -17,6 +17,10 @@ class WeaponPool(object):
         return cls.pool[cls.number]
 
     @classmethod
+    def get_weapon(cls, number):
+        return cls.pool[number]
+
+    @classmethod
     def set_enemy_weapon(cls, enemy):
 
         match cls.number:
@@ -27,9 +31,6 @@ class WeaponPool(object):
             case 3:
                 return ReboungGun(enemy)
 
-    @classmethod
-    def get_weapon(cls, num):
-        return cls.pool[num]
 
     @classmethod
     def get_weapon_number(cls, player):

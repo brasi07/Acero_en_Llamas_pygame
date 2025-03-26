@@ -26,28 +26,29 @@ class Saw(Weapon):
         self.cooldown = 1000
 
 
-    def activar_secundaria(self, mundo, jugador):
+    def activar_secundaria(self, mundo, jugador=None):
         if self.tiempo_actual - self.ultimo_golpe > 1000:
             jugador.recibir_dano(1)
             self.ultimo_golpe = self.tiempo_actual
 
     def update_secundaria(self, tank, mundo):
+        self.x, self.y = self.desplazamientox + self.tank.rect_element.centerx, self.desplazamientoy + self.tank.rect_element.centery
+
         self.tiempo_actual = pygame.time.get_ticks()
 
         if self.tiempo_actual - self.ultimo_cambio_frame >= TIME_FRAME:
             self.ultimo_cambio_frame = self.tiempo_actual  # Actualizar el tiempo del último cambio
             self.frame_actual = (self.frame_actual + 1) % len(self.animacion)
 
-            # Actualizar la imagen del cañón
-            self.imagen_canon_base = self.animacion[self.frame_actual]
-            self.actualizar_rotacion(self.tank.direccion)  # Aplicar rotación según la dirección del tanque
-
-    def actualizar_rotacion(self, direccion):
-        """Rota la imagen de la sierra según la dirección del tanque."""
+        direccion = self.tank.direccion
+        # Actualizar la imagen del cañón
         if direccion in self.DIRECCIONES_ROTACION:
             angulo = self.DIRECCIONES_ROTACION[direccion]
-            self.imagen_canon = pygame.transform.rotate(self.imagen_canon_base, angulo)
-            self.rect_canon = self.imagen_canon.get_rect(center=self.tank.rect_element.center)
+        else:
+            angulo = 0
 
+        self.imagen_canon = pygame.transform.rotate(self.imagen_canon_base, angulo)
+        self.rect_canon = self.imagen_canon.get_rect(center=self.tank.rect_element.center)
+        self.imagen_canon_base = self.animacion[self.frame_actual]
 
 

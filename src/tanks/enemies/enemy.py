@@ -135,8 +135,6 @@ class Enemy(Tank):
         if not hasattr(self, "pos_anterior"):
             self.pos_anterior = ((self.rect_element.centerx // TILE_SIZE) % 32, (self.rect_element.centery // TILE_SIZE) % 18)
 
-
-
         if distancia_jugador < self.attack_range and (raycasting(pantalla_binaria, start, goal) or pantalla_binaria[goal[1]][goal[0]] == 1):
             self.state = EnemyState.ATTACKING
             return

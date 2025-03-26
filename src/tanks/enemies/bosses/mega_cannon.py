@@ -16,7 +16,7 @@ class MegaCannon(Enemy):
         self.colision_layer_balas = CollisionLayer.BULLET_BOSS2
         self.attack_range = TILE_SIZE*20
         self.in_screen = False
-
+        self.inicioBattle = False
 
     def update(self, jugador, mundo):
         if self.vida <= 0:
@@ -40,7 +40,12 @@ class MegaCannon(Enemy):
 
         self.arma.update(mundo, jugador)
         self.arma.update_secundaria(jugador, mundo)
-        if jugador.rect_element.centery < (self.fila_pantalla+1) * ALTO:
+
+        distancia = self.distancia_jugador(jugador)
+        if distancia < 400:
+            self.inicioBattle = True
+
+        if jugador.rect_element.centery < (self.fila_pantalla+1) * ALTO and self.inicioBattle:
             self.manejar_ataque(mundo, pantalla_binaria, start, goal)
 
     def manejar_ataque(self, mundo, pantalla_binaria, start, goal):
