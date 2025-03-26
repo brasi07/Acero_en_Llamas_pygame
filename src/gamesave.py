@@ -21,7 +21,7 @@ class Partida:
             "hp" : self.player.vida,
             "posx" : self.player.rect_element.x,
             "posy" : self.player.rect_element.y,
-            "weapon" : self.player.armas_pos,
+            "weapon" : WeaponPool.get_weapon_number(self.player),
             "key_obj" : self.player.key_objs,
             "world" : self.current_stage,
             "camx" : self.camx,

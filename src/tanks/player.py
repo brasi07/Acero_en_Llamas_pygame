@@ -43,7 +43,6 @@ class Player(Tank):
         self.arma.update_secundaria(self, mundo)
         self.arma.update(mundo=mundo)
         self.verificar_fuera_pantalla(mundo)
-
         if self.contador_desliz ==1:
             self.deslizar=False
         else:

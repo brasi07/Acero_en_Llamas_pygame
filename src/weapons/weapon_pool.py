@@ -36,5 +36,6 @@ class WeaponPool(object):
         while i < len(cls.pool):
             if player.arma is cls.pool[i]:
                 return i
+            i += 1
 
         return 0
