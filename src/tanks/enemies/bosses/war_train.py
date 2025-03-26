@@ -30,12 +30,17 @@ class WarTrain(Enemy):
 
         self.colision_layer_balas = CollisionLayer.BULLET_ENEMY
         self.attack_range = 3000
+        self.in_screen = False
 
     def update(self, jugador, mundo):
         if self.vida <= 0:
             pygame.event.post(pygame.event.Event(EVENTO_BOSS_MUERTO))
             jugador.vida = jugador.vida_inicial
             self.eliminar = True
+
+        if not self.in_screen and self.en_la_misma_pantalla(jugador):
+            ResourceManager.load_and_play_wav("boss_battle_loop.wav", -1)
+            self.in_screen =  True
 
         if self.rect_element.x <= ANCHO * 3:
             self.rect_element.x += 2

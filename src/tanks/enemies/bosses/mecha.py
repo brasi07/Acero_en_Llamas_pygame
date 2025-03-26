@@ -1,6 +1,6 @@
 import pygame
 
-from ....extras import RESIZE_PLAYER, TILE_SIZE, EVENTO_BOSS_MUERTO
+from ....extras import RESIZE_PLAYER, TILE_SIZE, EVENTO_BOSS_MUERTO, ResourceManager
 from ..astar import astar
 from ..enemy import Enemy, EnemyState
 from ....weapons import Saw
@@ -9,6 +9,7 @@ from ....weapons import Saw
 class Mecha(Enemy):
     def __init__(self, x, y):
         super().__init__(20, 2.5, x, y, RESIZE_PLAYER, RESIZE_PLAYER, "horizontal", tank_level="_boss1", elite=False)
+        self.in_screen = False
         self.arma = Saw(self)
 
     def update(self, jugador, mundo):
@@ -19,7 +20,14 @@ class Mecha(Enemy):
 
 
         if not self.en_la_misma_pantalla(jugador):
+            if self.in_screen:
+                ResourceManager.stop_and_unload_wav("boss_battle_loop.wav")
+                self.in_screen = False
             return
+
+        if not self.in_screen:
+            ResourceManager.load_and_play_wav("boss_battle_loop.wav", -1)
+            self.in_screen =  True
 
         pantalla_binaria = mundo.mapas_binarios[self.indice_mundo_x][self.indice_mundo_y]
 
