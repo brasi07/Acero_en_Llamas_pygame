@@ -8,7 +8,7 @@ class TextoGUI(ElementoGUI):
         ElementoGUI.__init__(self, pantalla)
         self.idle = self.font.render(texto, True, color)
         self.text = self.idle
-        self.hover = self.font.render(texto, True, Settings.VERDE)
+        self.hover = self.font.render(texto, True, Settings.ROJO)
         self.rect = self.text.get_rect()
         # Se coloca el rectangulo en su posicion
         self.establecerPosicion(posicion)
