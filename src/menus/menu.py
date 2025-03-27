@@ -65,10 +65,7 @@ class Menu(Scene):
                     fase = world2.World2(self.director.pantalla.get_height(), self.director.pantalla.get_width())
                 case 3:
                     fase = world3.World3(self.director.pantalla.get_height(), self.director.pantalla.get_width())
-            fase.player.rect_element.x = partida.x
-            fase.player.rect_element.y = partida.y
-            fase.camara_x = partida.camx
-            fase.camara_y = partida.camy
+            partida.set_save_coords(fase)
             self.director.cambiar_escena(fase)
 
     def return_to_title(self):
