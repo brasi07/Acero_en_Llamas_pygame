@@ -5,7 +5,6 @@ import pygame
 from ..gamesave import Partida
 from ..scene import Scene
 from .pantallaGUI import *
-from ..tanks import player
 
 class Menu(Scene):
     def __init__(self, director):
