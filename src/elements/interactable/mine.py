@@ -7,8 +7,8 @@ class Mine(Interactable):
 
     def __init__(self, x, y):
         self.imagen = ResourceManager.load_and_scale_image("dynamite.png", 1, 1)
-        super().__init__(x, y, self.imagen, CollisionLayer.BOTH)
-        self.rect_element = self.imagen.get_rect(center=(x*TILE_SIZE, y*TILE_SIZE))
+        super().__init__(x, y, self.imagen, Settings.CollisionLayer.BOTH)
+        self.rect_element = self.imagen.get_rect(center=(x*Settings.TILE_SIZE, y*Settings.TILE_SIZE))
         self.tiempo_creacion = pygame.time.get_ticks()
         self.frame_actual = -1
         self.ultimo_cambio_frame = 0

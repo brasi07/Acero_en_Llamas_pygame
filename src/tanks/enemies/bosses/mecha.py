@@ -56,7 +56,7 @@ class Mecha(Enemy):
         # Inicializar la posición anterior si aún no existe
         if not hasattr(self, "pos_anterior"):
             self.pos_anterior = (
-            (self.rect_element.centerx // TILE_SIZE) % 32, (self.rect_element.centery // TILE_SIZE) % 18)
+            (self.rect_element.centerx // Settings.TILE_SIZE) % 32, (self.rect_element.centery // Settings.TILE_SIZE) % 18)
 
         # Recalcular ruta si no hay path o el objetivo ha cambiado
         if pygame.time.get_ticks() - self.ultima_persecucion > 500:
@@ -78,7 +78,7 @@ class Mecha(Enemy):
             self.actualizar_posicion(dx, dy, mundo)
 
             # Nueva posición del enemigo en coordenadas de tile
-            pos_actual = ((self.rect_element.centerx // TILE_SIZE) % 32, (self.rect_element.centery // TILE_SIZE) % 18)
+            pos_actual = ((self.rect_element.centerx // Settings.TILE_SIZE) % 32, (self.rect_element.centery //Settings.TILE_SIZE) % 18)
 
             # Si ha cambiado de tile, actualizar la matriz binaria
             if pos_actual != self.pos_anterior:
