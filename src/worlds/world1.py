@@ -1,6 +1,7 @@
 from ..elements import Wall
 from ..extras import Settings, ResourceManager
 from .world import World
+from ..menus.menu import DialogoMenu
 
 class World1(World):
     def __init__(self, alto_pantalla, ancho_pantalla):
@@ -37,4 +38,4 @@ class World1(World):
         if self.control.change_world(evento) or evento.type == Settings.EVENTO_BOSS_MUERTO:
             #self.player.improve()
             self.stop_music()
-            self.director.cambiar_escena(World2(self.alto_pantalla, self.ancho_pantalla))
+            self.director.cambiar_escena(DialogoMenu(self.director, "nieve", World2(self.alto_pantalla, self.ancho_pantalla)))

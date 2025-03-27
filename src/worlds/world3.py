@@ -2,6 +2,7 @@
 
 from ..extras import Settings, ResourceManager
 from .world import World
+from ..menus.menu import FinalMenu
 
 class World3(World):
     def __init__(self, alto_pantalla, ancho_pantalla):
@@ -38,4 +39,4 @@ class World3(World):
         if self.control.change_world(evento) or evento.type == Settings.EVENTO_BOSS_MUERTO:
             #self.player.improve()
             self.stop_music()
-            self.director.cambiar_escena(World1(self.alto_pantalla, self.ancho_pantalla))
+            self.director.cambiar_escena(FinalMenu(self.director))

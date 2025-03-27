@@ -53,11 +53,15 @@ class BotonVolver(BotonGUI):
         self.pantalla.menu.mostrarPantallaInicial()
 
 class BotonResume(BotonGUI):
-    def __init__(self, pantalla, posicion):
+    def __init__(self, pantalla, posicion, to=None):
         super().__init__(pantalla, "Continuar", posicion)
+        self.to = to
 
     def accion(self):
-        self.pantalla.menu.continuar()
+        if self.to:
+            self.pantalla.menu.director.cambiar_escena(self.to)
+        else:
+            self.pantalla.menu.continuar()
 
 class BotonRetry(BotonGUI):
     def __init__(self, pantalla, posicion):
@@ -86,3 +90,11 @@ class BotonReturnToTitle(BotonGUI):
 
     def accion(self):
         self.pantalla.menu.return_to_title()
+
+class BotonCreditos(BotonGUI):
+    def __init__(self, pantalla, posicion):
+        super().__init__(pantalla, "Creditos", posicion)
+
+    def accion(self):
+        from .menu import CreditosMenu
+        self.pantalla.menu.director.cambiar_escena(CreditosMenu(self.pantalla.menu.director))

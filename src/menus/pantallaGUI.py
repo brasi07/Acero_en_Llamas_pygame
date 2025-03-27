@@ -89,3 +89,26 @@ class PantallaGameOverGUI(PantallaGUI):
                              BotonReturnToTitle(self, (self.ANCHO / 2, self.ALTO / 3 + self.BUTTON_SIZEY * 3)),
                              BotonSalir(self, (self.ANCHO / 2, self.ALTO / 3 + self.BUTTON_SIZEY * 4))]
 
+class PantallaDialogo(PantallaGUI):
+    def __init__(self, menu, dialogo, to):
+        super().__init__(menu, f"dialogo_{dialogo}.png")
+        self.elementosGUI = [BotonResume(self, (self.ANCHO/2, self.ALTO/1.2), to=to)]
+
+
+class PantallaFin(PantallaGUI):
+
+    def __init__(self, menu, final=None):
+        # Para el final alternativo
+        nombre_archivo = f"pantalla_final_{final}.png" if final is not None else "pantalla_final.png"
+        super().__init__(menu, nombre_archivo)
+        self.elementosGUI = [BotonReturnToTitle(self, (self.ANCHO / 2, self.ALTO / 3 + self.BUTTON_SIZEY * 3)),
+                             BotonCreditos(self, (self.ANCHO / 2, self.ALTO / 3 + self.BUTTON_SIZEY * 4)),]
+
+
+class PantallaCreditos(PantallaGUI):
+    def __init__(self, menu):
+        super().__init__(menu, "creditos.png")
+        self.elementosGUI = [BotonReturnToTitle(self, (self.ANCHO / 2, self.ALTO / 2 + self.BUTTON_SIZEY * 4))]
+
+
+
