@@ -7,9 +7,9 @@ class ElementoGUI:
         self.pantalla = pantalla
         # La fuente la debería cargar el estor de recursos
         if self.pantalla.ANCHO >= 1024:
-            self.font = ResourceManager.load_font("Komi24", "Komi.ttf", 24)
+            self.font = ResourceManager.load_font("VT32324", "VT323.ttf", 24)
         else:
-            self.font = ResourceManager.load_font("Komi12", "Komi.ttf", 12)
+            self.font = ResourceManager.load_font("VT32312", "VT323.ttf", 12)
 
     def establecerPosicion(self, posicion):
         (posicionx, posiciony) = posicion

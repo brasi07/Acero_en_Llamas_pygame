@@ -56,9 +56,9 @@ class PantallaConfiguracionesGUI(PantallaGUI):
     def __init__(self, menu):
         super().__init__(menu, "menu_sin_logo.jpeg")
         if self.ANCHO >= 1024:
-            optionFont = ResourceManager.load_font("Komi14","Komi.ttf", 14)
+            optionFont = ResourceManager.load_font("VT32314","VT323.ttf", 14)
         else:
-            optionFont = ResourceManager.load_font("Komi10", "Komi.ttf", 10)
+            optionFont = ResourceManager.load_font("VT32310", "VT323.ttf", 10)
 
         self.elementosGUI = [   TextoMenu(self, "Resolucion", optionFont, 14, (self.ANCHO/6, self.ALTO/6)),
                                 TextoRes(self, Settings.NEGRO, "768x432", (self.ANCHO/6 + self.ANCHO*0.2, self.ALTO/6), (768,432), self.menu.director),
