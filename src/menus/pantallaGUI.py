@@ -30,9 +30,9 @@ class PantallaGUI:
                     if elemento.posicionEnElemento(event.pos):
                         if self.elementoClic != None and (elemento == self.elementoClic):
                             elemento.accion()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    self.menu.continuar()
+            #if event.type == pygame.KEYDOWN:
+                #if event.key == pygame.K_ESCAPE:
+                    #self.menu.continuar()
 
 
     def dibujar(self,pantalla):
@@ -81,6 +81,9 @@ class PantallaPauseGUI(PantallaGUI):
         pantalla.blit(self.background, (0,0))
         for elemento in self.elementosGUI:
             elemento.dibujar(pantalla)
+
+    def eventos(self, lista_eventos):
+        super().eventos(lista_eventos)
 
 class PantallaGameOverGUI(PantallaGUI):
     def __init__(self, menu):

@@ -5,7 +5,6 @@ import pygame
 from ..gamesave import Partida
 from ..scene import Scene
 from .pantallaGUI import *
-from ..tanks import player
 
 class Menu(Scene):
     def __init__(self, director):
@@ -26,11 +25,11 @@ class Menu(Scene):
         # Se mira si se quiere salir de esta escena
         for evento in lista_eventos:
         # Si se quiere salir, se le indica al director
-            if evento.type == pygame.KEYDOWN:
-                if evento.key == pygame.K_t:
-                    self.ejecutarJuego()
             if evento.type == pygame.QUIT:
                 self.director.salir_programa()
+            if evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_ESCAPE:
+                    self.salirPrograma()
         # Se pasa la lista de eventos a la pantalla actual
         self.listaPantallas[self.pantallaActual].eventos(lista_eventos)
 
@@ -66,10 +65,7 @@ class Menu(Scene):
                     fase = world2.World2(self.director.pantalla.get_height(), self.director.pantalla.get_width())
                 case 3:
                     fase = world3.World3(self.director.pantalla.get_height(), self.director.pantalla.get_width())
-            fase.player.rect_element.x = partida.x
-            fase.player.rect_element.y = partida.y
-            fase.camara_x = partida.camx
-            fase.camara_y = partida.camy
+            partida.set_save_coords(fase)
             self.director.cambiar_escena(fase)
 
     def return_to_title(self):
@@ -106,6 +102,17 @@ class PauseMenu(Menu):
 
     def guardar_partida(self):
         self.director.partida.save()
+
+    def eventos(self, lista_eventos):
+        for evento in lista_eventos:
+        # Si se quiere salir, se le indica al director
+            if evento.type == pygame.QUIT:
+                self.director.salir_programa()
+            if evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_ESCAPE:
+                    self.continuar()
+        # Se pasa la lista de eventos a la pantalla actual
+        self.listaPantallas[self.pantallaActual].eventos(lista_eventos)
 
 class GameOverMenu(Menu):
 

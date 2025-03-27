@@ -292,6 +292,9 @@ class World(Scene, ABC):
                         elemento.animacion_elimninar()
                         self.elementos_por_capa_y_pantalla[2][i][j].remove(elemento)
 
+        self.director.partida.update_save_data(self.camara_x, self.camara_y, self.num_filas, self.num_columnas,
+                                               self.world_number)
+
     def dibujar(self, pantalla):
         self.draw(pantalla)
 
@@ -356,9 +359,6 @@ class World(Scene, ABC):
                         elemento.dibujar(pantalla, self.camara_x, self.camara_y)
 
         self.actualizar_transicion()
-        self.director.partida.camx = self.camara_x
-        self.director.partida.camy = self.camara_y
-        self.director.partida.current_stage = self.world_number
 
     def draw_sky(self, pantalla):
         """Dibuja solo la última capa (capa más alta) en la pantalla actual."""

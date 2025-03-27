@@ -52,8 +52,17 @@ class Button(Interactable):
         self.camara_x_original = self.mundo.camara_x
         self.camara_y_original = self.mundo.camara_y
 
-        self.mundo.camara_x = self.objetos_a_activar[0].x + Settings.TILE_SIZE - self.mundo.ancho_pantalla // 2
-        self.mundo.camara_y = self.objetos_a_activar[0].y - self.mundo.alto_pantalla // 2
+        # Tamaño total del mundo en píxeles
+        ancho_total = self.mundo.num_columnas * Settings.TILE_SIZE
+        alto_total = self.mundo.num_filas * Settings.TILE_SIZE
+
+        # Calcular la nueva posición centrada en el objeto
+        nueva_x = self.objetos_a_activar[0].x + Settings.TILE_SIZE - self.mundo.ancho_pantalla // 2
+        nueva_y = self.objetos_a_activar[0].y - self.mundo.alto_pantalla // 2
+
+        # Limitar dentro de los márgenes del mundo
+        self.mundo.camara_x = max(0, min(nueva_x, ancho_total - self.mundo.ancho_pantalla))
+        self.mundo.camara_y = max(0, min(nueva_y, alto_total - self.mundo.alto_pantalla))
 
         self.tiempo_activacion = pygame.time.get_ticks()
         self.tiempo_objetos = self.tiempo_activacion
