@@ -35,5 +35,5 @@ class World2(World):
         from .world3 import World3
         if self.control.change_world(evento) or evento.type == Settings.EVENTO_BOSS_MUERTO:
             #self.player.improve()
-            ResourceManager.stop_and_unload_wav(self.song_name)
+            self.stop_music()
             self.director.cambiar_escena(World3(self.alto_pantalla, self.ancho_pantalla))

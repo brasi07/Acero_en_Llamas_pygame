@@ -17,18 +17,22 @@ class Mecha(Enemy):
     def update(self, jugador, mundo):
         if self.vida <= 0:
             pygame.event.post(pygame.event.Event(Settings.EVENTO_BOSS_MUERTO))
+            ResourceManager.stop_sound("saw_running.wav")
             jugador.vida = jugador.vida_inicial
             self.eliminar = True
 
         if not self.en_la_misma_pantalla(jugador):
             if self.in_screen:
                 ResourceManager.stop_and_unload_wav("boss_battle_loop.wav")
+                ResourceManager.stop_sound("saw_running.wav")
+                mundo.play_music()
                 self.in_screen = False
             return
 
         if not self.in_screen:
+            mundo.stop_music()
             ResourceManager.load_and_play_wav("boss_battle_loop.wav", -1)
-            ResourceManager.play_sound("saw_cutting.wav", -1)
+            ResourceManager.play_sound("saw_running.wav", -1)
             self.in_screen =  True
 
         pantalla_binaria = mundo.mapas_binarios[self.indice_mundo_x][self.indice_mundo_y]

@@ -82,7 +82,13 @@ class World(Scene, ABC):
         self.num_columnas = len(self.capas[1][0]) if self.num_filas > 0 else 0
         self.elementos_por_capa = {capa: [] for capa in self.capas.keys()}
 
+        self.play_music()
+
+    def play_music(self):
         ResourceManager.load_and_play_wav(self.song_name, -1)
+
+    def stop_music(self):
+        ResourceManager.stop_and_unload_wav(self.song_name)
 
     @staticmethod
     def extraer_numero_capa(archivo):

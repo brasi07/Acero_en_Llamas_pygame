@@ -27,10 +27,12 @@ class MegaCannon(Enemy):
         if not self.en_la_misma_pantalla(jugador):
             if self.in_screen:
                 ResourceManager.stop_and_unload_wav("boss_battle_loop.wav")
+                mundo.play_music()
                 self.in_screen = False
             return
 
         if not self.in_screen:
+            mundo.stop_music()
             ResourceManager.load_and_play_wav("boss_battle_loop.wav", -1)
             self.in_screen =  True
 
