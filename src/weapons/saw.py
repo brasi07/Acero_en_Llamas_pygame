@@ -29,6 +29,7 @@ class Saw(Weapon):
     def activar_secundaria(self, mundo, jugador=None):
         if self.tiempo_actual - self.ultimo_golpe > 1000:
             jugador.recibir_dano(1)
+            ResourceManager.play_sound("saw_cutting.wav", 0, 0.1)
             self.ultimo_golpe = self.tiempo_actual
 
     def update_secundaria(self, tank, mundo):

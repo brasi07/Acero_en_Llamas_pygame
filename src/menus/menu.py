@@ -34,6 +34,9 @@ class Menu(Scene):
         # Se pasa la lista de eventos a la pantalla actual
         self.listaPantallas[self.pantallaActual].eventos(lista_eventos)
 
+    def ejecutarJuego(self):
+        pass
+
     def dibujar(self, pantalla):
         self.listaPantallas[self.pantallaActual].dibujar(pantalla)
 

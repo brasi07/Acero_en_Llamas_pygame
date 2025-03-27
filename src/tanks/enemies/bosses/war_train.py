@@ -63,9 +63,12 @@ class WarTrain(Enemy):
 
     def manejar_ataque(self, mundo, pantalla_binaria, start, goal):
         for i, arma in enumerate(self.armas):  # Obtener el índice y el arma
-            if arma.cooldown and pygame.time.get_ticks() - self.tiempos_ultimo_disparo[i] >= arma.cooldown:
+            if self.in_screen and arma.cooldown and pygame.time.get_ticks() - self.tiempos_ultimo_disparo[i] >= arma.cooldown:
                 arma.activar_secundaria(mundo)
                 self.tiempos_ultimo_disparo[i] = pygame.time.get_ticks()
+
+    def en_la_misma_pantalla(self, jugador):
+        return (jugador.rect_element.y // self.TILE_SIZE // 18 == self.indice_mundo_y)
 
     def patrullar(self):
         pass

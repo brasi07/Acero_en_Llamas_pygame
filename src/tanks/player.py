@@ -28,6 +28,7 @@ class Player(Tank):
         self.anterior_mov_y = 0
         self.contador_desliz=0
         self.key_objs = objetos_clave
+        self.running = False
 
     def eventos(self, mundo):
         teclas = pygame.key.get_pressed()
@@ -50,6 +51,15 @@ class Player(Tank):
 
     def mover(self, mundo):
         #print(f"moviendo {self.deslizar} {self.contador_desliz}")
+        if self.movimiento_x != 0 or self.movimiento_y != 0:
+            if not self.running:
+                self.running = True
+                ResourceManager.play_sound("engine_heavy_loop.wav", -1, 0.02)
+        else:
+            if self.running:
+                self.running = False
+                ResourceManager.stop_sound("engine_heavy_loop.wav")
+
         self.actualizar_posicion(self.movimiento_x, self.movimiento_y, mundo)
 
     def obtener_movimiento(self, teclas):

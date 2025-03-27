@@ -25,6 +25,7 @@ class Shotgun(Weapon):
         self.ultimo_cambio_frame = 0
 
     def activar_secundaria(self, mundo, tank=None):
+        ResourceManager.play_sound("normal_shot.wav", 0, 0.05)
         self.tiempo_inicio = pygame.time.get_ticks()
         bala_central = Bullet(self)
         bala_izquierda = Bullet(self, self.angulo_cannon - 15)

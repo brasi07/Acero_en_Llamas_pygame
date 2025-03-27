@@ -90,13 +90,18 @@ class ResourceManager(object):
         return conjunto_sprites
 
     @classmethod
-    def play_sound(cls, sound):
+    def play_sound(cls, sound, loops=0, volume=0.25):
         if sound not in cls.resources:
             location = cls.locate_resource(sound)
             cls.resources[sound] = pygame.mixer.Sound(location)
-            cls.resources[sound].set_volume(0.25)
+            cls.resources[sound].set_volume(volume)
 
-        cls.resources[sound].play()
+        cls.resources[sound].play(loops)
+
+    @classmethod
+    def stop_sound(cls, sound):
+
+        cls.resources[sound].stop()
 
 
     @classmethod

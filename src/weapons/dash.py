@@ -22,6 +22,7 @@ class Dash(Weapon):
         if not self.activo:
             self.activo = True
             self.tiempo_inicio = pygame.time.get_ticks()
+            ResourceManager.play_sound("carga_blaster_2.wav")
 
             # Direcciones normalizadas para mantener velocidad constante en diagonales
             direcciones = {

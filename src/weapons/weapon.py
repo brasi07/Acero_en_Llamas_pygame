@@ -30,6 +30,7 @@ class Weapon:
         self.angulo_cannon = 0
 
     def activar(self, mundo):
+        ResourceManager.play_sound("normal_shot.wav", 0, 0.04)
         nueva_bala = Bullet(self)
         mundo.add_bullet(nueva_bala)
 

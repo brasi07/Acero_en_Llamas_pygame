@@ -22,6 +22,7 @@ class WeaponMegaCannon(Weapon):
     def activar_secundaria(self, mundo, tank=None):
         self.tiempo_inicio = pygame.time.get_ticks()
         bala = PlasmaBeam(self)
+        ResourceManager.play_sound("carga_blaster_1.wav")
         mundo.add_bullet(bala)
         self.activo = True
 

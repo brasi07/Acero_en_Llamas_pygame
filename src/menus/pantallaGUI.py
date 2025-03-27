@@ -8,6 +8,7 @@ from .texto_gui import TextoRes
 class PantallaGUI:
     def __init__(self, menu, nombreImagen):
         self.menu = menu
+        self.elementoClic = None
         # Se carga la imagen de fondo
         self.imagen = ResourceManager.load_image(nombreImagen)
         self.ANCHO, self.ALTO = Settings.ANCHO, Settings.ALTO
@@ -27,7 +28,7 @@ class PantallaGUI:
             if event.type == pygame.MOUSEBUTTONUP:
                 for elemento in self.elementosGUI:
                     if elemento.posicionEnElemento(event.pos):
-                        if (elemento == self.elementoClic):
+                        if self.elementoClic != None and (elemento == self.elementoClic):
                             elemento.accion()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:

@@ -28,6 +28,7 @@ class Mecha(Enemy):
 
         if not self.in_screen:
             ResourceManager.load_and_play_wav("boss_battle_loop.wav", -1)
+            ResourceManager.play_sound("saw_cutting.wav", -1)
             self.in_screen =  True
 
         pantalla_binaria = mundo.mapas_binarios[self.indice_mundo_x][self.indice_mundo_y]

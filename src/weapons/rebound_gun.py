@@ -25,6 +25,7 @@ class ReboungGun(Weapon):
 
     def activar_secundaria(self, mundo, tank=None):
         self.tiempo_inicio = pygame.time.get_ticks()
+        ResourceManager.play_sound("carga_blaster_2.wav")
         bala_rebote = BouncingBullet(self)
         mundo.add_bullet(bala_rebote)
         self.activo = True
