@@ -1,7 +1,7 @@
 from ..elements import LowWall, Decoracion, Wall
 from ..elements.interactable import Button, Trap, IceCube, IceFloor, PickableWeapon
 from ..elements.activateable import Door
-from ..extras import TILE_SIZE
+from ..extras import Settings
 from ..tanks.enemies import EnemyRed, EnemyPurple, EnemyGreen, EnemyBrown
 from ..tanks.enemies.bosses import WarTrain, MegaCannon, Mecha
 from ..weapons import WeaponPool
@@ -20,9 +20,9 @@ class ElementFactory:
             return elemento
 
         elif valor == 0:  # Jugador
-            game_instance.camara_x = x // (game_instance.ancho_pantalla / TILE_SIZE) * game_instance.ancho_pantalla
-            game_instance.camara_y = y // (game_instance.alto_pantalla / TILE_SIZE) * game_instance.alto_pantalla
-            game_instance.player.establecer_posicion(x * TILE_SIZE, y * TILE_SIZE)
+            game_instance.camara_x = x // (game_instance.ancho_pantalla / Settings.TILE_SIZE) * game_instance.ancho_pantalla
+            game_instance.camara_y = y // (game_instance.alto_pantalla / Settings.TILE_SIZE) * game_instance.alto_pantalla
+            game_instance.player.establecer_posicion(x * Settings.TILE_SIZE, y * Settings.TILE_SIZE)
             return game_instance.player
 
         elif 7000 <= valor <= 7399:

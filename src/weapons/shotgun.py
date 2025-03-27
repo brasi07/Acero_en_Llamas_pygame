@@ -1,5 +1,5 @@
 import pygame
-from ..extras import settings, ResourceManager, RESIZE_CANNON, COOLDOWN
+from ..extras import ResourceManager, Settings
 from .bullets import Bullet
 from .weapon import Weapon
 
@@ -16,11 +16,11 @@ class Shotgun(Weapon):
             self.animacion = ResourceManager.load_animation(f"{self.nombre_sprite}.png", 128, 128, 8)
             self.imagen_canon_base = self.animacion[0]
         else:
-            self.animacion = ResourceManager.load_animation(f"weapons{tank.tank_level}_128x128.png", 128, 128, 16, RESIZE_CANNON, RESIZE_CANNON)
+            self.animacion = ResourceManager.load_animation(f"weapons{tank.tank_level}_128x128.png", 128, 128, 16, Settings.RESIZE_CANNON, Settings.RESIZE_CANNON)
             self.imagen_canon_base = self.animacion[3]
 
         self.activo = False
-        self.cooldown = COOLDOWN
+        self.cooldown = Settings.COOLDOWN
         self.frame_actual = 0
         self.ultimo_cambio_frame = 0
 
@@ -40,7 +40,7 @@ class Shotgun(Weapon):
             tiempo_actual = pygame.time.get_ticks()  # Obtener el tiempo actual
 
             # Si han pasado 30 ms desde el último cambio de frame
-            if tiempo_actual - self.ultimo_cambio_frame >= settings.TIME_FRAME:
+            if tiempo_actual - self.ultimo_cambio_frame >= Settings.TIME_FRAME:
                 self.ultimo_cambio_frame = tiempo_actual  # Actualizar el tiempo del último cambio
 
                 if self.frame_actual < len(self.animacion) - 1:

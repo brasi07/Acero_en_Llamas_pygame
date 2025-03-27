@@ -1,6 +1,6 @@
 import pygame
 
-from ..extras import TIME_FRAME, ResourceManager, RESIZE_CANNON, COOLDOWN
+from ..extras import ResourceManager, Settings
 from .bullets import BouncingBullet
 from .weapon import Weapon
 
@@ -15,10 +15,10 @@ class ReboungGun(Weapon):
             self.animacion = ResourceManager.load_animation("turret_02_mk1.png", 128, 128, 8)
             self.imagen_canon_base = self.animacion[0]
         else:
-            self.animacion = ResourceManager.load_animation(f"weapons{tank.tank_level}_128x128.png", 128, 128, 16, RESIZE_CANNON, RESIZE_CANNON)
+            self.animacion = ResourceManager.load_animation(f"weapons{tank.tank_level}_128x128.png", 128, 128, 16, Settings.RESIZE_CANNON, Settings.RESIZE_CANNON)
             self.imagen_canon_base = self.animacion[4]
         self.activo = False
-        self.cooldown = COOLDOWN
+        self.cooldown = Settings.COOLDOWN
 
         self.frame_actual = 0
         self.ultimo_cambio_frame = 0
@@ -34,7 +34,7 @@ class ReboungGun(Weapon):
             tiempo_actual = pygame.time.get_ticks()  # Obtener el tiempo actual
 
             # Si han pasado 30 ms desde el último cambio de frame
-            if tiempo_actual - self.ultimo_cambio_frame >= TIME_FRAME:
+            if tiempo_actual - self.ultimo_cambio_frame >= Settings.TIME_FRAME:
                 self.ultimo_cambio_frame = tiempo_actual  # Actualizar el tiempo del último cambio
 
                 if self.frame_actual < len(self.animacion) - 1:

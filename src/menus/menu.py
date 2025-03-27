@@ -26,9 +26,9 @@ class Menu(Scene):
         # Se mira si se quiere salir de esta escena
         for evento in lista_eventos:
         # Si se quiere salir, se le indica al director
-            #if evento.type == pygame.KEYDOWN:
-                #if evento.key == pygame.K_ESCAPE:
-                    #self.salirPrograma()
+            if evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_t:
+                    self.ejecutarJuego()
             if evento.type == pygame.QUIT:
                 self.director.salir_programa()
         # Se pasa la lista de eventos a la pantalla actual
@@ -43,9 +43,6 @@ class Menu(Scene):
     def mostrarPantallaInicial(self):
         self.pantallaActual=0
 
-    #ir a configuraciones podría no ser un método de menu en general, pero todos los menus que tenemos pueden ir a configuraciones asi que es conveniente estar aqui en este caso
-    def irAConfiguraciones(self):
-        self.pantallaActual=1 #encontrar una manera mellor de manjar las pantallas que no sea con el numero directamente
 
     def update(self, *args):
         self.listaPantallas[self.pantallaActual].update()
@@ -89,15 +86,18 @@ class MainMenu(Menu):
         from ..worlds import world1
 
         ResourceManager.stop_and_unload_wav(f"title_theme.wav")
+        self.director.partida = Partida(4, 0, 0, 1)
         fase = world1.World1(self.director.pantalla.get_height(), self.director.pantalla.get_width())
         self.director.cambiar_escena(fase)
+    
+    def irAConfiguraciones(self):
+        self.pantallaActual=1 #encontrar una manera mellor de manjar las pantallas que no sea con el numero directamente
 
 class PauseMenu(Menu):
 
     def __init__(self, director):
         super().__init__(director)
         self.listaPantallas.append(PantallaPauseGUI(self))
-        self.listaPantallas.append(PantallaConfiguracionesGUI(self))
         self.mostrarPantallaInicial()
 
     def guardar_partida(self):

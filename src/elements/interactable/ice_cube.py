@@ -1,9 +1,9 @@
 from .interactable import Interactable
-from ...extras import CollisionLayer
+from ...extras import Settings
 
 class IceCube(Interactable):
     def __init__(self, x, y, imagen):
-        super().__init__(x, y, imagen, CollisionLayer.INTERACTUABLE)
+        super().__init__(x, y, imagen, Settings.CollisionLayer.INTERACTUABLE)
 
     def interactuar(self, objeto):
         from ...tanks import Player

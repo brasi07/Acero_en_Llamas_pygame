@@ -3,7 +3,7 @@ import math
 import pygame
 
 from .extras.resourcesmanager import ResourceManager
-from .extras.settings import ROJO, ROJO_CLARO, MINIMAPA_POS, ANCHO, ALTO, HABITACION_ANCHO, HABITACION_ALTO, ESPACIADO, BLANCO_TRANSLUCIDO, NEGRO_TRANSLUCIDO
+from .extras.settings import Settings
 from .singleton import SingletonMeta
 
 
@@ -37,22 +37,22 @@ class Ui(metaclass=SingletonMeta):
         # Posiciones de cada habitación en el minimapa
         posiciones = {}
 
-        x_player = jugador.rect_element.centerx // ANCHO
-        y_player = jugador.rect_element.centery // ALTO
+        x_player = jugador.rect_element.centerx // Settings.ANCHO
+        y_player = jugador.rect_element.centery // Settings.ALTO
 
         # Dibujar habitaciones
         for fila in range(4):
             for col in range(3):
-                x = col * (HABITACION_ANCHO + ESPACIADO)
-                y = fila * (HABITACION_ALTO + ESPACIADO)
+                x = col * (Settings.HABITACION_ANCHO + Settings.ESPACIADO)
+                y = fila * (Settings.HABITACION_ALTO + Settings.ESPACIADO)
 
-                posiciones[(fila, col)] = (x + HABITACION_ANCHO // 2, y + HABITACION_ALTO // 2)
+                posiciones[(fila, col)] = (x + Settings.HABITACION_ANCHO // 2, y + Settings.HABITACION_ALTO // 2)
                 if (fila, col) == (y_player, x_player):
-                    color = BLANCO_TRANSLUCIDO
+                    color = Settings.BLANCO_TRANSLUCIDO
                 else:
-                    color = NEGRO_TRANSLUCIDO
+                    color = Settings.NEGRO_TRANSLUCIDO
 
-                pygame.draw.rect(minimapa, color, (x, y, HABITACION_ANCHO, HABITACION_ALTO), border_radius=3)
+                pygame.draw.rect(minimapa, color, (x, y, Settings.HABITACION_ANCHO, Settings.HABITACION_ALTO), border_radius=3)
 
         # Dibujar conexiones con colores variables
         for ((y1, x1), (y2, x2), color) in mundo.CONEXIONES:
@@ -67,8 +67,8 @@ class Ui(metaclass=SingletonMeta):
 
                 # Normalizar dirección y ajustar para que la línea comience desde el borde de la habitación
                 if distancia > 0:
-                    ajuste_x = (dx / distancia) * (HABITACION_ANCHO // 2)
-                    ajuste_y = (dy / distancia) * (HABITACION_ALTO // 2)
+                    ajuste_x = (dx / distancia) * (Settings.HABITACION_ANCHO // 2)
+                    ajuste_y = (dy / distancia) * (Settings.HABITACION_ALTO // 2)
 
                     x1_px += ajuste_x
                     y1_px += ajuste_y
@@ -79,7 +79,7 @@ class Ui(metaclass=SingletonMeta):
                 pygame.draw.line(minimapa, color, (x1_px, y1_px), (x2_px, y2_px), 8)
 
         # Dibujar el minimapa en la pantalla
-        pantalla.blit(minimapa, MINIMAPA_POS)
+        pantalla.blit(minimapa, Settings.MINIMAPA_POS)
 
     def draw_health_bar(self, tank, pantalla, cam_x, cam_y):
         """Dibuja la barra de vida del tanque en una única superficie y la centra."""

@@ -1,13 +1,13 @@
 import pygame
 from abc import ABC
 from .interactable import Interactable
-from ...extras import CollisionLayer, EVENTO_COLECCIONABLE_RECOGIDO, ResourceManager
+from ...extras import Settings, ResourceManager
 
 
 class Pickable(ABC, Interactable):
 
     def __init__(self, x, y, sprite):
-        super().__init__(x, y, sprite, CollisionLayer.INTERACTUABLE)
+        super().__init__(x, y, sprite, Settings.CollisionLayer.INTERACTUABLE)
         self.direccion = 1  # 1 para bajar, -1 para subir
         self.velocidad = 1  # Cuántos píxeles se mueve en cada actualización
         self.limite_superior = self.y - 10  # Límite superior del movimiento
@@ -53,6 +53,6 @@ class PickableCollectable(Pickable):
         from ...tanks import Player
         if isinstance(objeto, Player) and self.check_collision(objeto):
             ResourceManager.play_sound("object_picked.wav")
-            pygame.event.post(pygame.event.Event(EVENTO_COLECCIONABLE_RECOGIDO))
+            pygame.event.post(pygame.event.Event(Settings.EVENTO_COLECCIONABLE_RECOGIDO))
             self.eliminar = True
 

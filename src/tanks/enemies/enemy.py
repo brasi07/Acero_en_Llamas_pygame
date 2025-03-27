@@ -1,5 +1,5 @@
 import pygame
-from ...extras import CollisionLayer, TILE_SIZE
+from ...extras import Settings
 from ...elements.interactable import PickableWeapon
 from .astar import *
 from ..tank import Tank
@@ -12,7 +12,7 @@ class EnemyState:
 
 class Enemy(Tank):
     def __init__(self, vida, velocidad, x, y, resizex, resizey, modo_patrulla, elite, tank_level, id_mapa=None):
-        super().__init__(vida, velocidad, x, y, resizex, resizey, collision_layer=CollisionLayer.ENEMY, tank_level=tank_level)
+        super().__init__(vida, velocidad, x, y, resizex, resizey, collision_layer=Settings.CollisionLayer.ENEMY, tank_level=tank_level)
 
         self.state = EnemyState.PATROLLING if modo_patrulla != "torreta" else EnemyState.ATTACKING
         self.chase_range = 300
@@ -25,6 +25,7 @@ class Enemy(Tank):
         self.start_y = self.y
         self.patrol_movement = 350  # Rango de patrulla
         self.patrol_phase = 0  # Fase de patrulla
+        self.TILE_SIZE = Settings.TILE_SIZE
 
         self.elite = elite
         self.arma_drop = WeaponPool().random_weapon()
@@ -37,10 +38,10 @@ class Enemy(Tank):
             self.vida = self.vida_inicial
             self.chase_range *= 1.5
 
-        self.colision_layer_balas = CollisionLayer.BULLET_ENEMY
+        self.colision_layer_balas = Settings.CollisionLayer.BULLET_ENEMY
 
-        self.indice_mundo_x = (self.rect_element.x // TILE_SIZE) // 32
-        self.indice_mundo_y = (self.rect_element.y // TILE_SIZE) // 18
+        self.indice_mundo_x = (self.rect_element.x // self.TILE_SIZE) // 32
+        self.indice_mundo_y = (self.rect_element.y // self.TILE_SIZE) // 18
 
         self.path = []
         self.tiempo_ultimo_disparo = 0  # Control del cooldown de ataque
@@ -53,8 +54,8 @@ class Enemy(Tank):
             return
 
         pantalla_binaria = mundo.mapas_binarios[self.indice_mundo_x][self.indice_mundo_y]
-        start = ((self.rect_element.centerx // TILE_SIZE) % 32, (self.rect_element.centery // TILE_SIZE) % 18)
-        goal = ((jugador.rect_element.centerx // TILE_SIZE) % 32, (jugador.rect_element.centery // TILE_SIZE) % 18)
+        start = ((self.rect_element.centerx // self.TILE_SIZE) % 32, (self.rect_element.centery // self.TILE_SIZE) % 18)
+        goal = ((jugador.rect_element.centerx // self.TILE_SIZE) % 32, (jugador.rect_element.centery // self.TILE_SIZE) % 18)
 
         self.marcar_nodo_ocupado(pantalla_binaria, start, self.id_mapa_binario)    
 
@@ -73,7 +74,7 @@ class Enemy(Tank):
         if self.state == EnemyState.PATROLLING and self.modo_patrulla != "torreta":
             self.manejar_patrullaje(mundo, pantalla_binaria)
         elif self.state == EnemyState.CHASING and self.modo_patrulla != "torreta":
-            self.manejar_persecucion(mundo, pantalla_binaria, start, goal, TILE_SIZE, distancia_jugador=distancia)
+            self.manejar_persecucion(mundo, pantalla_binaria, start, goal, self.TILE_SIZE, distancia_jugador=distancia)
         elif self.state == EnemyState.ATTACKING:
             self.manejar_ataque(mundo, pantalla_binaria, start, goal)
 
@@ -102,7 +103,7 @@ class Enemy(Tank):
                     pantalla_binaria[y][x] = 0
 
     def drop_weapon(self, mundo):
-        drop = PickableWeapon(self.rect_element.centerx / TILE_SIZE, self.rect_element.centery / TILE_SIZE,
+        drop = PickableWeapon(self.rect_element.centerx / self.TILE_SIZE, self.rect_element.centery / self.TILE_SIZE,
                               self.arma_drop)
         mundo.elementos_por_capa_y_pantalla[2][self.fila_pantalla][self.col_pantalla].append(drop)
         mundo.elementos_actualizables.append(drop)
@@ -110,20 +111,20 @@ class Enemy(Tank):
     def manejar_patrullaje(self, mundo, pantalla_binaria):
         if self.modo_patrulla == "horizontal":
             dx, dy = self.velocidad * self.patrol_direction, 0
-            pos_anterior = ((self.rect_element.centerx // TILE_SIZE) % 32, (self.rect_element.centery // TILE_SIZE) % 18)
+            pos_anterior = ((self.rect_element.centerx // self.TILE_SIZE) % 32, (self.rect_element.centery // self.TILE_SIZE) % 18)
             if self.actualizar_posicion(dx, dy, mundo):
                 self.patrol_direction *= -1
-                self.marcar_nodo_ocupado(pantalla_binaria, ((self.rect_element.centerx // TILE_SIZE) % 32, (self.rect_element.centery // TILE_SIZE) % 18), self.id_mapa_binario)
+                self.marcar_nodo_ocupado(pantalla_binaria, ((self.rect_element.centerx // self.TILE_SIZE) % 32, (self.rect_element.centery // self.TILE_SIZE) % 18), self.id_mapa_binario)
                 self.desmarcar_nodo_ocupado(pantalla_binaria, pos_anterior, self.id_mapa_binario)
             if abs(self.rect_element.x - self.start_x) > self.patrol_movement:
                 self.patrol_direction *= -1
 
         elif self.modo_patrulla == "vertical":
             dx, dy = 0, self.velocidad * self.patrol_direction
-            pos_anterior = ((self.rect_element.centerx // TILE_SIZE) % 32, (self.rect_element.centery // TILE_SIZE) % 18)
+            pos_anterior = ((self.rect_element.centerx // self.TILE_SIZE) % 32, (self.rect_element.centery // self.TILE_SIZE) % 18)
             if self.actualizar_posicion(dx, dy, mundo):
                 self.patrol_direction *= -1
-                self.marcar_nodo_ocupado(pantalla_binaria, ((self.rect_element.centerx // TILE_SIZE) % 32, (self.rect_element.centery // TILE_SIZE) % 18), self.id_mapa_binario)
+                self.marcar_nodo_ocupado(pantalla_binaria, ((self.rect_element.centerx // self.TILE_SIZE) % 32, (self.rect_element.centery // self.TILE_SIZE) % 18), self.id_mapa_binario)
                 self.desmarcar_nodo_ocupado(pantalla_binaria, pos_anterior, self.id_mapa_binario)
             if abs(self.rect_element.y - self.start_y) > self.patrol_movement:
                 self.patrol_direction *= -1
@@ -133,7 +134,7 @@ class Enemy(Tank):
 
         # Inicializar la posición anterior si aún no existe
         if not hasattr(self, "pos_anterior"):
-            self.pos_anterior = ((self.rect_element.centerx // TILE_SIZE) % 32, (self.rect_element.centery // TILE_SIZE) % 18)
+            self.pos_anterior = ((self.rect_element.centerx // self.TILE_SIZE) % 32, (self.rect_element.centery // self.TILE_SIZE) % 18)
 
         if distancia_jugador < self.attack_range and (raycasting(pantalla_binaria, start, goal) or pantalla_binaria[goal[1]][goal[0]] == 1):
             self.state = EnemyState.ATTACKING
@@ -160,7 +161,7 @@ class Enemy(Tank):
             self.actualizar_posicion(dx, dy, mundo)
 
             # Nueva posición del enemigo en coordenadas de tile
-            pos_actual = ((self.rect_element.centerx // TILE_SIZE) % 32, (self.rect_element.centery // TILE_SIZE) % 18)
+            pos_actual = ((self.rect_element.centerx // self.TILE_SIZE) % 32, (self.rect_element.centery // self.TILE_SIZE) % 18)
 
             # Si ha cambiado de tile, actualizar la matriz binaria
             if pos_actual != self.pos_anterior:
@@ -197,7 +198,7 @@ class Enemy(Tank):
             self.establecer_posicion(self.start_x, self.start_y)
 
     def en_la_misma_pantalla(self, jugador):
-        return (jugador.rect_element.x // TILE_SIZE // 32 == self.indice_mundo_x) and (jugador.rect_element.y // TILE_SIZE // 18 == self.indice_mundo_y)
+        return (jugador.rect_element.x // self.TILE_SIZE // 32 == self.indice_mundo_x) and (jugador.rect_element.y // self.TILE_SIZE // 18 == self.indice_mundo_y)
 
     def dibujar_enemigo(self, pantalla, x, y):
         self.dibujar(pantalla, x, y)

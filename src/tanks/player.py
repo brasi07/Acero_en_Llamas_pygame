@@ -1,6 +1,6 @@
 import pygame
 
-from ..extras import CollisionLayer, RESIZE_PLAYER, EVENTO_JUGADOR_MUERTO, controller, ResourceManager
+from ..extras import Settings, ResourceManager
 from .tank import Tank
 from ..weapons import Weapon, Dash, Shotgun, ReboungGun, RocketLauncher, MineLauncher, Shield, WeaponPool
 
@@ -10,16 +10,16 @@ class Player(Tank):
     def __init__(self, vida, objetos_clave):
 
         # Llamamos primero al constructor de la clase base (Tank)
-        super().__init__(4, 3, 0, 0, RESIZE_PLAYER, RESIZE_PLAYER, collision_layer=CollisionLayer.PLAYER, tank_type="jugador")
+        super().__init__(4, 3, 0, 0, Settings.RESIZE_PLAYER, Settings.RESIZE_PLAYER, collision_layer=Settings.CollisionLayer.PLAYER, tank_type="jugador")
 
         self.vida = vida
 
         # Equipamos armas
         self.armas = [Weapon(self), Dash(self), Shotgun(self), ReboungGun(self), RocketLauncher(self), MineLauncher(self), Shield(self)]  # Lista de armas
         self.armas_pos = 0  # Índice de arma secundaria equipada
-        self.colision_layer_balas = CollisionLayer.BULLET_PLAYER
+        self.colision_layer_balas = Settings.CollisionLayer.BULLET_PLAYER
         self.barra_vida = ResourceManager.load_animation(f"vida_jugador.png", 48, 7, 5, resizex=5, resizey=0.5)
-        self.control = controller
+        self.control = Settings.controller
         self.posx_change_screen = self.rect_element.x
         self.posy_change_screen = self.rect_element.y
         self.deslizar=False
@@ -36,7 +36,7 @@ class Player(Tank):
 
     def update(self, mundo):
         if self.vida <= 0:
-            pygame.event.post(pygame.event.Event(EVENTO_JUGADOR_MUERTO))
+            pygame.event.post(pygame.event.Event(Settings.EVENTO_JUGADOR_MUERTO))
             self.vida = self.vida_inicial
 
         self.mover(mundo)

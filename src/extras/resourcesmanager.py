@@ -2,15 +2,16 @@ import csv
 import os
 import pygame
 from pathlib import Path
-from ..extras import spritesheet, RESIZE_PLAYER, ELIMINAR_FONDO, TILE_SIZE, RESIZE_CANNON
+from ..extras import spritesheet
+from ..extras.settings import Settings
 
 class ResourceManager(object):
     resources = {}
 
     @classmethod
-    def load_font(self, name, size):
+    def load_font(self, name,font, size):
         if name not in self.resources:
-            self.resources[name] = pygame.font.Font(self.locate_resource(name), size)
+            self.resources[name] = pygame.font.Font(self.locate_resource(font), size)
         return self.resources[name]
         
     @classmethod
@@ -25,7 +26,7 @@ class ResourceManager(object):
         raise FileNotFoundError(f"No se encontró {name} en {carpeta_recursos}")
 
     @classmethod
-    def load_animation(cls, name, sizex, sizey, number_sprites, resizex=RESIZE_PLAYER, resizey=RESIZE_PLAYER):
+    def load_animation(cls, name, sizex, sizey, number_sprites, resizex=Settings.RESIZE_PLAYER, resizey=Settings.RESIZE_PLAYER):
         if name in cls.resources and isinstance(cls.resources[name], list):
             return cls.resources[name]  # Retorna si ya fue cargado
 
@@ -45,10 +46,10 @@ class ResourceManager(object):
             rect = (x, y, sizex, sizey)  # Rectángulo del sprite
 
             # Extrae el sprite de la imagen
-            sprite = sprite_sheet.image_at(rect, ELIMINAR_FONDO)
+            sprite = sprite_sheet.image_at(rect, Settings.ELIMINAR_FONDO)
 
             # Escalar si es necesario
-            sprite = pygame.transform.scale(sprite, (resizex * TILE_SIZE, resizey * TILE_SIZE))
+            sprite = pygame.transform.scale(sprite, (resizex * Settings.TILE_SIZE, resizey * Settings.TILE_SIZE))
 
             sprites.append(sprite)  # Agregar el sprite a la lista
 
@@ -95,9 +96,9 @@ class ResourceManager(object):
             return cls.resources[f"{sprite_type}{tank_color}"]
 
         weapon_sprite_sheet = spritesheet.SpriteSheet(ResourceManager.locate_resource(f"{sprite_type}{tank_color}.png"))
-        weapon_strip = weapon_sprite_sheet.load_strip((0, 0, 96, 96), 16, ELIMINAR_FONDO)
+        weapon_strip = weapon_sprite_sheet.load_strip((0, 0, 96, 96), 16, Settings.ELIMINAR_FONDO)
         weapon_sprites = [pygame.transform.scale(frame, (
-        RESIZE_CANNON * TILE_SIZE, RESIZE_CANNON * TILE_SIZE)) for frame in
+        Settings.RESIZE_CANNON * Settings.TILE_SIZE, Settings.RESIZE_CANNON * Settings.TILE_SIZE)) for frame in
                           weapon_strip]
         sprite_weapon = weapon_sprites[numberweapon]
 
@@ -117,7 +118,7 @@ class ResourceManager(object):
             if archivo.endswith(".png"):
                 id_sprite = archivo.split(".")[0]  # Obtiene el nombre sin la extensión
                 sprites[int(id_sprite)] = pygame.image.load(os.path.join(carpeta, archivo))
-                sprites[int(id_sprite)] = pygame.transform.scale(sprites[int(id_sprite)], (TILE_SIZE, TILE_SIZE))
+                sprites[int(id_sprite)] = pygame.transform.scale(sprites[int(id_sprite)], (Settings.TILE_SIZE, Settings.TILE_SIZE))
 
         cls.resources[carpeta] = sprites
 
@@ -158,7 +159,7 @@ class ResourceManager(object):
     def load_and_scale_image(cls, name, resizex, resizey):
 
         imagen = cls.load_image(name)
-        imagen_escalada = pygame.transform.scale(imagen, (resizex * TILE_SIZE, resizey * TILE_SIZE))
+        imagen_escalada = pygame.transform.scale(imagen, (resizex * Settings.TILE_SIZE, resizey * Settings.TILE_SIZE))
 
         return imagen_escalada
 

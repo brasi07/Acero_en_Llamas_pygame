@@ -1,6 +1,6 @@
 import pygame
 from .interactable import Interactable
-from ...extras import CollisionLayer, TIME_FRAME, ResourceManager, TILE_SIZE
+from ...extras import Settings, ResourceManager
 
 
 class Mine(Interactable):
@@ -15,12 +15,12 @@ class Mine(Interactable):
         self.activo = False
         self.objeto_colisionando = True
         self.animacion = ResourceManager.load_animation("explosiones4A.png", 32, 32, 6, resizex=1, resizey=1)
-
+        super().__init__(x, y, self.imagen, Settings.CollisionLayer.BOTH)
 
     def update(self, jugador):
         if self.activo:
             tiempo_actual = pygame.time.get_ticks()  # Obtener el tiempo actual
-            if tiempo_actual - self.ultimo_cambio_frame >= TIME_FRAME:
+            if tiempo_actual - self.ultimo_cambio_frame >= Settings.TIME_FRAME:
                     self.ultimo_cambio_frame = tiempo_actual  # Actualizar el tiempo del último cambio
                     if self.frame_actual < (len(self.animacion) - 1):
                         self.frame_actual += 1

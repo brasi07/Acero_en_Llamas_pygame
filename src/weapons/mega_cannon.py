@@ -2,14 +2,14 @@ import numpy as np
 import pygame
 
 from .bullets.plasma_beam import PlasmaBeam
-from ..extras import RESIZE_PLAYER, TIME_FRAME, ResourceManager, COOLDOWN
+from ..extras import Settings, ResourceManager
 from .weapon import Weapon
 
 class WeaponMegaCannon(Weapon):
     def __init__(self, tank, posicion=None):
         super().__init__(tank, posicion)
         self.tiempo_inicio = None  # Guarda el tiempo de activacivación
-        self.animacion = ResourceManager.load_animation("weapons_boss2.png", 128, 128, 11, RESIZE_PLAYER * 2, RESIZE_PLAYER * 2)
+        self.animacion = ResourceManager.load_animation("weapons_boss2.png", 128, 128, 11, Settings.RESIZE_PLAYER * 2, Settings.RESIZE_PLAYER * 2)
         self.imagen_canon_base = self.animacion[0]
         self.rect_canon = self.imagen_canon.get_rect(center=tank.rect_element.center)
         self.activo = False

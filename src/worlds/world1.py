@@ -1,5 +1,5 @@
 from ..elements import Wall
-from ..extras import ROJO_TRANSLUCIDO, NEGRO_TRANSLUCIDO, EVENTO_BOSS_MUERTO, ResourceManager, ANCHO, ALTO, TILE_SIZE
+from ..extras import Settings, ResourceManager
 from .world import World
 
 class World1(World):
@@ -12,18 +12,18 @@ class World1(World):
         self.ice = ()
 
         self.CONEXIONES = [
-            ((1, 1), (2, 1), ROJO_TRANSLUCIDO),
-            ((0, 0), (0, 1), NEGRO_TRANSLUCIDO),  # Habitación (0,0) conecta con (0,1)
-            ((0, 1), (0, 2), NEGRO_TRANSLUCIDO),
-            ((0, 0), (1, 0), NEGRO_TRANSLUCIDO),
-            ((1, 0), (2, 0), NEGRO_TRANSLUCIDO),
-            ((2, 0), (3, 0), NEGRO_TRANSLUCIDO),
-            ((0, 1), (0, 2), NEGRO_TRANSLUCIDO),
-            ((0, 1), (1, 1), NEGRO_TRANSLUCIDO),
-            ((1, 1), (1, 2), NEGRO_TRANSLUCIDO),
-            ((1, 2), (2, 2), NEGRO_TRANSLUCIDO),
-            ((2, 2), (3, 2), NEGRO_TRANSLUCIDO),
-            ((3, 2), (3, 1), NEGRO_TRANSLUCIDO),
+            ((1, 1), (2, 1), Settings.ROJO_TRANSLUCIDO),
+            ((0, 0), (0, 1), Settings.NEGRO_TRANSLUCIDO),  # Habitación (0,0) conecta con (0,1)
+            ((0, 1), (0, 2), Settings.NEGRO_TRANSLUCIDO),
+            ((0, 0), (1, 0), Settings.NEGRO_TRANSLUCIDO),
+            ((1, 0), (2, 0), Settings.NEGRO_TRANSLUCIDO),
+            ((2, 0), (3, 0), Settings.NEGRO_TRANSLUCIDO),
+            ((0, 1), (0, 2), Settings.NEGRO_TRANSLUCIDO),
+            ((0, 1), (1, 1), Settings.NEGRO_TRANSLUCIDO),
+            ((1, 1), (1, 2), Settings.NEGRO_TRANSLUCIDO),
+            ((1, 2), (2, 2), Settings.NEGRO_TRANSLUCIDO),
+            ((2, 2), (3, 2), Settings.NEGRO_TRANSLUCIDO),
+            ((3, 2), (3, 1), Settings.NEGRO_TRANSLUCIDO),
         ]
 
         for capa, tiles in self.capas.items():
@@ -34,7 +34,7 @@ class World1(World):
 
     def manejar_evento_especifico(self, evento):
         from .world2 import World2
-        if self.control.change_world(evento) or evento.type == EVENTO_BOSS_MUERTO:
+        if self.control.change_world(evento) or evento.type == Settings.EVENTO_BOSS_MUERTO:
             #self.player.improve()
             ResourceManager.stop_and_unload_wav(self.song_name)
             self.director.cambiar_escena(World2(self.alto_pantalla, self.ancho_pantalla))

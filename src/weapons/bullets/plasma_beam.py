@@ -2,7 +2,6 @@ import pygame
 
 from src.extras import ResourceManager
 from src.weapons.bullets import Bullet
-from src.extras import COLLISION_RULES
 
 class PlasmaBeam(Bullet):
     def __init__(self, arma):

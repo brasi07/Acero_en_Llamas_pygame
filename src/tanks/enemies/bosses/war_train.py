@@ -1,6 +1,6 @@
 import pygame
 
-from ....extras import RESIZE_PLAYER, ResourceManager, CollisionLayer, ANCHO, EVENTO_BOSS_MUERTO, TILE_SIZE
+from ....extras import Settings, ResourceManager
 from ..enemy import Enemy
 from ....weapons import Shotgun, RocketLauncher, ReboungGun
 from ....weapons.bullets import Rocket
@@ -8,10 +8,10 @@ from ....weapons.bullets import Rocket
 
 class WarTrain(Enemy):
     def __init__(self, x, y):
-        super().__init__(100, 2.5, x, y, RESIZE_PLAYER, RESIZE_PLAYER, "horizontal", tank_level="_boss3", elite=False)
-        self.imagen = ResourceManager.load_and_scale_image("body_boss3.png",RESIZE_PLAYER*14, RESIZE_PLAYER*2)
+        super().__init__(100, 2.5, x, y, Settings.RESIZE_PLAYER, Settings.RESIZE_PLAYER, "horizontal", tank_level="_boss3", elite=False)
+        self.imagen = ResourceManager.load_and_scale_image("body_boss3.png",Settings.RESIZE_PLAYER*14, Settings.RESIZE_PLAYER*2)
         self.rect_element = self.imagen.get_rect(topleft=(x, y))
-        self.rect_element.y = y + TILE_SIZE/2
+        self.rect_element.y = y + Settings.TILE_SIZE/2
         self.mask = pygame.mask.from_surface(self.imagen)
         self.muerto = False
         self.armas = [Shotgun(self, (-370, 0)),
@@ -25,16 +25,16 @@ class WarTrain(Enemy):
         self.tiempos_ultimo_disparo = [0,0,0,0,0,0,0]
 
         for i in range(5):
-            self.armas[i].imagen_canon_base = pygame.transform.scale(self.armas[i].imagen_canon_base, (TILE_SIZE*3, TILE_SIZE*3))
-            self.armas[i].imagen_canon = pygame.transform.scale(self.armas[i].imagen_canon,(TILE_SIZE * 3, TILE_SIZE * 3))
+            self.armas[i].imagen_canon_base = pygame.transform.scale(self.armas[i].imagen_canon_base, (Settings.TILE_SIZE*3, Settings.TILE_SIZE*3))
+            self.armas[i].imagen_canon = pygame.transform.scale(self.armas[i].imagen_canon,(Settings.TILE_SIZE * 3, Settings.TILE_SIZE * 3))
 
-        self.colision_layer_balas = CollisionLayer.BULLET_ENEMY
+        self.colision_layer_balas = Settings.CollisionLayer.BULLET_ENEMY
         self.attack_range = 3000
         self.in_screen = False
 
     def update(self, jugador, mundo):
         if self.vida <= 0:
-            pygame.event.post(pygame.event.Event(EVENTO_BOSS_MUERTO))
+            pygame.event.post(pygame.event.Event(Settings.EVENTO_BOSS_MUERTO))
             jugador.vida = jugador.vida_inicial
             self.eliminar = True
 
@@ -42,7 +42,7 @@ class WarTrain(Enemy):
             ResourceManager.load_and_play_wav("boss_battle_loop.wav", -1)
             self.in_screen =  True
 
-        if self.rect_element.x <= ANCHO * 3:
+        if self.rect_element.x <= Settings.ANCHO * 3:
             self.rect_element.x += 2
         else:
             self.rect_element.x = -self.imagen.get_width()
@@ -50,8 +50,8 @@ class WarTrain(Enemy):
         self.mask = pygame.mask.from_surface(self.imagen)
 
         pantalla_binaria = mundo.mapas_binarios[self.indice_mundo_x][self.indice_mundo_y]
-        start = ((self.rect_element.centerx // TILE_SIZE) % 32, (self.rect_element.centery // TILE_SIZE) % 18)
-        goal = ((jugador.rect_element.centerx // TILE_SIZE) % 32, (jugador.rect_element.centery // TILE_SIZE) % 18)
+        start = ((self.rect_element.centerx // Settings.TILE_SIZE) % 32, (self.rect_element.centery // Settings.TILE_SIZE) % 18)
+        goal = ((jugador.rect_element.centerx // Settings.TILE_SIZE) % 32, (jugador.rect_element.centery // Settings.TILE_SIZE) % 18)
 
         for arma in self.armas:
             arma.update(mundo, jugador)

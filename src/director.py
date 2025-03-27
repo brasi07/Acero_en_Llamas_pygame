@@ -1,28 +1,28 @@
 import pygame
 
 from . import SingletonMeta
-from .extras.settings import ANCHO, ALTO, FPS
 from .gamesave import Partida
+from .extras.settings import Settings
 
 
 class Director(metaclass=SingletonMeta):
 
     def __init__(self):
-        self.pantalla = pygame.display.set_mode((ANCHO, ALTO), pygame.FULLSCREEN | pygame.SCALED | pygame.DOUBLEBUF)
+        self.pantalla = pygame.display.set_mode((Settings.ANCHO, Settings.ALTO), pygame.DOUBLEBUF)
         self.pila_escenas = []
         self.salir_escena = False
         self.escena_guardada = None
         self.escena_guardada_clase = None
         self.escena_parametros = None
         self.clock = pygame.time.Clock()
-        self.partida = Partida(4, 0, 0, 1)
+        self.settings = Settings()
 
     def bucle(self, escena):
         self.salir_escena = False
         pygame.event.clear()
 
         while not self.salir_escena:
-            time_past = self.clock.tick(FPS)
+            time_past = self.clock.tick(Settings.FPS)
             escena.eventos(pygame.event.get())
             escena.update(time_past)
             escena.dibujar(self.pantalla)

@@ -1,12 +1,12 @@
 import math
 import time
 import numpy as np
-from ...extras import TILE_SIZE, ResourceManager, RESOLUTION_SCALE
+from ...extras import Settings, ResourceManager
 from ...elements import Element
 
 class Bullet(Element):
     # Cargar sprites de colisión una sola vez (variable estática)
-    sprites_colision = [ResourceManager.load_and_scale_image(f"expl{i}.png", 20 / TILE_SIZE, 20 / TILE_SIZE)
+    sprites_colision = [ResourceManager.load_and_scale_image(f"expl{i}.png", 20 / Settings.TILE_SIZE, 20 / Settings.TILE_SIZE)
                         for i in range(1, 11)]
 
     def __init__(self, arma, angulo=None, desplazamiento_lateral=0, desplazamiento_frontal=0):
@@ -16,7 +16,7 @@ class Bullet(Element):
 
         super().__init__(x, y, arma.imagen_bala, arma.tank.colision_layer_balas)
 
-        self.velocidad = RESOLUTION_SCALE*RESOLUTION_SCALE*7
+        self.velocidad = Settings.RESOLUTION_SCALE*Settings.RESOLUTION_SCALE*7
         self.vel_x = math.cos(self.angle_rad) * self.velocidad
         self.vel_y = math.sin(self.angle_rad) * self.velocidad
         self.dano = 1

@@ -1,11 +1,11 @@
 import pygame
 from .interactable import Interactable
-from ...extras import CollisionLayer, TILE_SIZE, ResourceManager
+from ...extras import Settings, ResourceManager
 
 
 class Button(Interactable):
     def __init__(self, x, y, sprite, objetos_a_activar, mundo):
-        super().__init__(x, y, sprite, CollisionLayer.INTERACTUABLE)
+        super().__init__(x, y, sprite, Settings.CollisionLayer.INTERACTUABLE)
         self.camara_temporal_activa = False
         self.tiempo_activacion = 0
         self.tiempo_objetos = 0
@@ -52,7 +52,7 @@ class Button(Interactable):
         self.camara_x_original = self.mundo.camara_x
         self.camara_y_original = self.mundo.camara_y
 
-        self.mundo.camara_x = self.objetos_a_activar[0].x + TILE_SIZE - self.mundo.ancho_pantalla // 2
+        self.mundo.camara_x = self.objetos_a_activar[0].x + Settings.TILE_SIZE - self.mundo.ancho_pantalla // 2
         self.mundo.camara_y = self.objetos_a_activar[0].y - self.mundo.alto_pantalla // 2
 
         self.tiempo_activacion = pygame.time.get_ticks()

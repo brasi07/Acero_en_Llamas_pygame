@@ -1,13 +1,13 @@
 import pygame
-from ..extras import ResourceManager, RESIZE_PLAYER
+from ..extras import ResourceManager, Settings
 from .weapon import Weapon
 
 class Shield(Weapon):
     def __init__(self, tank, posicion=None):
         super().__init__(tank, posicion)
         self.tiempo_inicio = pygame.time.get_ticks()
-        self.imagenes_accesorio_base = ResourceManager.load_and_scale_image("escudo.png", RESIZE_PLAYER, RESIZE_PLAYER)
-        self.imagen_escudo_roto = ResourceManager.load_and_scale_image("escudo_roto.png", RESIZE_PLAYER, RESIZE_PLAYER)
+        self.imagenes_accesorio_base = ResourceManager.load_and_scale_image("escudo.png", Settings.RESIZE_PLAYER, Settings.RESIZE_PLAYER)
+        self.imagen_escudo_roto = ResourceManager.load_and_scale_image("escudo_roto.png", Settings.RESIZE_PLAYER, Settings.RESIZE_PLAYER)
         self.imagen_accesorio = self.imagenes_accesorio_base
         self.under_weapon = False
         self.proteger = True

@@ -1,16 +1,16 @@
 import pygame
 from .elemento_gui import ElementoGUI
-from ..extras import ResourceManager, NEGRO, VERDE, BUTTON_SIZEX, BUTTON_SIZEY
+from ..extras import ResourceManager, Settings
 
 class BotonGUI(ElementoGUI):
 
     def __init__(self, pantalla, texto, posicion):
         ElementoGUI.__init__(self, pantalla)
         self.imagen = ResourceManager.load_image("button_default.png")
-        self.imagen = pygame.transform.scale(self.imagen, (BUTTON_SIZEX, BUTTON_SIZEY))
+        self.imagen = pygame.transform.scale(self.imagen, (Settings.BUTTON_SIZEX, Settings.BUTTON_SIZEY))
         self.rect = self.imagen.get_rect()
-        self.idle = self.font.render(texto, True, NEGRO)
-        self.hover = self.font.render(texto, True, VERDE)
+        self.idle = self.font.render(texto, True, Settings.NEGRO)
+        self.hover = self.font.render(texto, True, Settings.VERDE)
         self.text = self.idle
         self.textrect = self.text.get_rect()
         # Se coloca el rectangulo en su posicion

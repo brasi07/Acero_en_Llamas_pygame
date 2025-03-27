@@ -1,17 +1,17 @@
 import pygame
 from ..elements import Element
 from ..elements.interactable import Interactable
-from ..extras import CollisionLayer, TILE_SIZE, ResourceManager, ANCHO, ALTO, RESOLUTION_SCALE
+from ..extras import Settings, ResourceManager
 from ..weapons import Weapon
 
 class Tank(Element):
 
-    def __init__(self, vida, velocidad, x, y, resizex, resizey, collision_layer=CollisionLayer.NONE, tank_type="enemigos", tank_level=""):
+    def __init__(self, vida, velocidad, x, y, resizex, resizey, collision_layer=Settings.CollisionLayer.NONE, tank_type="enemigos", tank_level=""):
 
         self.tank_type = tank_type
         self.tank_level = tank_level
         self.sprites = ResourceManager.load_sprites(resizex, resizey, f"body{tank_level}")
-        super().__init__(x * TILE_SIZE, y * TILE_SIZE, self.sprites["abajo"], collision_layer)
+        super().__init__(x * Settings.TILE_SIZE, y * Settings.TILE_SIZE, self.sprites["abajo"], collision_layer)
 
         self.vida = vida
         self.vida_inicial = vida
@@ -32,10 +32,10 @@ class Tank(Element):
         self.rect_element.y = y
 
     def actualizar_posicion(self, movimiento_x, movimiento_y, mundo):
-        colision1 = self.verificar_colision(RESOLUTION_SCALE*RESOLUTION_SCALE*movimiento_x, 0, mundo)
-        colision2 = self.verificar_colision(0, RESOLUTION_SCALE*RESOLUTION_SCALE*movimiento_y, mundo)
+        colision1 = self.verificar_colision(Settings.RESOLUTION_SCALE*Settings.RESOLUTION_SCALE*movimiento_x, 0, mundo)
+        colision2 = self.verificar_colision(0, Settings.RESOLUTION_SCALE*Settings.RESOLUTION_SCALE*movimiento_y, mundo)
 
-        direccion = self.determinar_direccion(RESOLUTION_SCALE*RESOLUTION_SCALE*movimiento_x, RESOLUTION_SCALE*RESOLUTION_SCALE*movimiento_y)
+        direccion = self.determinar_direccion(Settings.RESOLUTION_SCALE*Settings.RESOLUTION_SCALE*movimiento_x, Settings.RESOLUTION_SCALE*Settings.RESOLUTION_SCALE*movimiento_y)
         if direccion:
             self.direccion = direccion
             self.imagen = self.sprites[direccion]

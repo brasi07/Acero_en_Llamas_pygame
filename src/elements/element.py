@@ -1,9 +1,8 @@
 import pygame
-from ..extras import CollisionLayer, COLLISION_RULES, ANCHO, ALTO, ResourceManager, TILE_SIZE
-
+from ..extras import Settings
 
 class Element:
-    def __init__(self, x, y, imagen=None, collision_layer=CollisionLayer.NONE):
+    def __init__(self, x, y, imagen=None, collision_layer=Settings.CollisionLayer.NONE):
         self.x = x
         self.y = y
         self.collision_layer = collision_layer  # Asigna la capa de colisión
@@ -35,15 +34,15 @@ class Element:
 
     def obtener_pantalla_actual(self):
         """Calcula en qué pantalla está el jugador basado en su posición."""
-        col_pantalla = int(self.rect_element.centerx // ANCHO)
-        fila_pantalla = int(self.rect_element.centery // ALTO)
+        col_pantalla = int(self.rect_element.centerx // Settings.ANCHO)
+        fila_pantalla = int(self.rect_element.centery // Settings.ALTO)
 
         return fila_pantalla, col_pantalla
 
     def check_collision(self, other_element):
         """Verifica colisión con otro elemento basado en la tabla de colisiones."""
         # Si las capas no pueden colisionar, retorna False
-        if other_element.collision_layer not in COLLISION_RULES.get(self.collision_layer, set()) or other_element is self:
+        if other_element.collision_layer not in Settings.COLLISION_RULES.get(self.collision_layer, set()) or other_element is self:
             return False
 
         # Verificar colisión por máscara si ambos tienen imagen

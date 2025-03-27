@@ -1,5 +1,5 @@
 import pygame
-from ..extras import TIME_FRAME, ResourceManager
+from ..extras import Settings, ResourceManager
 from .weapon import Weapon
 
 class Saw(Weapon):
@@ -36,7 +36,7 @@ class Saw(Weapon):
 
         self.tiempo_actual = pygame.time.get_ticks()
 
-        if self.tiempo_actual - self.ultimo_cambio_frame >= TIME_FRAME:
+        if self.tiempo_actual - self.ultimo_cambio_frame >= Settings.TIME_FRAME:
             self.ultimo_cambio_frame = self.tiempo_actual  # Actualizar el tiempo del último cambio
             self.frame_actual = (self.frame_actual + 1) % len(self.animacion)
 

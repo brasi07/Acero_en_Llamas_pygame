@@ -1,7 +1,7 @@
 import time
 from .bullet import Bullet
 from ...elements.interactable import Interactable
-from ...extras import COLLISION_RULES, CollisionLayer, RESIZE_PLAYER, ResourceManager
+from ...extras import Settings, ResourceManager
 
 
 class BouncingBullet(Bullet):
@@ -10,7 +10,7 @@ class BouncingBullet(Bullet):
         super().__init__(arma)
         self.rebote_count = 0
         self.rebote_max = 2
-        self.sprites = ResourceManager.load_animation("balas_botadoras.png", 32, 32, 3, RESIZE_PLAYER * 0.13, RESIZE_PLAYER * 0.13)
+        self.sprites = ResourceManager.load_animation("balas_botadoras.png", 32, 32, 3, Settings.RESIZE_PLAYER * 0.13, Settings.RESIZE_PLAYER * 0.13)
         self.imagen = self.sprites[0]
 
     def iniciar_colision(self, elemento=None):
@@ -23,7 +23,7 @@ class BouncingBullet(Bullet):
             self.rect_element = self.sprites_colision[0].get_rect(center=self.rect_element.center)  # Centrar explosión
         else:
             if self.rebote_count == 0:
-                self.collision_layer = CollisionLayer.BULLET_ANY
+                self.collision_layer = Settings.CollisionLayer.BULLET_ANY
 
             self.rebote_count += 1
             self.imagen = self.sprites[self.rebote_count]
@@ -43,7 +43,7 @@ class BouncingBullet(Bullet):
                 self.vel_y = -self.vel_y
 
     def check_collision(self, other_element):
-        if other_element.collision_layer not in COLLISION_RULES.get(self.collision_layer, set()):
+        if other_element.collision_layer not in Settings.COLLISION_RULES.get(self.collision_layer, set()):
             return False
 
         # Comprobar si los rectángulos colisionan y devuelve el element colisionado

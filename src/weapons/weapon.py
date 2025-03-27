@@ -2,7 +2,7 @@ import math
 
 import numpy as np
 import pygame
-from ..extras import RESIZE_PLAYER, ResourceManager, COOLDOWN
+from ..extras import Settings, ResourceManager
 from .bullets import Bullet
 
 class Weapon:
@@ -17,14 +17,14 @@ class Weapon:
 
         self.imagen_canon_base = ResourceManager.cargar_canon(0, "weapons", tank.tank_level)
         self.imagenes_accesorio_base = None
-        self.imagen_bala = ResourceManager.load_and_scale_image("bala_base.png", RESIZE_PLAYER * 0.07, RESIZE_PLAYER * 0.07)
+        self.imagen_bala = ResourceManager.load_and_scale_image("bala_base.png", Settings.RESIZE_PLAYER * 0.07, Settings.RESIZE_PLAYER * 0.07)
 
         self.imagen_canon = self.imagen_canon_base
         self.imagen_accesorio = self.imagenes_accesorio_base
 
         self.rect_canon = self.imagen_canon.get_rect(center=(self.x, self.y))
         self.rect_accesorio = None
-        self.cooldown = COOLDOWN
+        self.cooldown = Settings.COOLDOWN
 
         self.under_weapon = True
         self.angulo_cannon = 0

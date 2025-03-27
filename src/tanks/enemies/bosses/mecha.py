@@ -1,6 +1,6 @@
 import pygame
 
-from ....extras import RESIZE_PLAYER, TILE_SIZE, EVENTO_BOSS_MUERTO, ResourceManager
+from ....extras import Settings, ResourceManager
 from ..astar import astar
 from ..enemy import Enemy, EnemyState
 from ....weapons import Saw
@@ -8,7 +8,7 @@ from ....weapons import Saw
 
 class Mecha(Enemy):
     def __init__(self, x, y):
-        super().__init__(20, 2.5, x, y, RESIZE_PLAYER, RESIZE_PLAYER, "horizontal", tank_level="_boss1", elite=False)
+        super().__init__(20, 2.5, x, y, Settings.RESIZE_PLAYER, Settings.RESIZE_PLAYER, "horizontal", tank_level="_boss1", elite=False)
         self.in_screen = False
         self.arma = Saw(self)
         self.id_mapa_binario = 2
@@ -16,7 +16,7 @@ class Mecha(Enemy):
 
     def update(self, jugador, mundo):
         if self.vida <= 0:
-            pygame.event.post(pygame.event.Event(EVENTO_BOSS_MUERTO))
+            pygame.event.post(pygame.event.Event(Settings.EVENTO_BOSS_MUERTO))
             jugador.vida = jugador.vida_inicial
             self.eliminar = True
 
@@ -32,8 +32,8 @@ class Mecha(Enemy):
 
         pantalla_binaria = mundo.mapas_binarios[self.indice_mundo_x][self.indice_mundo_y]
 
-        start = ((self.rect_element.centerx // TILE_SIZE) % 32, (self.rect_element.centery // TILE_SIZE) % 18)
-        goal = ((jugador.rect_element.centerx // TILE_SIZE) % 32, (jugador.rect_element.centery // TILE_SIZE) % 18)
+        start = ((self.rect_element.centerx // Settings.TILE_SIZE) % 32, (self.rect_element.centery // Settings.TILE_SIZE) % 18)
+        goal = ((jugador.rect_element.centerx // Settings.TILE_SIZE) % 32, (jugador.rect_element.centery // Settings.TILE_SIZE) % 18)
 
         self.arma.update_secundaria(jugador, mundo)
         distancia = self.distancia_jugador(jugador)
@@ -45,8 +45,8 @@ class Mecha(Enemy):
         if self.state == EnemyState.PATROLLING:
             self.manejar_patrullaje(mundo, pantalla_binaria)
         elif self.state == EnemyState.CHASING:
-            if distancia > TILE_SIZE*1.5:
-                self.manejar_persecucion(mundo, pantalla_binaria, start, goal, TILE_SIZE)
+            if distancia > Settings.TILE_SIZE*1.5:
+                self.manejar_persecucion(mundo, pantalla_binaria, start, goal, Settings.TILE_SIZE)
             else:
                 self.arma.activar_secundaria(mundo, jugador)
 

@@ -4,7 +4,7 @@ from abc import ABC
 import pygame
 
 from .. import Director
-from ..extras import settings, EVENTO_JUGADOR_MUERTO, ANCHO, ALTO, ResourceManager, TILE_SIZE
+from ..extras import Settings, ResourceManager
 from ..elements import Wall, LowWall
 from ..elements.activateable import Door
 from ..menus.menu import PauseMenu, GameOverMenu
@@ -22,7 +22,7 @@ class World(Scene, ABC):
         super().__init__(Director())
 
         self.ui = Ui()
-        self.control = settings.controller
+        self.control = Settings.controller
         self.world_number = world_number
         self.player = self.director.partida.player
 
@@ -38,8 +38,8 @@ class World(Scene, ABC):
         self.CONEXIONES = []
         self.num_pantallas_ancho = 3  # Número de pantallas en el eje X
         self.num_pantallas_alto = 4  # Número de pantallas en el eje Y
-        self.tiles_por_pantalla_x = ANCHO // TILE_SIZE  # Ancho en tiles de una pantalla
-        self.tiles_por_pantalla_y = ALTO // TILE_SIZE  # Alto en tiles de una pantalla
+        self.tiles_por_pantalla_x = self.ancho_pantalla // Settings.TILE_SIZE  # Ancho en tiles de una pantalla
+        self.tiles_por_pantalla_y = self.alto_pantalla // Settings.TILE_SIZE  # Alto en tiles de una pantalla
 
         self.elementos_por_capa = {}
         self.elementos_actualizables = []
@@ -134,8 +134,8 @@ class World(Scene, ABC):
         # Marcar obstáculos en la matriz
         for elemento in self.elementos_por_capa[2]:
             if isinstance(elemento, (Wall, LowWall, Door)):
-                tile_x = elemento.x // settings.TILE_SIZE
-                tile_y = elemento.y // settings.TILE_SIZE
+                tile_x = elemento.x // Settings.TILE_SIZE
+                tile_y = elemento.y // Settings.TILE_SIZE
                 mapa_binario[tile_y][tile_x] = 1
 
         # Inflar obstáculos (doblando el grosor)
@@ -151,8 +151,8 @@ class World(Scene, ABC):
                                 inflado[ny][nx] = 1
 
         # Crear submatrices para cada grid de pantalla
-        tiles_por_pantalla_x = self.ancho_pantalla // settings.TILE_SIZE
-        tiles_por_pantalla_y = self.alto_pantalla // settings.TILE_SIZE
+        tiles_por_pantalla_x = self.ancho_pantalla // Settings.TILE_SIZE
+        tiles_por_pantalla_y = self.alto_pantalla // Settings.TILE_SIZE
         matriz_mapas = [[None for _ in range(4)] for _ in range(3)]
 
         for i in range(3):
@@ -217,14 +217,14 @@ class World(Scene, ABC):
     def elemento_en_pantalla(self, elemento):
         """Verifica si el elemento está dentro del área visible."""
         return (
-                self.camara_x - settings.TILE_SIZE <= elemento.rect_element.x < self.camara_x + self.ancho_pantalla + settings.TILE_SIZE
-                and self.camara_y - settings.TILE_SIZE <= elemento.rect_element.y < self.camara_y + self.alto_pantalla + settings.TILE_SIZE
+                self.camara_x - Settings.TILE_SIZE <= elemento.rect_element.x < self.camara_x + self.ancho_pantalla + Settings.TILE_SIZE
+                and self.camara_y - Settings.TILE_SIZE <= elemento.rect_element.y < self.camara_y + self.alto_pantalla + Settings.TILE_SIZE
         )
 
     def obtener_pantalla_actual(self):
         """Calcula en qué pantalla está el jugador basado en su posición."""
-        col_pantalla = int(self.camara_x // ANCHO)
-        fila_pantalla = int(self.camara_y // ALTO)
+        col_pantalla = int(self.camara_x // self.ancho_pantalla)
+        fila_pantalla = int(self.camara_y // self.alto_pantalla)
 
         # Asegurar que está dentro de los límites del mundo
         col_pantalla = max(0, min(col_pantalla, self.num_pantallas_ancho - 1))
@@ -237,7 +237,7 @@ class World(Scene, ABC):
         for evento in eventos:
             if evento.type == pygame.QUIT:
                 self.director.salir_programa()
-            elif evento.type == EVENTO_JUGADOR_MUERTO:
+            elif evento.type == Settings.EVENTO_JUGADOR_MUERTO:
                 self.player.vida = self.player.vida_inicial
                 self.player.cambiar_secundaria(self.previous_weapon)
                 self.director.apilar_escena(GameOverMenu(self.director))
