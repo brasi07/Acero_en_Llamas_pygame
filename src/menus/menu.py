@@ -25,11 +25,11 @@ class Menu(Scene):
         # Se mira si se quiere salir de esta escena
         for evento in lista_eventos:
         # Si se quiere salir, se le indica al director
-            if evento.type == pygame.KEYDOWN:
-                if evento.key == pygame.K_t:
-                    self.ejecutarJuego()
             if evento.type == pygame.QUIT:
                 self.director.salir_programa()
+            if evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_ESCAPE:
+                    self.salirPrograma()
         # Se pasa la lista de eventos a la pantalla actual
         self.listaPantallas[self.pantallaActual].eventos(lista_eventos)
 
@@ -101,6 +101,17 @@ class PauseMenu(Menu):
 
     def guardar_partida(self):
         self.director.partida.save()
+
+    def eventos(self, lista_eventos):
+        for evento in lista_eventos:
+        # Si se quiere salir, se le indica al director
+            if evento.type == pygame.QUIT:
+                self.director.salir_programa()
+            if evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_ESCAPE:
+                    self.continuar()
+        # Se pasa la lista de eventos a la pantalla actual
+        self.listaPantallas[self.pantallaActual].eventos(lista_eventos)
 
 class GameOverMenu(Menu):
 
