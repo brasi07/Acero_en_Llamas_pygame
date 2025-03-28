@@ -15,17 +15,16 @@ class World3(World):
         self.ice = ()
 
         self.CONEXIONES = [
-            ((3, 0), (3, 1), Settings.NEGRO_TRANSLUCIDO),  # Habitación (0,0) conecta con (0,1)
+            ((0, 0), (0, 1), Settings.NEGRO_TRANSLUCIDO),  # Habitación (0,0) conecta con (0,1)
+            ((0, 1), (1, 1), Settings.ROJO_TRANSLUCIDO),
+            ((0, 1), (0, 2), Settings.NEGRO_TRANSLUCIDO),
+            ((1, 1), (1, 0), Settings.NEGRO_TRANSLUCIDO),
+            ((1, 1), (1, 2), Settings.NEGRO_TRANSLUCIDO),
+            ((1, 1), (2, 1), Settings.NEGRO_TRANSLUCIDO),
+            ((2, 1), (3, 1), Settings.ROJO_TRANSLUCIDO),
+            ((3, 1), (3, 0), Settings.NEGRO_TRANSLUCIDO),
             ((3, 1), (3, 2), Settings.NEGRO_TRANSLUCIDO),
-            ((3, 2), (2, 2), Settings.NEGRO_TRANSLUCIDO),
-            ((2, 2), (1, 2), Settings.NEGRO_TRANSLUCIDO),
-            ((1, 2), (0, 2), Settings.NEGRO_TRANSLUCIDO),
-            ((0, 2), (0, 1), Settings.NEGRO_TRANSLUCIDO),
-            ((0, 1), (0, 0), Settings.NEGRO_TRANSLUCIDO),
-            ((0, 0), (1, 0), Settings.NEGRO_TRANSLUCIDO),
-            ((1, 0), (2, 0), Settings.NEGRO_TRANSLUCIDO),
-            ((2, 0), (2, 1), Settings.NEGRO_TRANSLUCIDO),
-            ((2, 1), (1, 1), Settings.NEGRO_TRANSLUCIDO),
+            ((3, 0), (2, 0), Settings.NEGRO_TRANSLUCIDO),
         ]
 
         for capa, tiles in self.capas.items():
