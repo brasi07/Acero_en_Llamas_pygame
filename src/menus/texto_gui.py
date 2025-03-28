@@ -49,37 +49,6 @@ class TextoRes(TextoGUI):
         escena.irAConfiguraciones()
         self.director.cambiar_escena(escena)
 
-
-
-
-class TextoJugar(TextoGUI):
-    def __init__(self, pantalla,posicion):
-        TextoGUI.__init__(self, pantalla, Settings.NEGRO, 'Jugar', posicion)
-        
-    def accion(self):
-        self.pantalla.menu.ejecutarJuego()
-
-class TextoResume(TextoGUI):
-    def __init__(self, pantalla, posicion):
-        super().__init__(pantalla, Settings.NEGRO, "Continuar", posicion)
-
-    def accion(self):
-        self.pantalla.menu.continuar()
-
-class TextoSalir(TextoGUI):
-    def __init__(self, pantalla, posicion):
-        super().__init__(pantalla, Settings.NEGRO, "Salir", posicion)
-    
-    def accion(self):
-        self.pantalla.menu.salirPrograma()
-
-class TextoConfiguraciones(TextoGUI):
-    def __init__(self, pantalla, posicion):
-        super().__init__(pantalla, Settings.NEGRO, "Configuraciones", posicion)
-
-    def accion(self):
-        self.pantalla.menu.irAConfiguraciones()
-
 class TextoSonido(TextoGUI):
 
     def __init__(self, pantalla, color, texto, posicion,volumen, musica):
