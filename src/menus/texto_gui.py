@@ -79,3 +79,19 @@ class TextoConfiguraciones(TextoGUI):
 
     def accion(self):
         self.pantalla.menu.irAConfiguraciones()
+
+class TextoSonido(TextoGUI):
+
+    def __init__(self, pantalla, color, texto, posicion,volumen, musica):
+        self.volumen = volumen
+        self.musica = musica
+        super().__init__(pantalla, color, texto, posicion)
+
+    def accion(self):
+        from ..extras import ResourceManager
+        if self.musica:
+            Settings.VOLUMEN_MUSICA = self.volumen
+            ResourceManager.load_and_play_wav(f"title_theme.wav")
+        else:
+            Settings.VOLUMEN_SFX = self.volumen
+            ResourceManager.play_sound(f"object_picked.wav")

@@ -3,7 +3,7 @@ import pygame
 from .elemento_gui import *
 from .boton_gui import *
 from .menu_texto import TextoMenu
-from .texto_gui import TextoRes
+from .texto_gui import TextoRes, TextoSonido
 
 class PantallaGUI:
     def __init__(self, menu, nombreImagen):
@@ -65,6 +65,18 @@ class PantallaConfiguracionesGUI(PantallaGUI):
                                 TextoRes(self, Settings.NEGRO, "1024x576", (self.ANCHO/6 + self.ANCHO*0.15*2, self.ALTO/6), (1024,576), self.menu.director),
                                 TextoRes(self, Settings.NEGRO, "1280x720", (self.ANCHO/6 + self.ANCHO*0.15*3, self.ALTO/6), (1280, 720), self.menu.director),
                                 TextoRes(self, Settings.NEGRO, "Full Screen", (self.ANCHO/6 + self.ANCHO*0.15*4, self.ALTO/6), None, self.menu.director),
+                                TextoMenu(self, "Volumen Música", optionFont, (self.ANCHO/6, self.ALTO/6 + Settings.BUTTON_SIZEY)),
+                                TextoSonido(self, Settings.NEGRO, "0%", (self.ANCHO/6 + self.ANCHO*0.15,self.ALTO/6 + Settings.BUTTON_SIZEY), 0, True),
+                                TextoSonido(self, Settings.NEGRO, "25%", (self.ANCHO/6 + self.ANCHO*0.15*2,self.ALTO/6 + Settings.BUTTON_SIZEY), 0.25, True),
+                                TextoSonido(self, Settings.NEGRO, "50%", (self.ANCHO/6 + self.ANCHO*0.15*3,self.ALTO/6 + Settings.BUTTON_SIZEY), 0.50, True),
+                                TextoSonido(self, Settings.NEGRO, "75%", (self.ANCHO/6 + self.ANCHO*0.15*4,self.ALTO/6 + Settings.BUTTON_SIZEY), 0.75, True),
+                                TextoSonido(self, Settings.NEGRO, "100%", (self.ANCHO/6 + self.ANCHO*0.15*5,self.ALTO/6 + Settings.BUTTON_SIZEY), 1, True),
+                                TextoMenu(self, "Volumen Efectos", optionFont, (self.ANCHO/6, self.ALTO/6 + Settings.BUTTON_SIZEY * 2)),
+                                TextoSonido(self, Settings.NEGRO, "0%", (self.ANCHO/6 + self.ANCHO*0.15,self.ALTO/6 + Settings.BUTTON_SIZEY*2), 0, False),
+                                TextoSonido(self, Settings.NEGRO, "25%", (self.ANCHO/6 + self.ANCHO*0.15*2,self.ALTO/6 + Settings.BUTTON_SIZEY*2), 0.25, False),
+                                TextoSonido(self, Settings.NEGRO, "50%", (self.ANCHO/6 + self.ANCHO*0.15*3,self.ALTO/6 + Settings.BUTTON_SIZEY*2), 0.50, False),
+                                TextoSonido(self, Settings.NEGRO, "75%", (self.ANCHO/6 + self.ANCHO*0.15*4,self.ALTO/6 + Settings.BUTTON_SIZEY*2), 0.75, False),
+                                TextoSonido(self, Settings.NEGRO, "100%", (self.ANCHO/6 + self.ANCHO*0.15*5,self.ALTO/6 + Settings.BUTTON_SIZEY*2), 1, False),
                                 BotonVolver(self, (self.ANCHO/2,self.ALTO - self.ALTO/6))]
 
 class PantallaPauseGUI(PantallaGUI):

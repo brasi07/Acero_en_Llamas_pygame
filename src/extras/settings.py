@@ -17,6 +17,8 @@ class Settings(metaclass=SingletonMeta):
     ESPACIADO = 4            # Espacio entre habitaciones en el minimapa
     MINIMAPA_POS = (50, int((ALTO - HABITACION_ALTO * 4 - ESPACIADO * 3 - RESOLUTION_SCALE*50)))  # Posición en pantalla (esquina superior derecha)
     BUTTON_SIZEX, BUTTON_SIZEY = ANCHO * 0.4, ALTO * 0.1
+    VOLUMEN_MUSICA = 1
+    VOLUMEN_SFX = 1
     
 
     RESIZE_PLAYER = 2.5

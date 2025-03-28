@@ -94,8 +94,8 @@ class ResourceManager(object):
         if sound not in cls.resources:
             location = cls.locate_resource(sound)
             cls.resources[sound] = pygame.mixer.Sound(location)
-            cls.resources[sound].set_volume(volume)
-
+        
+        cls.resources[sound].set_volume(volume * Settings.VOLUMEN_SFX)
         cls.resources[sound].play(loops)
 
     @classmethod
@@ -186,6 +186,7 @@ class ResourceManager(object):
             cls.resources[name] = audio
 
         pygame.mixer_music.load(cls.resources[name])
+        pygame.mixer_music.set_volume(Settings.VOLUMEN_MUSICA)
         pygame.mixer_music.play(loops)
 
     @classmethod
