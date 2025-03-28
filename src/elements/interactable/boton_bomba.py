@@ -4,16 +4,13 @@ from ...extras import Settings, ResourceManager
 
 
 class Button_Bomb(Interactable):
-    def __init__(self, x, y, sprite, objetos_a_activar, mundo):
+    def __init__(self, x, y, sprite):
         super().__init__(x, y, sprite, Settings.CollisionLayer.INTERACTUABLE)
         self.camara_temporal_activa = False
         self.tiempo_activacion = 0
         self.tiempo_objetos = 0
         self.objetos_activados = False
         self.sprite = sprite
-        self.objetos_a_activar = objetos_a_activar
-        self.mundo = mundo
-
         self.objeto_colisionando = False
 
     def interactuar(self, objeto,mundo):

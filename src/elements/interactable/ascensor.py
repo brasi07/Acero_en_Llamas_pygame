@@ -11,7 +11,7 @@ class Ascensor(Interactable):
             if self.check_collision(objeto) and isinstance(objeto, Player):
                 if objeto.fila_pantalla==2:
                     objeto.rect_element.x=Settings.ANCHO*2.77
-                    objeto.rect_element.y=objeto.rect_element.y-Settings.ALTO
+                    objeto.rect_element.y=Settings.ALTO*1.42
                     mundo.destino_camara_y = mundo.destino_camara_y - Settings.ALTO
 
                 else:

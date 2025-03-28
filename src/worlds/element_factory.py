@@ -1,5 +1,5 @@
 from ..elements import LowWall, Decoracion, Wall
-from ..elements.interactable import Button, Trap, IceCube, IceFloor, PickableWeapon,Ascensor
+from ..elements.interactable import Button, Trap, IceCube, IceFloor, PickableWeapon,Ascensor,Button_Bomb
 from ..elements.activateable import Door
 from ..extras import Settings
 from ..tanks.enemies import EnemyRed, EnemyPurple, EnemyGreen, EnemyBrown
@@ -57,6 +57,8 @@ class ElementFactory:
             return Decoracion(x, y, sprites[valor])
         elif valor == 2193:
             return Ascensor(x, y, sprites[valor])
+        elif valor == 5300:
+            return Button_Bomb(x,y,sprites[2142])
         elif valor != -1 and valor in sprites:
             return Wall(x, y, sprites[valor])
 
