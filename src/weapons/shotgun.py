@@ -20,7 +20,7 @@ class Shotgun(Weapon):
             self.imagen_canon_base = self.animacion[3]
 
         self.activo = False
-        self.cooldown = Settings.COOLDOWN
+        self.cooldown = 3000
         self.frame_actual = 0
         self.ultimo_cambio_frame = 0
 
