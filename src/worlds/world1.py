@@ -11,7 +11,7 @@ class World1(World):
         self.lowWalls = (1168, 1155, 1283, 1220, 1282, 1157, 1346, 1092, 1347)
         self.decorations = (514, 515, 516, 517, 578, 579, 580, 581, 876, 878, 768, 2436, 2437, 2438, 2500, 2502, 2564, 2565, 2566)
         self.ice = ()
-
+        self.world_number = 1
         self.CONEXIONES = [
             ((1, 1), (2, 1), Settings.ROJO_TRANSLUCIDO),
             ((0, 0), (0, 1), Settings.NEGRO_TRANSLUCIDO),  # Habitación (0,0) conecta con (0,1)

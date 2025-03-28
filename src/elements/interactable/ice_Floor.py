@@ -5,7 +5,7 @@ class IceFloor(Interactable):
     def __init__(self, x, y, imagen=None):
         super().__init__(x, y, imagen, Settings.CollisionLayer.INTERACTUABLE)
 
-    def interactuar(self, objeto):
+    def interactuar(self, objeto,mundo):
         from ...tanks import Player
         if self.check_collision(objeto) and isinstance(objeto, Player):
             objeto.deslizar=True

@@ -5,7 +5,7 @@ from ..menus.menu import DialogoMenu
 class World2(World):
     def __init__(self, alto_pantalla, ancho_pantalla):
         super().__init__(alto_pantalla, ancho_pantalla, 2, "monte.wav")
-        world_number = 2
+        self.world_number = 2
         self.hasSky = True
         self.traps = (1425, -2)
         self.lowWalls = (16, 18, 20, 85, 86, 336, 338, 340, 466, 405, 406, 469, 470, 1484, 1485, 1548, 1549, 2114, 2176, 2178, 2240, 2304, 2305, 2368)

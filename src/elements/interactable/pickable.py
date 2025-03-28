@@ -36,7 +36,7 @@ class PickableWeapon(Pickable):
         self.weapon = weapon
         super().__init__(x, y, weapon.get_pickable_image())
 
-    def interactuar(self, objeto):
+    def interactuar(self, objeto,mundo):
         from ...tanks import Player
         if isinstance(objeto, Player) and self.check_collision(objeto):
             ResourceManager.play_sound("object_picked.wav")
@@ -49,7 +49,7 @@ class PickableCollectable(Pickable):
         self.weapon = weapon
         super().__init__(x, y, weapon.get_pickable_image())
 
-    def interactuar(self, objeto):
+    def interactuar(self, objeto,mundo):
         from ...tanks import Player
         if isinstance(objeto, Player) and self.check_collision(objeto):
             ResourceManager.play_sound("object_picked.wav")

@@ -5,3 +5,5 @@ from .mine import Mine
 from .interactable import Interactable
 from .pickable import Pickable, PickableWeapon
 from .ice_cube import IceCube
+from .ascensor import Ascensor
+from .boton_bomba import Button_Bomb

@@ -2,7 +2,7 @@ import pygame
 
 from ..extras import Settings, ResourceManager
 from .tank import Tank
-from ..weapons import Weapon, Dash, Shotgun, ReboungGun, RocketLauncher, MineLauncher, Shield
+from ..weapons import Weapon, Dash, Shotgun, ReboungGun, RocketLauncher, MineLauncher, Shield,bombardero
 
 
 class Player(Tank):
@@ -29,12 +29,14 @@ class Player(Tank):
         self.key_objs = objetos_clave
         self.running = False
 
+
     def eventos(self, mundo):
         teclas = pygame.key.get_pressed()
         self.movimiento_x, self.movimiento_y = self.obtener_movimiento(teclas)
         self.gestionar_armas(mundo, teclas)
 
     def update(self, mundo):
+        #print(f"{self.x},{self.y}")
         if self.vida <= 0:
             pygame.event.post(pygame.event.Event(Settings.EVENTO_JUGADOR_MUERTO))
 
