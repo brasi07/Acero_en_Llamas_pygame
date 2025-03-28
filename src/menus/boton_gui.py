@@ -24,6 +24,11 @@ class BotonGUI(ElementoGUI):
         super().establecerPosicion(posicion)
         self.textrect.center = self.rect.center
 
+    def cambiarTexto(self, texto):
+        self.idle = self.font.render(texto, True, Settings.NEGRO)
+        self.hover = self.font.render(texto, True, Settings.ROJO)
+        self.text =self.hover
+
 class BotonJugar(BotonGUI):
     def __init__(self, pantalla,posicion):
         BotonGUI.__init__(self, pantalla, "JUGAR", posicion)
@@ -76,6 +81,7 @@ class BotonGuardar(BotonGUI):
 
     def accion(self):
         self.pantalla.menu.guardar_partida()
+        self.cambiarTexto("GUARDADO")
 
 class BotonCargar(BotonGUI):
     def __init__(self, pantalla, posicion):

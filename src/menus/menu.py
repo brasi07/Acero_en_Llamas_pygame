@@ -67,6 +67,7 @@ class Menu(Scene):
                     fase = world3.World3(self.director.pantalla.get_height(), self.director.pantalla.get_width())
             partida.set_save_coords(fase)
             self.director.cambiar_escena(fase)
+            
 
     def return_to_title(self):
         self.director.cambiar_escena(MainMenu(self.director))

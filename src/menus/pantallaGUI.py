@@ -73,7 +73,8 @@ class PantallaPauseGUI(PantallaGUI):
         self.elementosGUI = [BotonResume(self, (self.ANCHO/2, self.ALTO/3)),
                              BotonCargar(self, (self.ANCHO/2, self.ALTO/3 + self.BUTTON_SIZEY)),
                              BotonGuardar(self, (self.ANCHO/2, self.ALTO/3 + self.BUTTON_SIZEY*2)),
-                             BotonSalir(self, (self.ANCHO/2, self.ALTO/3 + self.BUTTON_SIZEY * 3))]
+                             BotonReturnToTitle(self, (self.ANCHO/2, self.ALTO/3 + self.BUTTON_SIZEY * 3)),
+                             BotonSalir(self, (self.ANCHO/2, self.ALTO/3 + self.BUTTON_SIZEY * 4))]
         
     def dibujar(self,pantalla):
         if self.background == None:
