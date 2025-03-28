@@ -20,6 +20,7 @@ class RocketLauncher(Weapon):
             self.rocket_counter -= 1
 
         rocket = Rocket(self, self.posRocket)
+        ResourceManager.play_sound("missile_launch.wav")
         mundo.add_bullet(rocket)
 
         # Alternar entre -30, -10, 10, y 30 para hacer que los misiles salgan de diferentes lados

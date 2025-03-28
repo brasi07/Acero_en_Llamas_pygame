@@ -75,6 +75,7 @@ class Menu(Scene):
         self.director.cambiar_escena(MainMenu(self.director))
 
 
+
 class MainMenu(Menu):
 
     def __init__(self, director):
@@ -101,6 +102,7 @@ class PauseMenu(Menu):
     def __init__(self, director):
         super().__init__(director)
         self.listaPantallas.append(PantallaPauseGUI(self))
+        self.listaPantallas.append(PantallaControles(self))
         self.mostrarPantallaInicial()
 
     def guardar_partida(self):
@@ -117,6 +119,9 @@ class PauseMenu(Menu):
                     self.continuar()
         # Se pasa la lista de eventos a la pantalla actual
         self.listaPantallas[self.pantallaActual].eventos(lista_eventos)
+
+    def verControles(self):
+        self.pantallaActual=1
 
 class GameOverMenu(Menu):
 
@@ -143,9 +148,9 @@ class DialogoMenu(Menu):
 
 class FinalMenu(Menu):
     
-    def __init__(self, director):
+    def __init__(self, director, final=None):
         super().__init__(director)
-        self.listaPantallas.append(PantallaFin(self))
+        self.listaPantallas.append(PantallaFin(self, final))
         self.mostrarPantallaInicial()
 
 class CreditosMenu(Menu):

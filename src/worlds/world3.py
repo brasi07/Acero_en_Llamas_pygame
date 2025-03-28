@@ -1,4 +1,5 @@
 #from pefile import fast_load
+from pygame.examples.music_drop_fade import play_file
 
 from ..extras import Settings, ResourceManager
 from .world import World
@@ -40,9 +41,13 @@ class World3(World):
 
     def manejar_evento_especifico(self, evento):
         if self.control.change_world(evento) or evento.type == Settings.EVENTO_BOSS_MUERTO:
-            self.player.improve()
             self.stop_music()
-            self.director.cambiar_escena(FinalMenu(self.director))
+            if self.player.key_objs >= 3:
+                self.director.cambiar_escena(FinalMenu(self.director, "alternativo"))
+            else:
+                self.director.cambiar_escena(FinalMenu(self.director))
+
+
     def update(self, time):
         super().update(time)
         if pygame.time.get_ticks() - self.tiempoInicio_bomba >= 6000:

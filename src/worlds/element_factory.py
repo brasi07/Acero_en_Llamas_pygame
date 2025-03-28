@@ -1,6 +1,7 @@
 from ..elements import LowWall, Decoracion, Wall
 from ..elements.interactable import Button, Trap, IceCube, IceFloor, PickableWeapon,Ascensor,Button_Bomb
 from ..elements.activateable import Door
+from ..elements.interactable.pickable import PickableCollectable
 from ..extras import Settings
 from ..tanks.enemies import EnemyRed, EnemyPurple, EnemyGreen, EnemyBrown
 from ..tanks.enemies.bosses import WarTrain, MegaCannon, Mecha
@@ -35,6 +36,9 @@ class ElementFactory:
             return WarTrain(x, y)
         elif  valor in game_instance.ice:
             return IceFloor(x,y,sprites[valor])
+
+        elif valor == 5400:
+            return PickableCollectable(x, y)
 
         elif 5200 <= valor <= 5299:
             return PickableWeapon(x, y, WeaponPool().get_weapon(valor % 100))

@@ -87,7 +87,8 @@ class PantallaPauseGUI(PantallaGUI):
                              BotonCargar(self, (self.ANCHO/2, self.ALTO/3 + self.BUTTON_SIZEY)),
                              BotonGuardar(self, (self.ANCHO/2, self.ALTO/3 + self.BUTTON_SIZEY*2)),
                              BotonReturnToTitle(self, (self.ANCHO/2, self.ALTO/3 + self.BUTTON_SIZEY * 3)),
-                             BotonSalir(self, (self.ANCHO/2, self.ALTO/3 + self.BUTTON_SIZEY * 4))]
+                             BotonControles(self, (self.ANCHO/2, self.ALTO/3 + self.BUTTON_SIZEY * 4)),
+                             BotonSalir(self, (self.ANCHO/2, self.ALTO/3 + self.BUTTON_SIZEY * 5))]
         
     def dibujar(self,pantalla):
         if self.background == None:
@@ -99,6 +100,11 @@ class PantallaPauseGUI(PantallaGUI):
 
     def eventos(self, lista_eventos):
         super().eventos(lista_eventos)
+
+class PantallaControles(PantallaGUI):
+    def __init__(self, menu):
+        super().__init__(menu, "menu_ controles.png")
+        self.elementosGUI = [BotonResume(self, (self.ANCHO / 2, self.ALTO / 1.2))]
 
 class PantallaGameOverGUI(PantallaGUI):
     def __init__(self, menu):
@@ -115,7 +121,7 @@ class PantallaDialogo(PantallaGUI):
 
 class PantallaFin(PantallaGUI):
 
-    def __init__(self, menu, final=None):
+    def __init__(self, menu, final):
         # Para el final alternativo
         nombre_archivo = f"pantalla_final_{final}.png" if final is not None else "pantalla_final.png"
         super().__init__(menu, nombre_archivo)

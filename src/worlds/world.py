@@ -4,6 +4,7 @@ from abc import ABC
 import pygame
 
 from .. import Director
+from ..elements.interactable.pickable import PickableCollectable
 from ..extras import Settings, ResourceManager
 from ..elements import Wall, LowWall
 from ..elements.activateable import Door
@@ -27,6 +28,7 @@ class World(Scene, ABC):
         self.player = self.director.partida.player
 
         self.previous_weapon = self.player.arma
+        self.previous_key_objs = self.player.key_objs
 
         self.ancho_pantalla = ancho_pantalla
         self.alto_pantalla = alto_pantalla
@@ -108,6 +110,9 @@ class World(Scene, ABC):
                 valor = int(valor)  # Asegurar que es un número válido
                 id_enemigo += 1
                 elemento = ElementFactory.create_element(valor, x, y, sprites, puertas, self, id_enemigo)
+
+                if isinstance(elemento, PickableCollectable) and self.player.key_objs >= self.world_number:
+                    elemento = None
 
                 if elemento:
                     lista_elementos.append(elemento)  # Agregar a la lista general de elementos
@@ -246,7 +251,10 @@ class World(Scene, ABC):
             elif evento.type == Settings.EVENTO_JUGADOR_MUERTO:
                 self.player.vida = self.player.vida_inicial
                 self.player.cambiar_secundaria(self.previous_weapon)
+                self.player.key_objs = self.previous_key_objs
                 self.director.apilar_escena(GameOverMenu(self.director))
+            elif evento.type == Settings.EVENTO_COLECCIONABLE_RECOGIDO:
+                self.player.key_objs += 1
 
             if self.control.pausar(evento):
                 self.director.apilar_escena(PauseMenu( self.director))

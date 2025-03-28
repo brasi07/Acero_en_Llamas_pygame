@@ -45,9 +45,8 @@ class PickableWeapon(Pickable):
 
 class PickableCollectable(Pickable):
 
-    def __init__(self, x, y, weapon):
-        self.weapon = weapon
-        super().__init__(x, y, weapon.get_pickable_image())
+    def __init__(self, x, y):
+        super().__init__(x, y, ResourceManager.load_and_scale_image("key_object.png", 1, 1))
 
     def interactuar(self, objeto,mundo):
         from ...tanks import Player

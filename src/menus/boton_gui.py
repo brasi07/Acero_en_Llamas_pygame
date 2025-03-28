@@ -126,3 +126,10 @@ class BotonCreditos(BotonGUI):
     def accion(self):
         from .menu import CreditosMenu
         self.pantalla.menu.director.cambiar_escena(CreditosMenu(self.pantalla.menu.director))
+
+class BotonControles(BotonGUI):
+    def __init__(self, pantalla, posicion):
+        super().__init__(pantalla, "CONTROLES", posicion)
+
+    def accion(self):
+        self.pantalla.menu.verControles()
