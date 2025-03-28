@@ -50,7 +50,7 @@ class ExplosionBullet(Bullet):
                 dy = e.rect_element.centery - self.y
                 dist = math.hypot(dx, dy)
 
-                print(f"{e.rect_element.x} {e.rect_element.x} {dist} {self.radio_explosion*25}")
+                #print(f"{e.rect_element.x} {e.rect_element.x} {dist} {self.radio_explosion*25}")
                 if dist <= self.radio_explosion*25:
                     e.recibir_dano(self.dano)
 
