@@ -6,8 +6,7 @@ from ...elements import Element
 
 class Bullet(Element):
     # Cargar sprites de colisión una sola vez (variable estática)
-    sprites_colision = [ResourceManager.load_and_scale_image(f"expl{i}.png", 20 / Settings.TILE_SIZE, 20 / Settings.TILE_SIZE)
-                        for i in range(1, 11)]
+
 
     def __init__(self, arma, angulo=None, desplazamiento_lateral=0, desplazamiento_frontal=0):
         self.arma = arma
@@ -20,7 +19,8 @@ class Bullet(Element):
         self.vel_x = math.cos(self.angle_rad) * self.velocidad
         self.vel_y = math.sin(self.angle_rad) * self.velocidad
         self.dano = 1
-
+        self.sprites_colision = [ResourceManager.load_and_scale_image(f"expl{i}.png", 20 / Settings.TILE_SIZE, 20 / Settings.TILE_SIZE)
+                        for i in range(1, 11)]
         # Estado de la bala
         self.colisionando = False
         self.tiempo_colision = 0

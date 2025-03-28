@@ -28,8 +28,6 @@ class Player(Tank):
         self.contador_desliz=0
         self.key_objs = objetos_clave
         self.running = False
-        self.tiempoInicio_bomba = pygame.time.get_ticks()
-        self.bomba=bombardero.ExplosionWeapon(self)
 
 
     def eventos(self, mundo):
@@ -42,13 +40,6 @@ class Player(Tank):
         if self.vida <= 0:
             pygame.event.post(pygame.event.Event(Settings.EVENTO_JUGADOR_MUERTO))
             self.vida = self.vida_inicial
-
-        if mundo.world_number==3 and pygame.time.get_ticks() - self.tiempoInicio_bomba >= 3000:
-            print("Bomba")
-            self.tiempoInicio_bomba = pygame.time.get_ticks()
-            # Crea la bala explosiva; se usará el ángulo y desplazamientos por defecto, pero puedes especificarlos si lo deseas.
-            self.bomba.activar(mundo)
-
 
         self.mover(mundo)
         self.arma.update_secundaria(self, mundo)

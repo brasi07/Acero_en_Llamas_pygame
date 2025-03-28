@@ -21,7 +21,7 @@ class ExplosionWeapon(Weapon):
         # Sobrescribimos las imágenes base para que no se dibuje nada.
         self.imagen_canon_base = self.invisible_surface
         self.imagen_canon = self.invisible_surface
-        self.imagen_bala = ResourceManager.load_and_scale_image("mirilla.png",Settings.RESOLUTION_SCALE*50,Settings.RESOLUTION_SCALE*50)
+        self.imagen_bala = None
 
   # Si quieres asegurarte de que no se use ninguna bala gráfica
 

@@ -23,6 +23,7 @@ class Settings(metaclass=SingletonMeta):
     RESIZE_CANNON = 2.0
 
     TILE_SIZE = int(RESOLUTION_SCALE*32)
+    BOMB_SIZE= int(3*RESOLUTION_SCALE)
 
     def updateRes(self):
         self.ANCHO, self.ALTO = int(self.RESOLUTION_SCALE*1024), int(self.RESOLUTION_SCALE*576)

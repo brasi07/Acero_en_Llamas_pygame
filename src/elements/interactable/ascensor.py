@@ -7,16 +7,14 @@ class Ascensor(Interactable):
 
     def interactuar(self, objeto,mundo):
         from ...tanks import Player
+        if self.check_collision(objeto):
+            if self.check_collision(objeto) and isinstance(objeto, Player):
+                if objeto.fila_pantalla==2:
+                    objeto.rect_element.x=Settings.ANCHO*2.77
+                    objeto.rect_element.y=objeto.rect_element.y-Settings.ALTO
+                    mundo.destino_camara_y = mundo.destino_camara_y - Settings.ALTO
 
-        if self.check_collision(objeto) and isinstance(objeto, Player):
-            if objeto.y>10:
-                objeto.x=0
-                objeto.y=0
-                mundo.destino_camara_x = 0
-                mundo.destino_camara_y = 0
-
-            else:
-                objeto.x = 0
-                objeto.y = 0
-                mundo.destino_camara_x = 0
-                mundo.destino_camara_y = 0
+                else:
+                    objeto.rect_element.x=Settings.ANCHO*2.77
+                    objeto.rect_element.y = objeto.rect_element.y + Settings.ALTO
+                    mundo.destino_camara_y = mundo.destino_camara_y + Settings.ALTO
