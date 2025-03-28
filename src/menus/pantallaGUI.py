@@ -61,9 +61,10 @@ class PantallaConfiguracionesGUI(PantallaGUI):
             optionFont = ResourceManager.load_font("VT32310", "VT323.ttf", 20)
 
         self.elementosGUI = [   TextoMenu(self, "Resolucion", optionFont, (self.ANCHO/6, self.ALTO/6)),
-                                TextoRes(self, Settings.NEGRO, "768x432", (self.ANCHO/6 + self.ANCHO*0.2, self.ALTO/6), (768,432), self.menu.director),
-                                TextoRes(self, Settings.NEGRO, "1024x576", (self.ANCHO/6 + self.ANCHO*0.2*2, self.ALTO/6), (1024,576), self.menu.director),
-                                TextoRes(self, Settings.NEGRO, "1280x720", (self.ANCHO/6 + self.ANCHO*0.2*3, self.ALTO/6), (1280, 720), self.menu.director),
+                                TextoRes(self, Settings.NEGRO, "768x432", (self.ANCHO/6 + self.ANCHO*0.15, self.ALTO/6), (768,432), self.menu.director),
+                                TextoRes(self, Settings.NEGRO, "1024x576", (self.ANCHO/6 + self.ANCHO*0.15*2, self.ALTO/6), (1024,576), self.menu.director),
+                                TextoRes(self, Settings.NEGRO, "1280x720", (self.ANCHO/6 + self.ANCHO*0.15*3, self.ALTO/6), (1280, 720), self.menu.director),
+                                TextoRes(self, Settings.NEGRO, "Full Screen", (self.ANCHO/6 + self.ANCHO*0.15*4, self.ALTO/6), None, self.menu.director),
                                 BotonVolver(self, (self.ANCHO/2,self.ALTO - self.ALTO/6))]
 
 class PantallaPauseGUI(PantallaGUI):

@@ -3,12 +3,14 @@ import pygame
 from . import SingletonMeta
 from .gamesave import Partida
 from .extras.settings import Settings
+from pygame._sdl2 import Window
+
 
 
 class Director(metaclass=SingletonMeta):
 
     def __init__(self):
-        self.pantalla = pygame.display.set_mode((Settings.ANCHO, Settings.ALTO), pygame.DOUBLEBUF)
+        self.pantalla = pygame.display.set_mode((1024,576), pygame.FULLSCREEN | pygame.SCALED | pygame.DOUBLEBUF)
         self.pila_escenas = []
         self.salir_escena = False
         self.escena_guardada = None

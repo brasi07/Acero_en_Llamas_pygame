@@ -1,6 +1,8 @@
 from .elemento_gui import ElementoGUI
 from ..extras.settings import Settings
 import pygame
+from pygame._sdl2 import Window
+
 
 class TextoGUI(ElementoGUI):
     def __init__(self, pantalla, color, texto, posicion):
@@ -25,16 +27,24 @@ class TextoRes(TextoGUI):
     def accion(self):
         from .menu import MainMenu
 
-        if self.res == (1024,576):
-            Settings.RESOLUTION_SCALE = 1
-        elif self.res == (768,432):
-            Settings.RESOLUTION_SCALE = 0.75
-        elif self.res == (1280,720):
-            Settings.RESOLUTION_SCALE = 1.25
+        if self.res:
+            if self.res == (1024,576):
+                Settings.RESOLUTION_SCALE = 1
+            elif self.res == (768,432):
+                Settings.RESOLUTION_SCALE = 0.75
+            elif self.res == (1280,720):
+                Settings.RESOLUTION_SCALE = 1.25            
 
-        Settings.updateRes(Settings)
+            Settings.updateRes(Settings)
         
-        self.director.pantalla = pygame.display.set_mode(self.res)
+            self.director.pantalla = pygame.display.set_mode(self.res, pygame.RESIZABLE |pygame.DOUBLEBUF)
+        else:
+            Settings.RESOLUTION_SCALE = 1
+            Settings.updateRes(Settings)
+            pygame.display.quit()
+            pygame.display.init()
+            self.director.pantalla = pygame.display.set_mode((1024, 576), pygame.FULLSCREEN | pygame.SCALED | pygame.DOUBLEBUF)
+            
         escena = MainMenu(self.director)
         escena.irAConfiguraciones()
         self.director.cambiar_escena(escena)
