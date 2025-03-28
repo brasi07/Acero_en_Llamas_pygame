@@ -5,7 +5,6 @@ import pygame
 class ElementoGUI:
     def __init__(self, pantalla):
         self.pantalla = pantalla
-        # La fuente la debería cargar el estor de recursos
         if self.pantalla.ANCHO >= 1024:
             self.font = ResourceManager.load_font("VT32324", "VT323.ttf", 28)
         else:

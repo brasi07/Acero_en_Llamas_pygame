@@ -91,6 +91,7 @@ class PantallaPauseGUI(PantallaGUI):
         
     def dibujar(self,pantalla):
         if self.background == None:
+            #no se pinta la imagen sino que se guarda una copia de la pantalla para que se vea el juego de fondo mientras esta pausado
             self.background = pantalla.copy()
         pantalla.blit(self.background, (0,0))
         for elemento in self.elementosGUI:

@@ -94,7 +94,7 @@ class MainMenu(Menu):
         self.director.cambiar_escena(fase)
     
     def irAConfiguraciones(self):
-        self.pantallaActual=1 #encontrar una manera mellor de manjar las pantallas que no sea con el numero directamente
+        self.pantallaActual=1 
 
 class PauseMenu(Menu):
 
@@ -112,6 +112,7 @@ class PauseMenu(Menu):
             if evento.type == pygame.QUIT:
                 self.director.salir_programa()
             if evento.type == pygame.KEYDOWN:
+                #se sobrescribe el evento del Escape para que pause/despause el juego y no salgas
                 if evento.key == pygame.K_ESCAPE:
                     self.continuar()
         # Se pasa la lista de eventos a la pantalla actual
