@@ -82,7 +82,7 @@ class World(Scene, ABC):
         self.num_columnas = len(self.capas[1][0]) if self.num_filas > 0 else 0
         self.elementos_por_capa = {capa: [] for capa in self.capas.keys()}
 
-        self.play_music()
+        self.started = False
 
     def play_music(self):
         ResourceManager.load_and_play_wav(self.song_name, -1)
@@ -265,6 +265,10 @@ class World(Scene, ABC):
         pass
 
     def update(self, time):
+
+        if not self.started:
+            self.play_music()
+            self.started = True
 
         self.player.update(self)
 

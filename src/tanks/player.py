@@ -37,7 +37,6 @@ class Player(Tank):
     def update(self, mundo):
         if self.vida <= 0:
             pygame.event.post(pygame.event.Event(Settings.EVENTO_JUGADOR_MUERTO))
-            self.vida = self.vida_inicial
 
         self.mover(mundo)
         self.arma.update_secundaria(self, mundo)
