@@ -46,12 +46,12 @@ class ExplosionBullet(Bullet):
 
         # Aplicar daño a todos los elementos en el radio
         for e in mundo.elementos_por_capa_y_pantalla[2][self.fila_pantalla][self.col_pantalla]:
-            if isinstance(e,Tank):
+            if isinstance(e,Player):
                 dx = e.rect_element.centerx - self.x
                 dy = e.rect_element.centery - self.y
                 dist = math.hypot(dx, dy)
-                if isinstance(e,Player):
-                    print(f"{e.rect_element.x} {e.rect_element.x} {dist} {self.radio_explosion*25}")
+
+                print(f"{e.rect_element.x} {e.rect_element.x} {dist} {self.radio_explosion*25}")
                 if dist <= self.radio_explosion*25:
                     e.recibir_dano(self.dano)
 

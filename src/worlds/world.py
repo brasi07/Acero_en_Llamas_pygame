@@ -298,6 +298,8 @@ class World(Scene, ABC):
     def dibujar(self, pantalla):
         self.draw(pantalla)
 
+
+
         self.player.draw(pantalla, self.camara_x, self.camara_y)
 
         for enemigo in self.enemigos:

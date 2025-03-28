@@ -22,6 +22,7 @@ class ExplosionWeapon(Weapon):
         self.imagen_canon_base = self.invisible_surface
         self.imagen_canon = self.invisible_surface
         self.imagen_bala = None
+        self.fin=False
 
   # Si quieres asegurarte de que no se use ninguna bala gráfica
 
@@ -40,8 +41,9 @@ class ExplosionWeapon(Weapon):
         # ResourceManager.play_sound("8bit_bomb_explosion.wav")
 
         # Crear la bala que explota de inmediato
-        bala_explosiva = ExplosionBullet(self,self.tank,mundo)
-        mundo.add_bullet(bala_explosiva)
+        if not self.fin:
+            bala_explosiva = ExplosionBullet(self,self.tank,mundo)
+            mundo.add_bullet(bala_explosiva)
 
     def update(self, mundo, tank=None):
         """
