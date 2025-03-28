@@ -52,7 +52,7 @@ class Menu(Scene):
     def continuar(self):
         self.director.salir_de_escena()
 
-    def cargar_partida(self):
+    def cargar_partida(self, boton):
         from ..worlds import world1, world2, world3
         partida = Partida.load("save.pkl")
         if partida:
@@ -67,6 +67,8 @@ class Menu(Scene):
                     fase = world3.World3(self.director.pantalla.get_height(), self.director.pantalla.get_width())
             partida.set_save_coords(fase)
             self.director.cambiar_escena(fase)
+        else:
+            boton.cambiarTexto("NO HAY PARTIDA")
             
 
     def return_to_title(self):

@@ -12,9 +12,11 @@ class BotonGUI(ElementoGUI):
         self.idle = self.font.render(texto, True, Settings.NEGRO)
         self.hover = self.font.render(texto, True, Settings.ROJO)
         self.text = self.idle
+        self.incial_text = texto
         self.textrect = self.text.get_rect()
         # Se coloca el rectangulo en su posicion
         self.establecerPosicion(posicion)
+        self.cambiado = False
     
     def dibujar(self, pantalla):
         pantalla.blit(self.imagen, self.rect)
@@ -28,6 +30,26 @@ class BotonGUI(ElementoGUI):
         self.idle = self.font.render(texto, True, Settings.NEGRO)
         self.hover = self.font.render(texto, True, Settings.ROJO)
         self.text =self.hover
+        self.textrect = self.text.get_rect()
+        self.textrect.center = self.rect.center
+        self.cambiado = True
+        self.clickedWhen = pygame.time.get_ticks()
+
+    def update(self):
+        super().update()
+        if self.cambiado:
+            tiempo_actual = pygame.time.get_ticks()
+            if tiempo_actual - self.clickedWhen >= 500:
+                self.volverTextoOriginal()
+
+    def volverTextoOriginal(self):
+        self.idle = self.font.render(self.incial_text, True, Settings.NEGRO)
+        self.hover = self.font.render(self.incial_text, True, Settings.ROJO)
+        self.text =self.hover
+        self.textrect = self.text.get_rect()
+        self.textrect.center = self.rect.center
+        self.cambiado = False
+
 
 class BotonJugar(BotonGUI):
     def __init__(self, pantalla,posicion):
@@ -88,7 +110,7 @@ class BotonCargar(BotonGUI):
         super().__init__(pantalla, "CARGAR PARTIDA", posicion)
 
     def accion(self):
-        self.pantalla.menu.cargar_partida()
+        self.pantalla.menu.cargar_partida(self)
 
 class BotonReturnToTitle(BotonGUI):
     def __init__(self, pantalla, posicion):
