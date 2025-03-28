@@ -24,7 +24,7 @@ class ExplosionBullet(Bullet):
         # Posición de la explosión en el tanque
         self.x = tank.x
         self.y = tank.y
-        self.imagen=ResourceManager.load_and_scale_image("mirilla.png",Settings.RESOLUTION_SCALE*5,Settings.RESOLUTION_SCALE*5)
+        self.imagen=ResourceManager.load_and_scale_image("mirilla.png",Settings.RESOLUTION_SCALE*50,Settings.RESOLUTION_SCALE*50)
         self.rect_element = self.imagen.get_rect(topleft=(self.x, self.y))
         self.mask = pygame.mask.from_surface(self.imagen)
         # Parámetros de daño

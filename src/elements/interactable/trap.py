@@ -5,7 +5,7 @@ class Trap(Interactable):
     def __init__(self, x, y, imagen):
         super().__init__(x, y, imagen, Settings.CollisionLayer.INTERACTUABLE)
 
-    def interactuar(self, objeto):
+    def interactuar(self, objeto,mundo):
         # Suponiendo que el mundo tiene una referencia al jugador: mundo.jugador
         if self.check_collision(objeto) and not self.eliminar:
             self.explotar(objeto)

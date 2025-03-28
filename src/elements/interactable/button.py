@@ -19,7 +19,7 @@ class Button(Interactable):
 
         self.objeto_colisionando = False
 
-    def interactuar(self, objeto):
+    def interactuar(self, objeto,mundo):
         """Solo activa el botón si el jugador NO estaba colisionando en el frame anterior."""
         if not self.camara_temporal_activa and self.check_collision(objeto) and not self.objeto_colisionando:
             self.presionar_boton()

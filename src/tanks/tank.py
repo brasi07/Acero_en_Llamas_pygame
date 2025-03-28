@@ -51,7 +51,7 @@ class Tank(Element):
         # Problema: Se recorren todos los elementos, pero debería ser solo los de colisión
         for e in mundo.elementos_por_capa_y_pantalla[2][self.fila_pantalla][self.col_pantalla]:
             if isinstance(e, Interactable):
-                e.interactuar(self)
+                e.interactuar(self,mundo)
 
             if self.check_collision(e):
                 colision = True

@@ -31,7 +31,7 @@ class Mine(Interactable):
         if not self.check_collision(jugador):
             self.objeto_colisionando = False
 
-    def interactuar(self, objeto):
+    def interactuar(self, objeto,mundo):
         if not self.objeto_colisionando and self.check_collision(objeto) and not self.activo:
             objeto.recibir_dano(1)
             ResourceManager.play_sound("8bit_bomb_explosion.wav")

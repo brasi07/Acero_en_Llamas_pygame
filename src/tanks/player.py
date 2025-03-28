@@ -38,6 +38,7 @@ class Player(Tank):
         self.gestionar_armas(mundo, teclas)
 
     def update(self, mundo):
+        #print(f"{self.x},{self.y}")
         if self.vida <= 0:
             pygame.event.post(pygame.event.Event(Settings.EVENTO_JUGADOR_MUERTO))
             self.vida = self.vida_inicial
