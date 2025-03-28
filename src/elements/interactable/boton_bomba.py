@@ -19,7 +19,7 @@ class Button_Bomb(Interactable):
     def interactuar(self, objeto,mundo):
         """Solo activa el botón si el jugador NO estaba colisionando en el frame anterior."""
         if not self.camara_temporal_activa and self.check_collision(objeto) and not self.objeto_colisionando:
-            self.presionar_boton()
+            self.presionar_boton(mundo)
             ResourceManager.play_sound("button_pressed.wav")
             self.objeto_colisionando = True
 

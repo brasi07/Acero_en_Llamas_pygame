@@ -24,7 +24,7 @@ class ExplosionWeapon(Weapon):
         self.imagen_bala = None
         self.fin=False
 
-  # Si quieres asegurarte de que no se use ninguna bala gráfica
+        # Si quieres asegurarte de que no se use ninguna bala gráfica
 
         # Si tu clase base Weapon ajusta rect_canon, dejamos algo mínimo:
         self.rect_canon = self.imagen_canon.get_rect(center=tank.rect_element.center)

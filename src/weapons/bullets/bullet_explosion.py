@@ -40,7 +40,6 @@ class ExplosionBullet(Bullet):
         self.tiempo=pygame.time.get_ticks()
 
     def explotar(self, mundo):
-        from ...tanks.tank import Tank
         from ...tanks.player import Player
         ResourceManager.play_sound("8bit_bomb_explosion.wav")
 
