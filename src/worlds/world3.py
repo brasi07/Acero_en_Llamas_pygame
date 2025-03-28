@@ -7,7 +7,7 @@ from ..menus.menu import FinalMenu
 class World3(World):
     def __init__(self, alto_pantalla, ancho_pantalla):
         super().__init__(alto_pantalla, ancho_pantalla, 3, "final_city.wav")
-        world_number = 3
+        self.world_number = 3
         self.hasSky = False
         self.traps = (-2, -2)
         self.lowWalls = (1410, 12, 13, 16, 679, 680)
