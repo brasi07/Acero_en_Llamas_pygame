@@ -14,13 +14,13 @@ class WarTrain(Enemy):
         self.rect_element.y = y + Settings.TILE_SIZE/2
         self.mask = pygame.mask.from_surface(self.imagen)
         self.muerto = False
-        self.armas = [Shotgun(self, (-370, 0)),
-                      RocketLauncher(self, (-270, 0)),
+        self.armas = [Shotgun(self, (-370*Settings.RESOLUTION_SCALE, 0)),
+                      RocketLauncher(self, (-270*Settings.RESOLUTION_SCALE, 0)),
                       ReboungGun(self, (0, 0)),
-                      Shotgun(self, (100, 0)),
-                      RocketLauncher(self, (350, 0)),
-                      ReboungGun(self, (420, 0)),
-                      Shotgun(self, (470, 0))
+                      Shotgun(self, (100*Settings.RESOLUTION_SCALE, 0)),
+                      RocketLauncher(self, (350*Settings.RESOLUTION_SCALE, 0)),
+                      ReboungGun(self, (420*Settings.RESOLUTION_SCALE, 0)),
+                      Shotgun(self, (470*Settings.RESOLUTION_SCALE, 0))
                       ]
         self.tiempos_ultimo_disparo = [0,0,0,0,0,0,0]
 

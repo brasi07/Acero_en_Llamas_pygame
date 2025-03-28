@@ -3,7 +3,7 @@ from .elemento_gui import ElementoGUI
 from ..extras.settings import Settings
 
 class TextoMenu(ElementoGUI):
-    def __init__(self, pantalla, texto, fonte, tamano, posicion):
+    def __init__(self, pantalla, texto, fonte, posicion):
         self.pantalla = pantalla
         self.font = fonte
         self.text = self.font.render(texto, True, Settings.NEGRO)
