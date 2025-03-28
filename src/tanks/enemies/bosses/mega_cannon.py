@@ -14,9 +14,10 @@ class MegaCannon(Enemy):
         self.muerto = False
         self.arma = WeaponMegaCannon(self)
         self.colision_layer_balas = Settings.CollisionLayer.BULLET_BOSS2
-        self.attack_range = Settings.TILE_SIZE*20
+        self.attack_range = Settings.TILE_SIZE*15
         self.in_screen = False
         self.inicioBattle = False
+        self.tiempo_inicio = 0
 
     def update(self, jugador, mundo):
         if self.vida <= 0:
@@ -35,6 +36,10 @@ class MegaCannon(Enemy):
             mundo.stop_music()
             ResourceManager.load_and_play_wav("boss_battle_loop.wav", -1)
             self.in_screen =  True
+            self.tiempo_inicio = pygame.time.get_ticks()  # Guarda el tiempo de inicio
+
+        if pygame.time.get_ticks() - self.tiempo_inicio >= 3000:
+            self.inicioBattle = True
 
         pantalla_binaria = mundo.mapas_binarios[self.indice_mundo_x][self.indice_mundo_y]
         start = ((self.rect_element.centerx // Settings.TILE_SIZE) % 32, (self.rect_element.centery // Settings.TILE_SIZE) % 18)
@@ -42,8 +47,10 @@ class MegaCannon(Enemy):
 
         self.arma.update(mundo, jugador)
         self.arma.update_secundaria(jugador, mundo)
-        if jugador.rect_element.centery < (self.fila_pantalla+1) * Settings.ALTO:
+
+        if jugador.rect_element.centery < (self.fila_pantalla+1) * Settings.ALTO and self.inicioBattle:
             self.manejar_ataque(mundo, pantalla_binaria, start, goal)
+
 
     def manejar_ataque(self, mundo, pantalla_binaria, start, goal):
        if self.arma.cooldown and pygame.time.get_ticks() - self.tiempo_ultimo_disparo >= self.arma.cooldown:
