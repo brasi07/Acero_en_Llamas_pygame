@@ -87,7 +87,7 @@ class MainMenu(Menu):
         ResourceManager.stop_and_unload_wav(f"title_theme.wav")
         self.director.partida = Partida(4, 4, 3, 0, 0, 1)
         sub_fase = DialogoMenu(self.director, "selva", world1.World1(self.director.pantalla.get_height(), self.director.pantalla.get_width()))
-        fase = DialogoMenu(self.director, "inicial", sub_fase)    
+        fase = DialogoMenu(self.director, "inicial", sub_fase, "intersection.wav")
         self.director.cambiar_escena(fase)
     
     def irAConfiguraciones(self):
@@ -129,9 +129,12 @@ class GameOverMenu(Menu):
 
 class DialogoMenu(Menu):
 
-    def __init__(self, director, dialogo, to):
+    def __init__(self, director, dialogo, to, music = ""):
         super().__init__(director)
         self.listaPantallas.append(PantallaDialogo(self, dialogo, to))
+        if music != "":
+            ResourceManager.load_and_play_wav(music)
+
         self.mostrarPantallaInicial()
 
 class FinalMenu(Menu):
