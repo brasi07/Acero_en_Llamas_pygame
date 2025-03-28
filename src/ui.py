@@ -123,7 +123,35 @@ class Ui(metaclass=SingletonMeta):
         x = 20
         y = 20
 
-        # Asegurar que la vida no sea negativa
-        vida_actual = max(jugador.vida, 0)
-        pantalla.blit(jugador.barra_vida[vida_actual], (x, y))
+        self.barras = ResourceManager.load_animation("barras_UI.png", 20, 7, 5, resizex=1, resizey=0.5)
+
+        # Datos de la barra de vida
+        vida_maxima = jugador.vida_inicial
+        vida_actual = max(jugador.vida, 0)  # Evitar negativos
+        sprite_width = self.barras[0].get_width()
+        sprite_height = self.barras[0].get_height()
+
+        num_segmentos = max(vida_maxima, 0)  # Segmentos intermedios
+        total_width = num_segmentos * sprite_width  # Ancho total de la barra
+
+        # **Calcular cuántos segmentos están dañados**
+        segmentos_danados = num_segmentos - vida_actual  # Cuántos usarán self.barras[1]
+        segmentos_danados = max(0, min(segmentos_danados, num_segmentos))  # Limitar entre 0 y num_segmentos
+
+        # Crear una superficie vacía para toda la barra de vida
+        surface_bar = pygame.Surface((total_width, sprite_height), pygame.SRCALPHA)
+
+        primer_sprite = self.barras[0] if segmentos_danados == num_segmentos else self.barras[9]
+        ultimo_sprite = self.barras[2] if segmentos_danados > 0 else self.barras[11]
+
+        surface_bar.blit(primer_sprite, (0, 0))  # Primer segmento
+
+        for i in range(num_segmentos - 2):
+            sprite = self.barras[1] if i + 1 >= num_segmentos - segmentos_danados else self.barras[10]
+            surface_bar.blit(sprite, ((i + 1) * sprite_width, 0))
+
+        surface_bar.blit(ultimo_sprite, ((num_segmentos - 1) * sprite_width, 0))  # Último segmento
+
+        # **Dibujar la barra ya centrada**
+        pantalla.blit(surface_bar, (x, y))
 

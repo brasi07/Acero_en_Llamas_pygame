@@ -36,6 +36,6 @@ class World1(World):
     def manejar_evento_especifico(self, evento):
         from .world2 import World2
         if self.control.change_world(evento) or evento.type == Settings.EVENTO_BOSS_MUERTO:
-            #self.player.improve()
+            self.player.improve()
             self.stop_music()
             self.director.cambiar_escena(DialogoMenu(self.director, "nieve", World2(self.alto_pantalla, self.ancho_pantalla)))

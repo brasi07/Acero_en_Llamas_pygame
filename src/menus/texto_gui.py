@@ -33,8 +33,6 @@ class TextoRes(TextoGUI):
             Settings.RESOLUTION_SCALE = 1.25
 
         Settings.updateRes(Settings)
-        print(Settings.RESOLUTION_SCALE)
-        print(Settings.ANCHO)
         
         self.director.pantalla = pygame.display.set_mode(self.res)
         escena = MainMenu(self.director)

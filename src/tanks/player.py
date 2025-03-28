@@ -2,15 +2,15 @@ import pygame
 
 from ..extras import Settings, ResourceManager
 from .tank import Tank
-from ..weapons import Weapon, Dash, Shotgun, ReboungGun, RocketLauncher, MineLauncher, Shield, WeaponPool
+from ..weapons import Weapon, Dash, Shotgun, ReboungGun, RocketLauncher, MineLauncher, Shield
 
 
 class Player(Tank):
 
-    def __init__(self, vida, objetos_clave):
+    def __init__(self, vida_inicial, speed, vida, objetos_clave):
 
         # Llamamos primero al constructor de la clase base (Tank)
-        super().__init__(4, 3, 0, 0, Settings.RESIZE_PLAYER, Settings.RESIZE_PLAYER, collision_layer=Settings.CollisionLayer.PLAYER, tank_type="jugador")
+        super().__init__(vida_inicial, speed, 0, 0, Settings.RESIZE_PLAYER, Settings.RESIZE_PLAYER, collision_layer=Settings.CollisionLayer.PLAYER, tank_type="jugador")
 
         self.vida = vida
 
@@ -18,7 +18,6 @@ class Player(Tank):
         self.armas = [Weapon(self), Dash(self), Shotgun(self), ReboungGun(self), RocketLauncher(self), MineLauncher(self), Shield(self)]  # Lista de armas
         self.armas_pos = 0  # Índice de arma secundaria equipada
         self.colision_layer_balas = Settings.CollisionLayer.BULLET_PLAYER
-        self.barra_vida = ResourceManager.load_animation(f"vida_jugador.png", 48, 7, 5, resizex=5, resizey=0.5)
         self.control = Settings.controller
         self.posx_change_screen = self.rect_element.x
         self.posy_change_screen = self.rect_element.y
@@ -145,4 +144,4 @@ class Player(Tank):
     def improve(self):
         self.vida_inicial += 2
         self.vida = self.vida_inicial
-        self.velocidad += 3
+        self.velocidad += 1

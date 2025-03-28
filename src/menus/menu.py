@@ -85,7 +85,7 @@ class MainMenu(Menu):
         from ..worlds import world1
 
         ResourceManager.stop_and_unload_wav(f"title_theme.wav")
-        self.director.partida = Partida(4, 0, 0, 1)
+        self.director.partida = Partida(4, 4, 3, 0, 0, 1)
         sub_fase = DialogoMenu(self.director, "selva", world1.World1(self.director.pantalla.get_height(), self.director.pantalla.get_width()))
         fase = DialogoMenu(self.director, "inicial", sub_fase)    
         self.director.cambiar_escena(fase)

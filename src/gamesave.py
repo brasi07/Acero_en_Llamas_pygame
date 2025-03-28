@@ -6,8 +6,8 @@ import pickle
 
 class Partida:
 
-    def __init__(self, vida, objetos_clave, weapon, world, x=0, y=0, camx=0, camy=0, world_rows = 1, world_columns = 1):
-        self.player = Player(vida, objetos_clave)
+    def __init__(self, vida, vida_max, speed, objetos_clave, weapon, world, x=0, y=0, camx=0, camy=0, world_rows = 1, world_columns = 1):
+        self.player = Player(vida_max, speed, vida, objetos_clave)
         self.filas = world_rows
         self.columnas = world_columns
         self.x = x
@@ -37,6 +37,8 @@ class Partida:
     def save(self):
         data = {
             "hp" : self.player.vida,
+            "max_hp" : self.player.vida_inicial,
+            "speed" : self.player.velocidad,
             "posx" : self.x,
             "posy" : self.y,
             "weapon" : WeaponPool.get_weapon_number(self.player),
@@ -55,6 +57,8 @@ class Partida:
                 datos = pickle.load(f)
                 return Partida(
                     datos["hp"],
+                    datos["max_hp"],
+                    datos["speed"],
                     datos["key_obj"],
                     datos["weapon"],
                     datos["world"],

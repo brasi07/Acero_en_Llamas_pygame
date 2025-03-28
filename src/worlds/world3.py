@@ -35,8 +35,7 @@ class World3(World):
         self.mapas_binarios = self.generar_mapas_binarios()
 
     def manejar_evento_especifico(self, evento):
-        from .world1 import World1
         if self.control.change_world(evento) or evento.type == Settings.EVENTO_BOSS_MUERTO:
-            #self.player.improve()
+            self.player.improve()
             self.stop_music()
             self.director.cambiar_escena(FinalMenu(self.director))
