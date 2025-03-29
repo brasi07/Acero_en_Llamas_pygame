@@ -104,7 +104,7 @@ class PantallaPauseGUI(PantallaGUI):
 class PantallaControles(PantallaGUI):
     def __init__(self, menu):
         super().__init__(menu, "menu_ controles.png")
-        self.elementosGUI = [BotonResume(self, (self.ANCHO / 2, self.ALTO / 1.2))]
+        self.elementosGUI = [BotonVolver(self, (self.ANCHO / 2, self.ALTO / 1.2))]
 
 class PantallaGameOverGUI(PantallaGUI):
     def __init__(self, menu):
