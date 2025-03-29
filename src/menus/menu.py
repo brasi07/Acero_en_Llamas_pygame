@@ -146,9 +146,9 @@ class DialogoMenu(Menu):
 
 class FinalMenu(Menu):
     
-    def __init__(self, director):
+    def __init__(self, director, final=None):
         super().__init__(director)
-        self.listaPantallas.append(PantallaFin(self))
+        self.listaPantallas.append(PantallaFin(self, final))
         self.mostrarPantallaInicial()
 
 class CreditosMenu(Menu):
