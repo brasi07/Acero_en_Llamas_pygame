@@ -28,23 +28,26 @@ class TextoRes(TextoGUI):
         from .menu import MainMenu
 
         if self.res:
-            if self.res == (1024,576):
+            if self.res == (1024,576): #default
                 Settings.RESOLUTION_SCALE = 1
-            elif self.res == (768,432):
+            #se cambia el valor de RESOLUTION_SCALE en proporción con el valor default
+            elif self.res == (768,432): 
                 Settings.RESOLUTION_SCALE = 0.75
             elif self.res == (1280,720):
                 Settings.RESOLUTION_SCALE = 1.25            
 
+            #se actulizan todos los valores que depienden de RESOLUTION_SCALE
             Settings.updateRes(Settings)
         
             self.director.pantalla = pygame.display.set_mode(self.res, pygame.RESIZABLE |pygame.DOUBLEBUF)
-        else:
+        else: #FULLSCREEN
             Settings.RESOLUTION_SCALE = 1
             Settings.updateRes(Settings)
             pygame.display.quit()
             pygame.display.init()
             self.director.pantalla = pygame.display.set_mode((1024, 576), pygame.FULLSCREEN | pygame.SCALED | pygame.DOUBLEBUF)
             
+        #Se reconstrue el menu inicial con la nueva resolución
         escena = MainMenu(self.director)
         escena.irAConfiguraciones()
         self.director.cambiar_escena(escena)
