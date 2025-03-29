@@ -40,7 +40,7 @@ class World3(World):
         self.mapas_binarios = self.generar_mapas_binarios()
 
     def manejar_evento_especifico(self, evento):
-        if self.control.change_world(evento) or evento.type == Settings.EVENTO_BOSS_MUERTO:
+        if evento.type == Settings.EVENTO_BOSS_MUERTO: #or self.control.change_world(evento)  <-- Opcion de desarrollador
             self.stop_music()
             if self.player.key_objs >= 3:
                 self.director.cambiar_escena(FinalMenu(self.director, "alternativo"))

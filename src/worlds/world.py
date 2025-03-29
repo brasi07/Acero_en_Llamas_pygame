@@ -259,8 +259,8 @@ class World(Scene, ABC):
             if self.control.pausar(evento):
                 self.director.apilar_escena(PauseMenu( self.director))
 
-            if self.control.change_weapon(evento):
-                self.player.cambiar_arma_secundaria()
+            #if self.control.change_weapon(evento):
+            #    self.player.cambiar_arma_secundaria()  <-- Opcion de desarrollador
 
             if self.control.open_minimap(evento):
                 self.minimap_active = not self.minimap_active

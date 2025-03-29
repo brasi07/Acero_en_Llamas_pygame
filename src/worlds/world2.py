@@ -34,7 +34,7 @@ class World2(World):
 
     def manejar_evento_especifico(self, evento):
         from .world3 import World3
-        if self.control.change_world(evento) or evento.type == Settings.EVENTO_BOSS_MUERTO:
+        if evento.type == Settings.EVENTO_BOSS_MUERTO: #or self.control.change_world(evento)  <-- Opcion de desarrollador
             self.player.improve()
             self.stop_music()
             self.director.cambiar_escena(DialogoMenu(self.director, "ruinas", World3(self.alto_pantalla, self.ancho_pantalla), "intersection.wav"))
