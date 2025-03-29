@@ -91,7 +91,10 @@ class PantallaPauseGUI(PantallaGUI):
                              BotonSalir(self, (self.ANCHO/2, self.ALTO/3 + self.BUTTON_SIZEY * 5))]
         
     def dibujar(self,pantalla):
-        #no se pinta imagen de fundo para que se vea el juego
+        if self.background == None:
+            #no se pinta la imagen sino que se guarda una copia de la pantalla para que se vea el juego de fondo mientras esta pausado
+            self.background = pantalla.copy()
+        pantalla.blit(self.background, (0,0))
         for elemento in self.elementosGUI:
             elemento.dibujar(pantalla)
 
@@ -101,7 +104,7 @@ class PantallaPauseGUI(PantallaGUI):
 class PantallaControles(PantallaGUI):
     def __init__(self, menu):
         super().__init__(menu, "menu_ controles.png")
-        self.elementosGUI = [BotonResume(self, (self.ANCHO / 2, self.ALTO / 1.2))]
+        self.elementosGUI = [BotonVolver(self, (self.ANCHO / 2, self.ALTO / 1.2))]
 
 class PantallaGameOverGUI(PantallaGUI):
     def __init__(self, menu):

@@ -75,7 +75,6 @@ class Menu(Scene):
         self.director.cambiar_escena(MainMenu(self.director))
 
 
-
 class MainMenu(Menu):
 
     def __init__(self, director):
@@ -122,7 +121,6 @@ class PauseMenu(Menu):
 
     def verControles(self):
         self.pantallaActual=1
-
 class GameOverMenu(Menu):
 
     def __init__(self, director):
@@ -148,9 +146,9 @@ class DialogoMenu(Menu):
 
 class FinalMenu(Menu):
     
-    def __init__(self, director, final=None):
+    def __init__(self, director):
         super().__init__(director)
-        self.listaPantallas.append(PantallaFin(self, final))
+        self.listaPantallas.append(PantallaFin(self))
         self.mostrarPantallaInicial()
 
 class CreditosMenu(Menu):
